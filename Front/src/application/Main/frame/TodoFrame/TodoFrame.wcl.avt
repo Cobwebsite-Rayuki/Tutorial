@@ -1,5 +1,5 @@
 namespace Application.Main.Frame {
-    export class Index extends Core.System.Frame implements Aventus.DefaultComponent {
+    export class TodoFrame extends Core.System.Frame implements Aventus.DefaultComponent {
 
         //#region static
 
@@ -25,21 +25,20 @@ namespace Application.Main.Frame {
         /**
          * @inheritdoc
          */
-        public override pageTitle(): string {
-            return "Tutorial - Accueil";
+        public override pageTitle(): string | undefined {
+            return "Vos tâches";
         }
         /**
          * @inheritdoc
          */
         public override onShow() {
-
         }
         /**
          * @inheritdoc
          */
         public override onHide() {
-
         }
+
         //#endregion
 
     }

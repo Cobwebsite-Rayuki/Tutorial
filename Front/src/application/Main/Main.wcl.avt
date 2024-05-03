@@ -1,36 +1,38 @@
+import { TodoFrame } from "./frame/TodoFrame/TodoFrame.wcl.avt";
 import { Index } from "./frame/Index/Index.wcl.avt";
 
 namespace Application {
-	export class Main extends Core.System.Application implements Aventus.DefaultComponent {
+    export class Main extends Core.System.Application implements Aventus.DefaultComponent {
 
-		//#region static
-		
-		//#endregion
-		
-		
-		//#region props
-		
-		//#endregion
-		
-		
-		//#region variables
-		
-		//#endregion
-		
-		
-		//#region constructor
-		
-		//#endregion
-		
-		
-		//#region methods
-		/**
-		 * @inheritdoc
-		 */
-		protected override async defineRoutes(): Promise<void> {
-			this.addRoute("/", Index);
-		 }
-		//#endregion
-		
-	}
+        //#region static
+
+        //#endregion
+
+
+        //#region props
+
+        //#endregion
+
+
+        //#region variables
+
+        //#endregion
+
+
+        //#region constructor
+
+        //#endregion
+
+
+        //#region methods
+        /**
+         * @inheritdoc
+         */
+        protected override async defineRoutes(): Promise<void> {
+            this.addRoute("/", Index);
+            this.addRoute("/todo", TodoFrame);
+        }
+        //#endregion
+
+    }
 }
