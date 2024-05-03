@@ -5,9 +5,11 @@ bin
 compiled.js
 compiled.ts
 compiled.html
-_run/apps
+_run/apps/Tutorial
 _run/Chrome
 _run/ChromeHeadlessShell
 _run/wwwroot/apps/Tutorial
 _run/wwwroot/users
 _run/wwwroot/desktops
+output
+compile.mjs

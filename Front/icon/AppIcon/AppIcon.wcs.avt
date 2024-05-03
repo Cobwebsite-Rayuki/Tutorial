@@ -4,8 +4,8 @@
 	rk-img {
 		--img-fill-color: transparent;
 		--img-stroke-color: white;
-		max-height: 100%;
 		flex-grow: 1;
+		max-height: 100%;
 		padding: 10%;
 	}
 }
