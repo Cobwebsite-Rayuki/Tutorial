@@ -2,6 +2,12 @@
 
 Afin de pouvoir effectuer ce tutorial, il vous faut
 
+- Créer une base de données mysql avec les informations suivantes
+    - host : localhost
+    - db name : rayuki
+    - username : root
+    - password : 
+    - si vous voulez changer ces informations vous pouvez éditer le fichier _run/appsettings.json
 - Installer vscode https://code.visualstudio.com/download
 - Installer les extensions Aventus et C# Dev Kit (après l'installation nous vous conseillons de reouvrir vscode)
 - Lancer la commande `npm run build`
