@@ -2,7 +2,7 @@
 
 :host {
 	rk-img {
-		--img-fill-color: transparent;
+		--img-fill-color: white;
 		--img-stroke-color: white;
 		flex-grow: 1;
 		max-height: 100%;

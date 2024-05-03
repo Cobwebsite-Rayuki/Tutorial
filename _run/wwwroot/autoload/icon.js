@@ -19,7 +19,8 @@ System.AppIcon = class AppIcon extends Core.System.AppIcon {
         arrStyle.push(AppIcon.__style);
         return arrStyle;
     }
-    __getHtml() {super.__getHtml();
+    __getHtml() {
+super.__getHtml();
     this.__getStatic().__template.setHTML({
         blocks: { 'default':`<rk-img src="/apps/Cave/img/grape.svg"></rk-img>` }
     });
@@ -61,7 +62,8 @@ System.AppIcon = class AppIcon extends Core.System.AppIcon {
         arrStyle.push(AppIcon.__style);
         return arrStyle;
     }
-    __getHtml() {super.__getHtml();
+    __getHtml() {
+super.__getHtml();
     this.__getStatic().__template.setHTML({
         blocks: { 'default':`<rk-img src="/apps/Explorer/img/icon.svg"></rk-img>` }
     });
@@ -100,7 +102,8 @@ System.AppIcon = class AppIcon extends Core.System.AppIcon {
         arrStyle.push(AppIcon.__style);
         return arrStyle;
     }
-    __getHtml() {super.__getHtml();
+    __getHtml() {
+super.__getHtml();
     this.__getStatic().__template.setHTML({
         blocks: { 'default':`<rk-img src="/apps/Projet/img/icon.svg"></rk-img>` }
     });
@@ -138,7 +141,8 @@ System.AppIcon = class AppIcon extends Core.System.AppIcon {
         arrStyle.push(AppIcon.__style);
         return arrStyle;
     }
-    __getHtml() {super.__getHtml();
+    __getHtml() {
+super.__getHtml();
     this.__getStatic().__template.setHTML({
         blocks: { 'default':`<rk-img src="/apps/Settings/img/logo.svg"></rk-img>` }
     });
@@ -177,7 +181,8 @@ System.AppIcon = class AppIcon extends Core.System.AppIcon {
         arrStyle.push(AppIcon.__style);
         return arrStyle;
     }
-    __getHtml() {super.__getHtml();
+    __getHtml() {
+super.__getHtml();
     this.__getStatic().__template.setHTML({
         blocks: { 'default':`<rk-img src="/apps/Suivi/img/logo.svg"></rk-img>` }
     });
@@ -216,7 +221,8 @@ System.AppIcon = class AppIcon extends Core.System.AppIcon {
         arrStyle.push(AppIcon.__style);
         return arrStyle;
     }
-    __getHtml() {super.__getHtml();
+    __getHtml() {
+super.__getHtml();
     this.__getStatic().__template.setHTML({
         blocks: { 'default':`<rk-img src="/apps/Tutorial/img/logo.svg"></rk-img>` }
     });
