@@ -1,0 +1,88 @@
+{
+    "module": "Tutorial",
+    "build": [
+        {
+			"name": "Main",
+			"src": [
+				"./src/*"
+			],
+			"compile": [
+				{
+					"output": [
+						"../_run/wwwroot/apps/Tutorial/index.js"
+					]
+				}
+			],
+			"dependances": [
+				{
+					"uri": "../Libs/Core.package.avt",
+					"include": "none"
+				},
+				{
+					"uri": "@Aventus",
+					"include": "none"
+				},
+				{
+					"uri": "@AventusUI",
+					"include": "none"
+				},
+				{
+					"uri": "@AventusSharp",
+					"include": "none"
+				}
+			],
+			"namespaceStrategy": "followFoldersCamelCase",
+			"namespaceRoot": "./src"
+		},
+		{
+			"name": "Icon",
+			"src": [
+				"./icon/*"
+			],
+			"compile": [
+				{
+					"output": [
+						"../_run/wwwroot/apps/Tutorial/icon.js"
+					]
+				}
+			],
+			"dependances": [
+				{
+					"uri": "../Libs/Core.package.avt",
+					"include": "none"
+				},
+				{
+					"uri": "@Aventus",
+					"include": "none"
+				},
+				{
+					"uri": "@AventusUI",
+					"include": "none"
+				},
+				{
+					"uri": "@AventusSharp",
+					"include": "none"
+				}
+			],
+			"namespaceStrategy": "rules",
+			"namespaceRules": {
+                "System": [
+                    "./icon/*"
+                ]
+			}
+		}
+    ],
+	"static": [
+		{
+			"name": "Main",
+			"input": "./static",
+			"output": [
+				"../_run/wwwroot/apps/Tutorial/"
+			]
+		}
+	],
+    "aliases": {
+        "@root": "./",
+        "~": "/apps/Tutorial"
+    }
+}

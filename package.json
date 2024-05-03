@@ -1,0 +1,8 @@
+{
+    "scripts": {
+        "dev" : "ASPNETCORE_ENVIRONMENT=Development && cd _run && dotnet Core.dll",
+        "export": "powershell Compress-Archive ./_export/* ./Tutorial.zip",
+        "build": "dotnet build --nologo -v q --property WarningLevel=0 /clp:ErrorsOnly",
+        "link" : "mklink D:\\Rayuki\\Apps\\system\\Explorer\\Front\\static\\_default.gs.avt D:\\Rayuki\\Core\\Core\\Front\\static\\autoload\\themes\\_default.gs.avt"
+    }
+}

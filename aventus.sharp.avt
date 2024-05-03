@@ -1,0 +1,14 @@
+﻿{
+  "outputPath": "./Front/src/generated",
+  "csProj": "./Tutorial.csproj",
+  "exportEnumByDefault": true,
+  "httpRouter": {
+    "uri": "/Tutorial",
+    "routerName": "TutorialRouter",
+    "namespace": "Routes",
+    "variableRoutesName": "TutorialHttpRoutes"
+  },
+  "wsEndpoint": {
+    "prefix": "/Tutorial"
+  }
+}
