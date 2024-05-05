@@ -3,10 +3,10 @@
   "csProj": "./Tutorial.csproj",
   "exportEnumByDefault": true,
   "httpRouter": {
+    "createRouter": true,
     "uri": "/Tutorial",
     "routerName": "TutorialRouter",
-    "namespace": "Routes",
-    "variableRoutesName": "TutorialHttpRoutes"
+    "namespace": "Routes"
   },
   "wsEndpoint": {
     "prefix": "/Tutorial"

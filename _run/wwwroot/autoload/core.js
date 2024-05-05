@@ -7,12 +7,16 @@ const _ = {};
 Aventus.Style.store("@default", `:host{--img-fill-color: var(--text-color);box-sizing:border-box;display:inline-block}:host *{box-sizing:border-box}.touch{cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0)}.touch.disable,.touch.disabled{cursor:default}.green{background-color:var(--green)}.red{background-color:var(--red)}.orange{background-color:var(--orange)}.blue{background-color:var(--blue)}`)
 const Websocket = {};
 _.Websocket = {};
+Websocket.Events = {};
+_.Websocket.Events = {};
 const Errors = {};
 _.Errors = {};
 const Permissions = {};
 _.Permissions = {};
 const Data = {};
 _.Data = {};
+Data.DataTypes = {};
+_.Data.DataTypes = {};
 const App = {};
 _.App = {};
 const Components = {};
@@ -21,12 +25,8 @@ const Lib = {};
 _.Lib = {};
 const System = {};
 _.System = {};
-Websocket.Events = {};
-_.Websocket.Events = {};
 Websocket.Routes = {};
 _.Websocket.Routes = {};
-Data.DataTypes = {};
-_.Data.DataTypes = {};
 const Routes = {};
 _.Routes = {};
 const State = {};
@@ -36,12 +36,27 @@ _.RAM = {};
 const Tools = {};
 _.Tools = {};
 let _n;
-Websocket.RayukiEndPointEvents= [];
+Websocket.Events.ApplicationTestEvent2=class ApplicationTestEvent2 extends AventusSharp.WebSocket.Event {
+    /**
+     * @inheritdoc
+     */
+    path() {
+        return `${this.getPrefix()}/application/test/2`;
+    }
+}
+Websocket.Events.ApplicationTestEvent2.Namespace=`${moduleName}.Websocket.Events`;
 
-_.Websocket.RayukiEndPointEvents=Websocket.RayukiEndPointEvents;
-Websocket.RayukiEndPointRoutes= [];
+_.Websocket.Events.ApplicationTestEvent2=Websocket.Events.ApplicationTestEvent2;
+Websocket.Events.Body=class Body {
+    static get Fullname() { return "Core.Websocket.Events.ApplicationTestEvent+Body, Core"; }
+    id;
+    name;
+}
+Websocket.Events.Body.Namespace=`${moduleName}.Websocket.Events`;
+Websocket.Events.Body.$schema={"id":"number","name":"string"};
+Aventus.Converter.register(Websocket.Events.Body.Fullname, Websocket.Events.Body);
 
-_.Websocket.RayukiEndPointRoutes=Websocket.RayukiEndPointRoutes;
+_.Websocket.Events.Body=Websocket.Events.Body;
 (function (PdfErrorCode) {
     PdfErrorCode[PdfErrorCode["UnknowError"] = 0] = "UnknowError";
     PdfErrorCode[PdfErrorCode["NoNameProvided"] = 1] = "NoNameProvided";
@@ -54,6 +69,13 @@ _.Errors.PdfErrorCode=Errors.PdfErrorCode;
 })(Errors.ImageFileErrorCode || (Errors.ImageFileErrorCode = {}));
 
 _.Errors.ImageFileErrorCode=Errors.ImageFileErrorCode;
+(function (CoreErrorCode) {
+    CoreErrorCode[CoreErrorCode["NotImplemented"] = 0] = "NotImplemented";
+    CoreErrorCode[CoreErrorCode["NotAvailable"] = 1] = "NotAvailable";
+    CoreErrorCode[CoreErrorCode["Impossible"] = 2] = "Impossible";
+})(Errors.CoreErrorCode || (Errors.CoreErrorCode = {}));
+
+_.Errors.CoreErrorCode=Errors.CoreErrorCode;
 (function (DesktopPermission) {
     DesktopPermission[DesktopPermission["CanEdit"] = 0] = "CanEdit";
     DesktopPermission[DesktopPermission["CanDelete"] = 1] = "CanDelete";
@@ -89,16 +111,17 @@ Data.Permission.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "EnumNa
 Aventus.Converter.register(Data.Permission.Fullname, Data.Permission);
 
 _.Data.Permission=Data.Permission;
-Data.Pdf=class Pdf {
-    static get Fullname() { return "Core.Data.Pdf, Core"; }
+Data.DataTypes.Pdf=class Pdf extends AventusSharp.Data.AventusFile {
+    static get Fullname() { return "Core.Data.DataTypes.Pdf, Core"; }
     Name = "";
     Html = "";
+    Debug = false;
 }
-Data.Pdf.Namespace=`${moduleName}.Data`;
-Data.Pdf.$schema={"Name":"string","Html":"string"};
-Aventus.Converter.register(Data.Pdf.Fullname, Data.Pdf);
+Data.DataTypes.Pdf.Namespace=`${moduleName}.Data.DataTypes`;
+Data.DataTypes.Pdf.$schema={...(AventusSharp.Data.AventusFile?.$schema ?? {}), "Name":"string","Html":"string","Debug":"boolean"};
+Aventus.Converter.register(Data.DataTypes.Pdf.Fullname, Data.DataTypes.Pdf);
 
-_.Data.Pdf=Data.Pdf;
+_.Data.DataTypes.Pdf=Data.DataTypes.Pdf;
 Data.Company=class Company extends AventusSharp.Data.Storable {
     static get Fullname() { return "Core.Data.Company, Core"; }
     Name = "";
@@ -171,7 +194,7 @@ Components.UserProfilPicture.Tag=`rk-user-profil-picture`;
 _.Components.UserProfilPicture=Components.UserProfilPicture;
 if(!window.customElements.get('rk-user-profil-picture')){window.customElements.define('rk-user-profil-picture', Components.UserProfilPicture);Aventus.WebComponentInstance.registerDefinition(Components.UserProfilPicture);}
 
-const Tooltip = class Tooltip extends Aventus.WebComponent {
+Components.Tooltip = class Tooltip extends Aventus.WebComponent {
     get 'visible'() { return this.getBoolAttr('visible') }
     set 'visible'(val) { this.setBoolAttr('visible', val) }get 'position'() { return this.getStringAttr('position') }
     set 'position'(val) { this.setStringAttr('position', val) }get 'color'() { return this.getStringAttr('color') }
@@ -290,12 +313,12 @@ const Tooltip = class Tooltip extends Aventus.WebComponent {
         this.parent.removeEventListener("mouseleave", this.onMouseLeave);
     }
 }
-Tooltip.Namespace=`${moduleName}`;
-Tooltip.Tag=`rk-tooltip`;
-_.Tooltip=Tooltip;
-if(!window.customElements.get('rk-tooltip')){window.customElements.define('rk-tooltip', Tooltip);Aventus.WebComponentInstance.registerDefinition(Tooltip);}
+Components.Tooltip.Namespace=`${moduleName}.Components`;
+Components.Tooltip.Tag=`rk-tooltip`;
+_.Components.Tooltip=Components.Tooltip;
+if(!window.customElements.get('rk-tooltip')){window.customElements.define('rk-tooltip', Components.Tooltip);Aventus.WebComponentInstance.registerDefinition(Components.Tooltip);}
 
-const Tab = class Tab extends Aventus.WebComponent {
+Components.Tab = class Tab extends Aventus.WebComponent {
     get 'label'() { return this.getStringAttr('label') }
     set 'label'(val) { this.setStringAttr('label', val) }    static __style = ``;
     __getStatic() {
@@ -318,12 +341,12 @@ const Tab = class Tab extends Aventus.WebComponent {
     __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('label')){ this['label'] = ""; } }
     __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('label'); }
 }
-Tab.Namespace=`${moduleName}`;
-Tab.Tag=`rk-tab`;
-_.Tab=Tab;
-if(!window.customElements.get('rk-tab')){window.customElements.define('rk-tab', Tab);Aventus.WebComponentInstance.registerDefinition(Tab);}
+Components.Tab.Namespace=`${moduleName}.Components`;
+Components.Tab.Tag=`rk-tab`;
+_.Components.Tab=Components.Tab;
+if(!window.customElements.get('rk-tab')){window.customElements.define('rk-tab', Components.Tab);Aventus.WebComponentInstance.registerDefinition(Components.Tab);}
 
-const TabHeader = class TabHeader extends Aventus.WebComponent {
+Components.TabHeader = class TabHeader extends Aventus.WebComponent {
     static get observedAttributes() {return ["label"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'active'() { return this.getBoolAttr('active') }
     set 'active'(val) { this.setBoolAttr('active', val) }    get 'label'() { return this.getStringProp('label') }
@@ -348,7 +371,7 @@ const TabHeader = class TabHeader extends Aventus.WebComponent {
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
   "content": {
     "tabheader_0°@HTML": {
-      "fct": (c) => `${c.print(c.comp.__86516f88c19f54ff51b6b23ce30be60emethod0())}`,
+      "fct": (c) => `${c.print(c.comp.__f727d7837c6f3c532ffb27ded1e8c0e4method0())}`,
       "once": true
     }
   }
@@ -363,16 +386,16 @@ const TabHeader = class TabHeader extends Aventus.WebComponent {
         this.label = tab.label;
         this._tab = tab;
     }
-    __86516f88c19f54ff51b6b23ce30be60emethod0() {
+    __f727d7837c6f3c532ffb27ded1e8c0e4method0() {
         return this.label;
     }
 }
-TabHeader.Namespace=`${moduleName}`;
-TabHeader.Tag=`rk-tab-header`;
-_.TabHeader=TabHeader;
-if(!window.customElements.get('rk-tab-header')){window.customElements.define('rk-tab-header', TabHeader);Aventus.WebComponentInstance.registerDefinition(TabHeader);}
+Components.TabHeader.Namespace=`${moduleName}.Components`;
+Components.TabHeader.Tag=`rk-tab-header`;
+_.Components.TabHeader=Components.TabHeader;
+if(!window.customElements.get('rk-tab-header')){window.customElements.define('rk-tab-header', Components.TabHeader);Aventus.WebComponentInstance.registerDefinition(Components.TabHeader);}
 
-const Tabs = class Tabs extends Aventus.WebComponent {
+Components.Tabs = class Tabs extends Aventus.WebComponent {
     tabs = {};
     activeHeader;
     static __style = `:host .hidden{display:none}`;
@@ -413,7 +436,7 @@ const Tabs = class Tabs extends Aventus.WebComponent {
         let elements = this.getElementsInSlot();
         let first = null;
         for (let element of elements) {
-            if (element instanceof Tab) {
+            if (element instanceof Components.Tab) {
                 this.tabs[element.label] = element;
                 let header = new (this.defineTabHeader())();
                 this.headerEl.appendChild(header);
@@ -437,16 +460,16 @@ const Tabs = class Tabs extends Aventus.WebComponent {
         this.bodyEl.appendChild(this.activeHeader);
     }
     defineTabHeader() {
-        return TabHeader;
+        return Components.TabHeader;
     }
     postCreation() {
         super.postCreation();
     }
 }
-Tabs.Namespace=`${moduleName}`;
-Tabs.Tag=`rk-tabs`;
-_.Tabs=Tabs;
-if(!window.customElements.get('rk-tabs')){window.customElements.define('rk-tabs', Tabs);Aventus.WebComponentInstance.registerDefinition(Tabs);}
+Components.Tabs.Namespace=`${moduleName}.Components`;
+Components.Tabs.Tag=`rk-tabs`;
+_.Components.Tabs=Components.Tabs;
+if(!window.customElements.get('rk-tabs')){window.customElements.define('rk-tabs', Components.Tabs);Aventus.WebComponentInstance.registerDefinition(Components.Tabs);}
 
 Components.Separator = class Separator extends Aventus.WebComponent {
     static __style = `:host{--_separator-color: var(--separator-color, var(--text-color))}:host{background:linear-gradient(90deg, transparent 0%, var(--_separator-color) 50%, transparent 100%);height:1px;margin:20px auto;width:100%;display:flex}`;
@@ -1019,7 +1042,7 @@ Lib.DateTools=class DateTools {
 Lib.DateTools.Namespace=`${moduleName}.Lib`;
 
 _.Lib.DateTools=Lib.DateTools;
-const PwaPromptIos = class PwaPromptIos extends Aventus.WebComponent {
+Components.PwaPromptIos = class PwaPromptIos extends Aventus.WebComponent {
     get 'visible'() { return this.getBoolAttr('visible') }
     set 'visible'(val) { this.setBoolAttr('visible', val) }    static get isStandalone() {
         if ("standalone" in window.navigator && window.navigator.standalone) {
@@ -1087,10 +1110,10 @@ const PwaPromptIos = class PwaPromptIos extends Aventus.WebComponent {
         this.visible = true;
     }
 }
-PwaPromptIos.Namespace=`${moduleName}`;
-PwaPromptIos.Tag=`rk-pwa-prompt-ios`;
-_.PwaPromptIos=PwaPromptIos;
-if(!window.customElements.get('rk-pwa-prompt-ios')){window.customElements.define('rk-pwa-prompt-ios', PwaPromptIos);Aventus.WebComponentInstance.registerDefinition(PwaPromptIos);}
+Components.PwaPromptIos.Namespace=`${moduleName}.Components`;
+Components.PwaPromptIos.Tag=`rk-pwa-prompt-ios`;
+_.Components.PwaPromptIos=Components.PwaPromptIos;
+if(!window.customElements.get('rk-pwa-prompt-ios')){window.customElements.define('rk-pwa-prompt-ios', Components.PwaPromptIos);Aventus.WebComponentInstance.registerDefinition(Components.PwaPromptIos);}
 
 System.Loading = class Loading extends Aventus.WebComponent {
     static get observedAttributes() {return ["text"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
@@ -1305,17 +1328,34 @@ _.Lib.Geometry=Lib.Geometry;
 })(Components.ResizeDirection || (Components.ResizeDirection = {}));
 
 _.Components.ResizeDirection=Components.ResizeDirection;
-Websocket.Events.ApplicationTestEvent2=class ApplicationTestEvent2 extends AventusSharp.WebSocket.Event {
+Websocket.MainEndPoint=class MainEndPoint extends AventusSharp.WebSocket.EndPoint {
+    /**
+     * Create a singleton
+     */
+    static getInstance() {
+        return Aventus.Instance.get(Websocket.MainEndPoint);
+    }
+    get path() {
+        return "/ws";
+    }
+}
+Websocket.MainEndPoint.Namespace=`${moduleName}.Websocket`;
+
+_.Websocket.MainEndPoint=Websocket.MainEndPoint;
+Websocket.Events.ApplicationTestEvent=class ApplicationTestEvent extends AventusSharp.WebSocket.Event {
     /**
      * @inheritdoc
      */
     path() {
-        return `${this.getPrefix()}/application/test/2`;
+        return `${this.getPrefix()}Core.Websocket.Events.ApplicationTestEvent`;
+    }
+    constructor(endpoint, getPrefix) {
+        super(endpoint ?? Websocket.MainEndPoint.getInstance(), getPrefix);
     }
 }
-Websocket.Events.ApplicationTestEvent2.Namespace=`${moduleName}.Websocket.Events`;
+Websocket.Events.ApplicationTestEvent.Namespace=`${moduleName}.Websocket.Events`;
 
-_.Websocket.Events.ApplicationTestEvent2=Websocket.Events.ApplicationTestEvent2;
+_.Websocket.Events.ApplicationTestEvent=Websocket.Events.ApplicationTestEvent;
 Websocket.Routes.DesktopRouter_RemoveDesktopIcon=class DesktopRouter_RemoveDesktopIcon extends AventusSharp.WebSocket.Event {
     /**
      * @inheritdoc
@@ -1333,16 +1373,6 @@ Websocket.Routes.DesktopRouter_RemoveDesktopIcon=class DesktopRouter_RemoveDeskt
 Websocket.Routes.DesktopRouter_RemoveDesktopIcon.Namespace=`${moduleName}.Websocket.Routes`;
 
 _.Websocket.Routes.DesktopRouter_RemoveDesktopIcon=Websocket.Routes.DesktopRouter_RemoveDesktopIcon;
-Websocket.Events.Body=class Body {
-    static get Fullname() { return "Core.Websocket.Events.ApplicationTestEvent+Body, Core"; }
-    id;
-    name;
-}
-Websocket.Events.Body.Namespace=`${moduleName}.Websocket.Events`;
-Websocket.Events.Body.$schema={"id":"number","name":"string"};
-Aventus.Converter.register(Websocket.Events.Body.Fullname, Websocket.Events.Body);
-
-_.Websocket.Events.Body=Websocket.Events.Body;
 (function (LoginCode) {
     LoginCode[LoginCode["OK"] = 0] = "OK";
     LoginCode[LoginCode["WrongCredentials"] = 1] = "WrongCredentials";
@@ -1450,18 +1480,54 @@ System.DesktopActivableLogic=class DesktopActivableLogic {
 System.DesktopActivableLogic.Namespace=`${moduleName}.System`;
 
 _.System.DesktopActivableLogic=System.DesktopActivableLogic;
-Data.DataTypes.Pdf=class Pdf extends AventusSharp.Data.AventusFile {
-    static get Fullname() { return "Core.Data.DataTypes.Pdf, Core"; }
-    Name = "";
-    Html = "";
-    Debug = false;
+App.AppConfiguration=class AppConfiguration {
+    static get Fullname() { return "Core.App.AppConfiguration, Core"; }
+    appsInstalled = [];
+    allApps = new Map();
 }
-Data.DataTypes.Pdf.Namespace=`${moduleName}.Data.DataTypes`;
-Data.DataTypes.Pdf.$schema={...(AventusSharp.Data.AventusFile?.$schema ?? {}), "Name":"string","Html":"string","Debug":"boolean"};
-Aventus.Converter.register(Data.DataTypes.Pdf.Fullname, Data.DataTypes.Pdf);
+App.AppConfiguration.Namespace=`${moduleName}.App`;
+App.AppConfiguration.$schema={"appsInstalled":"string","allApps":"Map"};
+Aventus.Converter.register(App.AppConfiguration.Fullname, App.AppConfiguration);
 
-_.Data.DataTypes.Pdf=Data.DataTypes.Pdf;
+Routes.CoreRouter=class CoreRouter extends Aventus.HttpRouter {
+    defineOptions(options) {
+        options.url = location.protocol + "//" + location.host + "";
+        return options;
+    }
+}
+Routes.CoreRouter.Namespace=`${moduleName}.Routes`;
+
+_.Routes.CoreRouter=Routes.CoreRouter;
+Routes.PdfRouter=class PdfRouter extends Aventus.HttpRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+    }
+    async Generate(body) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/generate`, Aventus.HttpMethod.POST);
+        request.setBody(body);
+        return await request.queryVoid(this.router);
+    }
+}
+Routes.PdfRouter.Namespace=`${moduleName}.Routes`;
+
+_.Routes.PdfRouter=Routes.PdfRouter;
+Routes.PermissionRouter=class PermissionRouter extends Aventus.HttpRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+    }
+    async Can(body) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/can`, Aventus.HttpMethod.POST);
+        request.setBody(body);
+        return await request.queryJSON(this.router);
+    }
+}
+Routes.PermissionRouter.Namespace=`${moduleName}.Routes`;
+
+_.Routes.PermissionRouter=Routes.PermissionRouter;
 Routes.MainRouter=class MainRouter extends Aventus.HttpRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+    }
     async LoginAction(body) {
         const request = new Aventus.HttpRequest(`${this.getPrefix()}/login`, Aventus.HttpMethod.POST);
         request.setBody(body);
@@ -1492,15 +1558,73 @@ Routes.MainRouter=class MainRouter extends Aventus.HttpRoute {
 Routes.MainRouter.Namespace=`${moduleName}.Routes`;
 
 _.Routes.MainRouter=Routes.MainRouter;
-App.AppConfiguration=class AppConfiguration {
-    static get Fullname() { return "Core.App.AppConfiguration, Core"; }
-    appsInstalled = [];
-    allApps = new Map();
+Lib.ServiceWorker=class ServiceWorker {
+    static getInstance() {
+        return AvInstance.get(Lib.ServiceWorker);
+    }
+    subscription;
+    async init(registration) {
+        if (await this.getSubscription(registration)) {
+            this.subscribe();
+        }
+    }
+    async getSubscription(registration) {
+        try {
+            let subscription = await registration.pushManager.getSubscription();
+            if (subscription) {
+                this.subscription = subscription;
+                return false;
+            }
+            let response = await new Routes.MainRouter().VapidPublicKey();
+            if (response.success && response.result) {
+                const vapidPublicKey = response.result;
+                // Chrome doesn't accept the base64-encoded (string) vapidPublicKey yet
+                // urlBase64ToUint8Array() is defined in /tools.js
+                const convertedVapidKey = this.urlBase64ToUint8Array(vapidPublicKey);
+                // Otherwise, subscribe the user (userVisibleOnly allows to specify that we don't plan to
+                // send notifications that don't have a visible effect for the user).
+                this.subscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: convertedVapidKey
+                });
+                return true;
+            }
+        }
+        catch (e) {
+            alert(e);
+        }
+        return false;
+    }
+    async subscribe() {
+        if (!this.subscription) {
+            return;
+        }
+        await new Routes.MainRouter().Register({
+            subscription: this.subscription
+        });
+    }
+    async unsubscribe() {
+        if (!this.subscription) {
+            return;
+        }
+        await this.subscription.unsubscribe();
+    }
+    urlBase64ToUint8Array(base64String) {
+        var padding = '='.repeat((4 - base64String.length % 4) % 4);
+        var base64 = (base64String + padding)
+            .replace(/\-/g, '+')
+            .replace(/_/g, '/');
+        var rawData = window.atob(base64);
+        var outputArray = new Uint8Array(rawData.length);
+        for (var i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+    }
 }
-App.AppConfiguration.Namespace=`${moduleName}.App`;
-App.AppConfiguration.$schema={"appsInstalled":"string","allApps":"Map"};
-Aventus.Converter.register(App.AppConfiguration.Fullname, App.AppConfiguration);
+Lib.ServiceWorker.Namespace=`${moduleName}.Lib`;
 
+_.Lib.ServiceWorker=Lib.ServiceWorker;
 Data.ApplicationData=class ApplicationData extends AventusSharp.Data.Storable {
     static get Fullname() { return "Core.Data.ApplicationData, Core"; }
     Name = "";
@@ -1659,14 +1783,6 @@ Data.DataTypes.ImageFile.$schema={...(AventusSharp.Data.AventusFile?.$schema ?? 
 Aventus.Converter.register(Data.DataTypes.ImageFile.Fullname, Data.DataTypes.ImageFile);
 
 _.Data.DataTypes.ImageFile=Data.DataTypes.ImageFile;
-Data.DataTypes.UserPPFile=class UserPPFile extends Data.DataTypes.ImageFile {
-    static get Fullname() { return "Core.Data.DataTypes.UserPPFile, Core"; }
-}
-Data.DataTypes.UserPPFile.Namespace=`${moduleName}.Data.DataTypes`;
-Data.DataTypes.UserPPFile.$schema={...(Data.DataTypes.ImageFile?.$schema ?? {}), };
-Aventus.Converter.register(Data.DataTypes.UserPPFile.Fullname, Data.DataTypes.UserPPFile);
-
-_.Data.DataTypes.UserPPFile=Data.DataTypes.UserPPFile;
 Data.User=class User extends AventusSharp.Data.Storable {
     static get Fullname() { return "Core.Data.User, Core"; }
     Firstname = "";
@@ -1718,6 +1834,21 @@ Data.PermissionGroup.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "P
 Aventus.Converter.register(Data.PermissionGroup.Fullname, Data.PermissionGroup);
 
 _.Data.PermissionGroup=Data.PermissionGroup;
+Routes.UserRouter=class UserRouter extends AventusSharp.Routes.StorableRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+    }
+    async GetConnected() {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/getconnected`, Aventus.HttpMethod.GET);
+        return await request.queryJSON(this.router);
+    }
+    StorableName() {
+        return "User";
+    }
+}
+Routes.UserRouter.Namespace=`${moduleName}.Routes`;
+
+_.Routes.UserRouter=Routes.UserRouter;
 State.DesktopStateManager=class DesktopStateManager extends Aventus.StateManager {
     /**
      * Get the instance of the StateManager
@@ -2382,6 +2513,9 @@ Aventus.Converter.register(Data.Desktop.Fullname, Data.Desktop);
 
 _.Data.Desktop=Data.Desktop;
 Routes.DesktopRouter=class DesktopRouter extends AventusSharp.Routes.StorableRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+    }
     StorableName() {
         return "Desktop";
     }
@@ -2389,41 +2523,6 @@ Routes.DesktopRouter=class DesktopRouter extends AventusSharp.Routes.StorableRou
 Routes.DesktopRouter.Namespace=`${moduleName}.Routes`;
 
 _.Routes.DesktopRouter=Routes.DesktopRouter;
-RAM.DesktopRAM=class DesktopRAM extends AventusSharp.RAM.RamHttp {
-    /**
-     * @inheritdoc
-     */
-    defineRoutes() {
-        return new Routes.DesktopRouter(new Lib.HttpRouter());
-    }
-    /**
-     * Create a singleton to store data
-     */
-    static getInstance() {
-        return Aventus.Instance.get(RAM.DesktopRAM);
-    }
-    /**
-     * @inheritdoc
-     */
-    defineIndexKey() {
-        return 'Id';
-    }
-    /**
-     * @inheritdoc
-     */
-    getTypeForData(objJson) {
-        return Data.Desktop;
-    }
-    async beforeUpdateItem(item, fromList, result) {
-        const savedApps = item.Applications;
-        item.Applications = [];
-        await super.beforeUpdateItem(item, fromList, result);
-        item.Applications = savedApps;
-    }
-}
-RAM.DesktopRAM.Namespace=`${moduleName}.RAM`;
-
-_.RAM.DesktopRAM=RAM.DesktopRAM;
 Components.PageCase = class PageCase extends Aventus.WebComponent {
     static get observedAttributes() {return ["case_width", "case_height"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'min_case_margin_left'() { return this.getNumberAttr('min_case_margin_left') }
@@ -2763,6 +2862,9 @@ _.Components.PageCase=Components.PageCase;
 if(!window.customElements.get('rk-page-case')){window.customElements.define('rk-page-case', Components.PageCase);Aventus.WebComponentInstance.registerDefinition(Components.PageCase);}
 
 Routes.ApplicationRouter=class ApplicationRouter extends Aventus.HttpRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+    }
     async GetAll() {
         const request = new Aventus.HttpRequest(`${this.getPrefix()}/application`, Aventus.HttpMethod.GET);
         return await request.queryJSON(this.router);
@@ -2785,151 +2887,6 @@ Routes.ApplicationRouter=class ApplicationRouter extends Aventus.HttpRoute {
 Routes.ApplicationRouter.Namespace=`${moduleName}.Routes`;
 
 _.Routes.ApplicationRouter=Routes.ApplicationRouter;
-Routes.PdfRouter=class PdfRouter extends Aventus.HttpRoute {
-    async Generate(body) {
-        const request = new Aventus.HttpRequest(`${this.getPrefix()}/generate`, Aventus.HttpMethod.POST);
-        request.setBody(body);
-        return await request.queryVoid(this.router);
-    }
-}
-Routes.PdfRouter.Namespace=`${moduleName}.Routes`;
-
-_.Routes.PdfRouter=Routes.PdfRouter;
-Routes.PermissionRouter=class PermissionRouter extends Aventus.HttpRoute {
-    async Can(body) {
-        const request = new Aventus.HttpRequest(`${this.getPrefix()}/can`, Aventus.HttpMethod.POST);
-        request.setBody(body);
-        return await request.queryJSON(this.router);
-    }
-}
-Routes.PermissionRouter.Namespace=`${moduleName}.Routes`;
-
-_.Routes.PermissionRouter=Routes.PermissionRouter;
-Routes.UserRouter=class UserRouter extends AventusSharp.Routes.StorableRoute {
-    async GetConnected() {
-        const request = new Aventus.HttpRequest(`${this.getPrefix()}/getconnected`, Aventus.HttpMethod.GET);
-        return await request.queryJSON(this.router);
-    }
-    StorableName() {
-        return "User";
-    }
-}
-Routes.UserRouter.Namespace=`${moduleName}.Routes`;
-
-_.Routes.UserRouter=Routes.UserRouter;
-Routes.CoreHttpRoutes= [
-    { type: Routes.ApplicationRouter, path: "Application" },
-    { type: Routes.DesktopRouter, path: "Desktop" },
-    { type: Routes.MainRouter, path: "" },
-    { type: Routes.PdfRouter, path: "Pdf" },
-    { type: Routes.PermissionRouter, path: "Permission" },
-    { type: Routes.UserRouter, path: "User" },
-];
-
-_.Routes.CoreHttpRoutes=Routes.CoreHttpRoutes;
-Routes.CoreRouterType= Aventus.HttpRouter.WithRoute(Routes.CoreHttpRoutes);
-
-_.Routes.CoreRouterType=Routes.CoreRouterType;
-Routes.CoreRouter=class CoreRouter extends Routes.CoreRouterType {
-    defineOptions(options) {
-        options.url = location.protocol + "//" + location.host + "";
-        return options;
-    }
-}
-Routes.CoreRouter.Namespace=`${moduleName}.Routes`;
-
-_.Routes.CoreRouter=Routes.CoreRouter;
-Lib.ServiceWorker=class ServiceWorker {
-    static getInstance() {
-        return AvInstance.get(Lib.ServiceWorker);
-    }
-    subscription;
-    async init(registration) {
-        if (await this.getSubscription(registration)) {
-            this.subscribe();
-        }
-    }
-    async getSubscription(registration) {
-        try {
-            let subscription = await registration.pushManager.getSubscription();
-            if (subscription) {
-                this.subscription = subscription;
-                return false;
-            }
-            let response = await new Routes.CoreRouter().routes.VapidPublicKey();
-            if (response.success && response.result) {
-                const vapidPublicKey = response.result;
-                // Chrome doesn't accept the base64-encoded (string) vapidPublicKey yet
-                // urlBase64ToUint8Array() is defined in /tools.js
-                const convertedVapidKey = this.urlBase64ToUint8Array(vapidPublicKey);
-                // Otherwise, subscribe the user (userVisibleOnly allows to specify that we don't plan to
-                // send notifications that don't have a visible effect for the user).
-                this.subscription = await registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: convertedVapidKey
-                });
-                return true;
-            }
-        }
-        catch (e) {
-            alert(e);
-        }
-        return false;
-    }
-    async subscribe() {
-        if (!this.subscription) {
-            return;
-        }
-        await new Routes.CoreRouter().routes.Register({
-            subscription: this.subscription
-        });
-    }
-    async unsubscribe() {
-        if (!this.subscription) {
-            return;
-        }
-        await this.subscription.unsubscribe();
-    }
-    urlBase64ToUint8Array(base64String) {
-        var padding = '='.repeat((4 - base64String.length % 4) % 4);
-        var base64 = (base64String + padding)
-            .replace(/\-/g, '+')
-            .replace(/_/g, '/');
-        var rawData = window.atob(base64);
-        var outputArray = new Uint8Array(rawData.length);
-        for (var i = 0; i < rawData.length; ++i) {
-            outputArray[i] = rawData.charCodeAt(i);
-        }
-        return outputArray;
-    }
-}
-Lib.ServiceWorker.Namespace=`${moduleName}.Lib`;
-
-_.Lib.ServiceWorker=Lib.ServiceWorker;
-Permissions.Permission=class Permission {
-    static saved = {};
-    static async can(query) {
-        if (!query.additionalInfo) {
-            query.additionalInfo = "";
-        }
-        let key = query.enumName + "$" + query.value + "$" + query.additionalInfo;
-        if (Object.keys(this.saved).includes(key)) {
-            return this.saved[key];
-        }
-        let response = await new Routes.CoreRouter().routes.Permission.Can({ permissionQuery: query });
-        if (response.success && response.result !== undefined) {
-            this.saved[key] = response.result;
-            return this.saved[key];
-        }
-        else {
-            console.log(response.errors);
-        }
-        return false;
-    }
-}
-Permissions.Permission.Namespace=`${moduleName}.Permissions`;
-
-_.Permissions.Permission=Permissions.Permission;
 RAM.ApplicationRAM=class ApplicationRAM extends Aventus.Ram {
     getAllDone = false;
     /**
@@ -2966,7 +2923,7 @@ RAM.ApplicationRAM=class ApplicationRAM extends Aventus.Ram {
             }
             else {
                 this.isLoading = true;
-                let apps = await new Routes.CoreRouter().routes.Application.GetAll();
+                let apps = await new Routes.ApplicationRouter().GetAll();
                 if (apps.success && apps.result) {
                     for (let app of apps.result) {
                         let resultTemp = new Aventus.ResultRamWithError();
@@ -3831,7 +3788,7 @@ RAM.UserRAM=class UserRAM extends AventusSharp.RAM.RamHttp {
         return this.actionGuard.run(["getConnected"], async () => {
             let result = new Aventus.ResultWithError();
             if (!this.connectedUserId) {
-                let query = await new Routes.CoreRouter().routes.User.GetConnected();
+                let query = await new Routes.UserRouter().GetConnected();
                 if (!query.success || !query.result) {
                     result.errors = query.errors;
                     return result;
@@ -3865,7 +3822,7 @@ _.RAM.UserRAM=RAM.UserRAM;
 Lib.SessionManager=class SessionManager {
     static async logout() {
         try {
-            await new Routes.CoreRouter().routes.Logout();
+            await new Routes.MainRouter().Logout();
         }
         catch { }
         window.location.reload();
@@ -4054,63 +4011,6 @@ System.HomeBtn.Tag=`rk-home-btn`;
 _.System.HomeBtn=System.HomeBtn;
 if(!window.customElements.get('rk-home-btn')){window.customElements.define('rk-home-btn', System.HomeBtn);Aventus.WebComponentInstance.registerDefinition(System.HomeBtn);}
 
-Websocket.Events.ApplicationTestEvent=class ApplicationTestEvent extends AventusSharp.WebSocket.Event {
-    /**
-     * @inheritdoc
-     */
-    path() {
-        return `${this.getPrefix()}Core.Websocket.Events.ApplicationTestEvent`;
-    }
-}
-Websocket.Events.ApplicationTestEvent.Namespace=`${moduleName}.Websocket.Events`;
-
-_.Websocket.Events.ApplicationTestEvent=Websocket.Events.ApplicationTestEvent;
-Websocket.Routes.ApplicationRouter=class ApplicationRouter extends AventusSharp.WebSocket.Route {
-    events;
-    constructor(endpoint) {
-        super(endpoint);
-        this.events = {
-            GetAll2: new Websocket.Routes.ApplicationRouter_GetAll2(endpoint, this.getPrefix),
-            GetAll3: new Websocket.Routes.ApplicationRouter_GetAll3(endpoint, this.getPrefix),
-            GetAll5: new Websocket.Events.ApplicationTestEvent(endpoint, this.getPrefix),
-        };
-        for (let key in this.events) {
-            this.events[key].init();
-        }
-    }
-    async GetAll2(options = {}) {
-        const info = {
-            channel: `${this.getPrefix()}/application2`,
-            ...options,
-        };
-        return await this.endpoint.sendMessageAndWait(info);
-    }
-    async GetAll3(body, options = {}) {
-        const info = {
-            channel: `${this.getPrefix()}/application3`,
-            body: body,
-            ...options,
-        };
-        return await this.endpoint.sendMessageAndWait(info);
-    }
-    async GetAll4(options = {}) {
-        const info = {
-            channel: `${this.getPrefix()}/application4`,
-            ...options,
-        };
-        return await this.endpoint.sendMessage(info);
-    }
-    async GetAll5(options = {}) {
-        const info = {
-            channel: `${this.getPrefix()}/getall5`,
-            ...options,
-        };
-        return await this.endpoint.sendMessageAndWait(info);
-    }
-}
-Websocket.Routes.ApplicationRouter.Namespace=`${moduleName}.Websocket.Routes`;
-
-_.Websocket.Routes.ApplicationRouter=Websocket.Routes.ApplicationRouter;
 Websocket.Routes.DesktopRouter_RegisterOpenApp=class DesktopRouter_RegisterOpenApp extends AventusSharp.WebSocket.Event {
     /**
      * @inheritdoc
@@ -4131,12 +4031,12 @@ _.Websocket.Routes.DesktopRouter_RegisterOpenApp=Websocket.Routes.DesktopRouter_
 Websocket.Routes.DesktopRouter=class DesktopRouter extends AventusSharp.WebSocket.Route {
     events;
     constructor(endpoint) {
-        super(endpoint);
+        super(endpoint ?? Websocket.MainEndPoint.getInstance());
         this.events = {
-            RegisterOpenApp: new Websocket.Routes.DesktopRouter_RegisterOpenApp(endpoint, this.getPrefix),
-            RemoveApp: new Websocket.Routes.DesktopRouter_RemoveApp(endpoint, this.getPrefix),
-            SetDesktopIcon: new Websocket.Routes.DesktopRouter_SetDesktopIcon(endpoint, this.getPrefix),
-            RemoveDesktopIcon: new Websocket.Routes.DesktopRouter_RemoveDesktopIcon(endpoint, this.getPrefix),
+            RegisterOpenApp: new Websocket.Routes.DesktopRouter_RegisterOpenApp(this.endpoint, this.getPrefix),
+            RemoveApp: new Websocket.Routes.DesktopRouter_RemoveApp(this.endpoint, this.getPrefix),
+            SetDesktopIcon: new Websocket.Routes.DesktopRouter_SetDesktopIcon(this.endpoint, this.getPrefix),
+            RemoveDesktopIcon: new Websocket.Routes.DesktopRouter_RemoveDesktopIcon(this.endpoint, this.getPrefix),
         };
         for (let key in this.events) {
             this.events[key].init();
@@ -4178,38 +4078,6 @@ Websocket.Routes.DesktopRouter=class DesktopRouter extends AventusSharp.WebSocke
 Websocket.Routes.DesktopRouter.Namespace=`${moduleName}.Websocket.Routes`;
 
 _.Websocket.Routes.DesktopRouter=Websocket.Routes.DesktopRouter;
-Websocket.MainEndPointRoutes= [
-    { type: Websocket.Routes.ApplicationRouter, path: "application" },
-    { type: Websocket.Routes.DesktopRouter, path: "desktop" },
-];
-
-_.Websocket.MainEndPointRoutes=Websocket.MainEndPointRoutes;
-Websocket.MainEndPointEvents= [
-    { type: Websocket.Events.ApplicationTestEvent, path: "application.ApplicationTestEvent" },
-    { type: Websocket.Events.ApplicationTestEvent2, path: "ApplicationTestEvent2" },
-];
-
-_.Websocket.MainEndPointEvents=Websocket.MainEndPointEvents;
-Websocket.MainEndPointType= AventusSharp.WebSocket.EndPoint.WithRoute({
-    routes: Websocket.MainEndPointRoutes,
-    events: Websocket.MainEndPointEvents
-});
-
-_.Websocket.MainEndPointType=Websocket.MainEndPointType;
-Websocket.MainEndPoint=class MainEndPoint extends Websocket.MainEndPointType {
-    /**
-     * Create a singleton
-     */
-    static getInstance() {
-        return Aventus.Instance.get(Websocket.MainEndPoint);
-    }
-    get path() {
-        return "/ws";
-    }
-}
-Websocket.MainEndPoint.Namespace=`${moduleName}.Websocket`;
-
-_.Websocket.MainEndPoint=Websocket.MainEndPoint;
 System.BottomBar = class BottomBar extends Aventus.WebComponent {
     get desktop() {
         if (this.parentNode instanceof ShadowRoot) {
@@ -4370,7 +4238,7 @@ System.BottomBar = class BottomBar extends Aventus.WebComponent {
             desktopIcon.IconTag = icon.tag;
             desktopIcon.Location = Data.DesktopLocation.BottomBar;
             desktopIcon.Id = icon.iconId;
-            let result = await Websocket.MainEndPoint.getInstance().routes.desktop.SetDesktopIcon({
+            let result = await new Websocket.Routes.DesktopRouter().SetDesktopIcon({
                 icon: desktopIcon
             });
             if (result.success && result.result) {
@@ -4388,7 +4256,7 @@ System.BottomBar = class BottomBar extends Aventus.WebComponent {
                     desktopIcon.IconTag = child.tag;
                     desktopIcon.Location = Data.DesktopLocation.BottomBar;
                     desktopIcon.Id = child.iconId;
-                    let result = await Websocket.MainEndPoint.getInstance().routes.desktop.SetDesktopIcon({
+                    let result = await new Websocket.Routes.DesktopRouter().SetDesktopIcon({
                         icon: desktopIcon
                     });
                     if (result.success) {
@@ -4405,7 +4273,7 @@ System.BottomBar = class BottomBar extends Aventus.WebComponent {
             let no = Array.from(children).indexOf(icon);
             let desktopIcon = new Data.DesktopAppIcon();
             desktopIcon.Id = icon.iconId;
-            let result = await Websocket.MainEndPoint.getInstance().routes.desktop.RemoveDesktopIcon({
+            let result = await new Websocket.Routes.DesktopRouter().RemoveDesktopIcon({
                 icon: desktopIcon
             });
             if (result.success) {
@@ -4419,7 +4287,7 @@ System.BottomBar = class BottomBar extends Aventus.WebComponent {
                         desktopIcon.IconTag = child.tag;
                         desktopIcon.Location = Data.DesktopLocation.BottomBar;
                         desktopIcon.Id = child.iconId;
-                        let result = await Websocket.MainEndPoint.getInstance().routes.desktop.SetDesktopIcon({
+                        let result = await new Websocket.Routes.DesktopRouter().SetDesktopIcon({
                             icon: desktopIcon
                         });
                         if (result.success) {
@@ -5024,7 +4892,7 @@ System.FrameNoScroll.Namespace=`${moduleName}.System`;
 _.System.FrameNoScroll=System.FrameNoScroll;
 
 System.Frame = class Frame extends System.FrameNoScroll {
-    static __style = `:host .main-scroll{--scrollbar-content-padding: 0 15px}`;
+    static __style = `:host .main-scroll{--scrollbar-content-padding: 0 15px}:host .main-scroll>*{--scrollbar-content-padding: 0}`;
     constructor() { super(); if (this.constructor == Frame) { throw "can't instanciate an abstract class"; } }
     __getStatic() {
         return Frame;
@@ -5297,8 +5165,8 @@ System.ApplicationHistory=class ApplicationHistory {
     }
     previous(destroy = false) {
         if (this.previousAvailable) {
-            if (destroy) {
-                delete this.memory[this.currentPosition];
+            if (destroy === true) {
+                this.memory.splice(this.currentPosition, 1);
             }
             this.currentPosition--;
             return this.memory[this.currentPosition];
@@ -5343,7 +5211,7 @@ Lib.ApplicationManager=class ApplicationManager {
     static async save(appInfo) {
         if (System.Os.instance.activeDesktop.data.Configuration.SyncDesktop) {
             await this.uniqueAction(appInfo, async (appInfo) => {
-                await Websocket.MainEndPoint.getInstance().routes.desktop.RegisterOpenApp({
+                await new Websocket.Routes.DesktopRouter().RegisterOpenApp({
                     appInfo
                 });
             });
@@ -5371,7 +5239,7 @@ Lib.ApplicationManager=class ApplicationManager {
     static async remove(appInfo) {
         if (System.Os.instance.activeDesktop.data.Configuration.SyncDesktop) {
             await this.uniqueAction(appInfo, async (appInfo) => {
-                await Websocket.MainEndPoint.getInstance().routes.desktop.RemoveApp({
+                await new Websocket.Routes.DesktopRouter().RemoveApp({
                     appInfo
                 });
             });
@@ -5437,8 +5305,8 @@ Lib.ApplicationManager=class ApplicationManager {
     static init() {
         this.onRegisterInfo = this.onRegisterInfo.bind(this);
         this.onRemoveApp = this.onRemoveApp.bind(this);
-        Websocket.MainEndPoint.getInstance().routes.desktop.events.RegisterOpenApp.onTrigger.add(this.onRegisterInfo);
-        Websocket.MainEndPoint.getInstance().routes.desktop.events.RemoveApp.onTrigger.add(this.onRemoveApp);
+        new Websocket.Routes.DesktopRouter().events.RegisterOpenApp.onTrigger.add(this.onRegisterInfo);
+        new Websocket.Routes.DesktopRouter().events.RemoveApp.onTrigger.add(this.onRemoveApp);
     }
     static async onRegisterInfo(item, params) {
         let key = this.getKey(item);
@@ -5851,7 +5719,7 @@ Components.Confirm = class Confirm extends Components.Popup {
         };
     }
     validate() {
-        this.resolve(false);
+        this.resolve(true);
     }
     cancel() {
         this.resolve(false);
@@ -5975,7 +5843,7 @@ System.Application = class Application extends Aventus.WebComponent {
 }));this.__addPropertyActions("is_hidden", ((target) => {
     target.onIsHiddenChange();
 })); }
-    static __style = `:host{--_application-box-shadow: var(--application-box-shadow);--_application-header-background-color: var(--application-header-background-color, var(--darker-active));--_application-background-color: var(--application-background-color, var(--primary-color-opacity));--_application-border-radius: var(--application-border-radius, 10px)}:host{background-color:var(--_application-background-color);border-radius:var(--_application-border-radius);box-shadow:var(--_application-box-shadow);container-name:application;container-type:inline-size;height:var(--app-height);outline:none;position:absolute;width:var(--app-width);z-index:50}:host .header{align-items:center;border-top-left-radius:var(--_application-border-radius);border-top-right-radius:var(--_application-border-radius);cursor:grab;display:flex;flex-shrink:0;height:30px;overflow:hidden;position:relative;width:100%;z-index:3}:host .header .background{background-color:var(--_application-header-background-color);inset:0;position:absolute;z-index:1}:host .header .navigation-actions{align-items:center;display:flex;flex-grow:0;height:100%;margin-left:15px;margin-right:15px;z-index:2}:host .header .navigation-actions .action{align-items:center;border-radius:2px;display:flex;height:calc(100% - 6px);justify-content:center;padding:0px;padding:1px 5px;transition:background-color var(--bezier-curve) .2s;width:22px}:host .header .navigation-actions .action rk-img{height:100%;width:100%}:host .header .navigation-actions .action.disable rk-img{--img-fill-color: var(--text-disable)}:host .header .title{flex-grow:1;margin-right:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:2}:host .header .application-actions{align-items:center;display:flex;gap:5px;justify-content:end;margin-right:15px;z-index:2}:host .header .application-actions .btn{border-radius:10px;height:15px;width:15px}:host .content{border-bottom-left-radius:var(--_application-border-radius);border-bottom-right-radius:var(--_application-border-radius);height:calc(100% - 35px);margin:5px;margin-top:0;overflow:hidden;width:calc(100% - 10px);z-index:1}:host .loading{border-radius:var(--_application-border-radius);display:none;z-index:600}:host rk-resize{--resize-z-index: 4}:host(:not([moving])){transition:height .5s var(--bezier-curve),width .5s var(--bezier-curve),top .5s var(--bezier-curve),left .5s var(--bezier-curve),border-radius .5s var(--bezier-curve),opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s}:host(:not([moving])) .header{transition:border-radius .5s var(--bezier-curve)}:host([moving]) .header{cursor:grabbing}:host([full]){border-radius:0;height:100% !important;left:0 !important;top:0 !important;width:100% !important;z-index:500}:host([full]) .header{border-top-left-radius:0;border-top-right-radius:0;cursor:default}:host([full]) .content{border-bottom-left-radius:0;border-bottom-right-radius:0}:host([is_hidden]){height:0 !important;left:calc(50% - 100px) !important;overflow:hidden;top:calc(100% - 50px) !important;width:200px !important}:host([loading]) .loading{display:flex}@media screen and (min-width: 1225px){:host .header .navigation-actions .action:not(.disable):hover{background-color:var(--lighter)}:host .header .application-actions .btn:hover{box-shadow:0 0 4px var(--darker-active) inset}}@media screen and (max-width: 1224px){:host .header{height:40px}:host .header .application-actions{gap:10px}:host .header .application-actions .btn{height:20px;width:20px}:host .content{height:calc(100% - 45px)}}@media screen and (max-width: 768px){:host{border-radius:0;height:100% !important;left:0 !important;top:0 !important;width:100% !important;z-index:502}:host .header{border-top-left-radius:0;border-top-right-radius:0;height:40px}:host .header .application-actions{gap:10px}:host .header .application-actions .btn{height:20px;width:20px}:host .header .application-actions .orange{display:none}:host .content{border-bottom-left-radius:0;border-bottom-right-radius:0;height:calc(100% - 45px)}:host rk-resize{display:none}:host([is_hidden]){left:0 !important;width:100% !important}}`;
+    static __style = `:host{--_application-box-shadow: var(--application-box-shadow);--_application-header-background-color: var(--application-header-background-color, var(--darker-active));--_application-background-color: var(--application-background-color, var(--primary-color-opacity));--_application-border-radius: var(--application-border-radius, 10px)}:host{background-color:var(--_application-background-color);border-radius:var(--_application-border-radius);box-shadow:var(--_application-box-shadow);container-name:application;container-type:inline-size;height:var(--app-height);outline:none;position:absolute;width:var(--app-width);z-index:50}:host .header{align-items:center;border-top-left-radius:var(--_application-border-radius);border-top-right-radius:var(--_application-border-radius);cursor:grab;display:flex;flex-shrink:0;height:30px;overflow:hidden;position:relative;width:100%;z-index:3}:host .header .background{background-color:var(--_application-header-background-color);inset:0;position:absolute;z-index:1}:host .header .navigation-actions{align-items:center;display:flex;flex-grow:0;height:100%;margin-left:15px;margin-right:15px;z-index:2}:host .header .navigation-actions .action{align-items:center;border-radius:2px;display:flex;height:calc(100% - 6px);justify-content:center;padding:0px;padding:1px 5px;transition:background-color var(--bezier-curve) .2s;width:22px}:host .header .navigation-actions .action rk-img{height:100%;width:100%;pointer-events:none}:host .header .navigation-actions .action.disable rk-img{--img-fill-color: var(--text-disable)}:host .header .title{flex-grow:1;margin-right:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:2}:host .header .application-actions{align-items:center;display:flex;gap:5px;justify-content:end;margin-right:15px;z-index:2}:host .header .application-actions .btn{border-radius:10px;height:15px;width:15px}:host .content{border-bottom-left-radius:var(--_application-border-radius);border-bottom-right-radius:var(--_application-border-radius);height:calc(100% - 35px);margin:5px;margin-top:0;overflow:hidden;width:calc(100% - 10px);z-index:1}:host .loading{border-radius:var(--_application-border-radius);display:none;z-index:600}:host rk-resize{--resize-z-index: 4}:host(:not([moving])){transition:height .5s var(--bezier-curve),width .5s var(--bezier-curve),top .5s var(--bezier-curve),left .5s var(--bezier-curve),border-radius .5s var(--bezier-curve),opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s}:host(:not([moving])) .header{transition:border-radius .5s var(--bezier-curve)}:host([moving]) .header{cursor:grabbing}:host([full]){border-radius:0;height:100% !important;left:0 !important;top:0 !important;width:100% !important;z-index:500}:host([full]) .header{border-top-left-radius:0;border-top-right-radius:0;cursor:default}:host([full]) .content{border-bottom-left-radius:0;border-bottom-right-radius:0}:host([is_hidden]){height:0 !important;left:calc(50% - 100px) !important;overflow:hidden;top:calc(100% - 50px) !important;width:200px !important}:host([loading]) .loading{display:flex}@media screen and (min-width: 1225px){:host .header .navigation-actions .action:not(.disable):hover{background-color:var(--lighter)}:host .header .application-actions .btn:hover{box-shadow:0 0 4px var(--darker-active) inset}}@media screen and (max-width: 1224px){:host .header{height:40px}:host .header .application-actions{gap:10px}:host .header .application-actions .btn{height:20px;width:20px}:host .content{height:calc(100% - 45px)}}@media screen and (max-width: 768px){:host{border-radius:0;height:100% !important;left:0 !important;top:0 !important;width:100% !important;z-index:502}:host .header{border-top-left-radius:0;border-top-right-radius:0;height:40px}:host .header .application-actions{gap:10px}:host .header .application-actions .btn{height:20px;width:20px}:host .header .application-actions .orange{display:none}:host .content{border-bottom-left-radius:0;border-bottom-right-radius:0;height:calc(100% - 45px)}:host rk-resize{display:none}:host([is_hidden]){left:0 !important;width:100% !important}}`;
     constructor() {            super();            this.history = new System.ApplicationHistory();            this.sizeManager = new System.ApplicationSize(this);            this.canChangeState = this.canChangeState.bind(this);            this.navigator.canChangeState(this.canChangeState);if (this.constructor == Application) { throw "can't instanciate an abstract class"; } this.validError404=this.validError404.bind(this)this.saveApplicationHistory=this.saveApplicationHistory.bind(this)this.onResizeStart=this.onResizeStart.bind(this)this.onResizeStop=this.onResizeStop.bind(this)this.moveApplicationToLeft=this.moveApplicationToLeft.bind(this)this.moveApplicationToRight=this.moveApplicationToRight.bind(this) }
     __getStatic() {
         return Application;
@@ -7092,6 +6960,41 @@ Lib.Platform=class Platform {
 Lib.Platform.Namespace=`${moduleName}.Lib`;
 
 _.Lib.Platform=Lib.Platform;
+RAM.DesktopRAM=class DesktopRAM extends AventusSharp.RAM.RamHttp {
+    /**
+     * @inheritdoc
+     */
+    defineRoutes() {
+        return new Routes.DesktopRouter(new Lib.HttpRouter());
+    }
+    /**
+     * Create a singleton to store data
+     */
+    static getInstance() {
+        return Aventus.Instance.get(RAM.DesktopRAM);
+    }
+    /**
+     * @inheritdoc
+     */
+    defineIndexKey() {
+        return 'Id';
+    }
+    /**
+     * @inheritdoc
+     */
+    getTypeForData(objJson) {
+        return Data.Desktop;
+    }
+    async beforeUpdateItem(item, fromList, result) {
+        const savedApps = item.Applications;
+        item.Applications = [];
+        await super.beforeUpdateItem(item, fromList, result);
+        item.Applications = savedApps;
+    }
+}
+RAM.DesktopRAM.Namespace=`${moduleName}.RAM`;
+
+_.RAM.DesktopRAM=RAM.DesktopRAM;
 System.Desktop = class Desktop extends Aventus.WebComponent {
     static get observedAttributes() {return ["desktop_id"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'show_application_list'() { return this.getBoolAttr('show_application_list') }
@@ -7108,7 +7011,7 @@ System.Desktop = class Desktop extends Aventus.WebComponent {
     oldActiveCase;
     pressManagerStopMoveApp;
     static __style = `:host{--_desktop-background-color: var(--desktop-background-color, var(--primary-color))}:host{background-color:var(--_desktop-background-color);background-position:center;background-repeat:no-repeat;background-size:cover;flex-shrink:0;height:100%;overflow:hidden;position:relative;width:100%}:host .icons{--page-case-border-radius: 5px;--page-case-border-active: 1px solid var(--darker-active);--page-case-background-active: var(--lighter-active);height:calc(100% - 70px);transition:opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s;width:100%;z-index:2}:host .app-container{transition:opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s}:host([show_application_list])>*{opacity:0 !important;visibility:hidden !important}:host([background_size=Cover]){background-size:cover}:host([background_size=Contain]){background-size:contain}:host([background_size=Stretch]){background-size:100% 100%}`;
-    constructor() { super(); this.setAppPositionTemp=this.setAppPositionTemp.bind(this)this.clearAppPositionTemp=this.clearAppPositionTemp.bind(this)this.setAppPosition=this.setAppPosition.bind(this)this.removeAppPosition=this.removeAppPosition.bind(this) }
+    constructor() {            super();this.setAppPositionTemp=this.setAppPositionTemp.bind(this)this.clearAppPositionTemp=this.clearAppPositionTemp.bind(this)this.setAppPosition=this.setAppPosition.bind(this)this.removeAppPosition=this.removeAppPosition.bind(this) }
     __getStatic() {
         return Desktop;
     }
@@ -7385,7 +7288,7 @@ System.Desktop = class Desktop extends Aventus.WebComponent {
             desktopIcon.Id = icon.iconId;
             this.oldActiveCase?.classList.remove("active");
             this.oldActiveCase = undefined;
-            let result = await Websocket.MainEndPoint.getInstance().routes.desktop.SetDesktopIcon({
+            let result = await new Websocket.Routes.DesktopRouter().SetDesktopIcon({
                 icon: desktopIcon
             });
             if (result.success && result.result) {
@@ -7399,7 +7302,7 @@ System.Desktop = class Desktop extends Aventus.WebComponent {
         if (caseEl && this.pageCaseEl.shadowRoot.contains(caseEl)) {
             let desktopIcon = new Data.DesktopAppIcon();
             desktopIcon.Id = icon.iconId;
-            let result = await Websocket.MainEndPoint.getInstance().routes.desktop.RemoveDesktopIcon({
+            let result = await new Websocket.Routes.DesktopRouter().RemoveDesktopIcon({
                 icon: desktopIcon
             });
             if (result.success) {
@@ -8415,7 +8318,7 @@ Lib.PWA=class PWA {
             }
         }
         else if (this.isAvailableIOS) {
-            let pwaios = new PwaPromptIos();
+            let pwaios = new Components.PwaPromptIos();
             document.body.appendChild(pwaios);
         }
     }
@@ -8473,7 +8376,7 @@ System.PwaButton.Tag=`rk-pwa-button`;
 _.System.PwaButton=System.PwaButton;
 if(!window.customElements.get('rk-pwa-button')){window.customElements.define('rk-pwa-button', System.PwaButton);Aventus.WebComponentInstance.registerDefinition(System.PwaButton);}
 
-const CalendarDay = class CalendarDay extends Aventus.WebComponent {
+Components.CalendarDay = class CalendarDay extends Aventus.WebComponent {
     get 'other'() { return this.getBoolAttr('other') }
     set 'other'(val) { this.setBoolAttr('other', val) }get 'today'() { return this.getBoolAttr('today') }
     set 'today'(val) { this.setBoolAttr('today', val) }    calendar;
@@ -8516,10 +8419,10 @@ const CalendarDay = class CalendarDay extends Aventus.WebComponent {
         });
     }
 }
-CalendarDay.Namespace=`${moduleName}`;
-_.CalendarDay=CalendarDay;
+Components.CalendarDay.Namespace=`${moduleName}.Components`;
+_.Components.CalendarDay=Components.CalendarDay;
 
-const CalendarDayDefault = class CalendarDayDefault extends CalendarDay {
+Components.CalendarDayDefault = class CalendarDayDefault extends Components.CalendarDay {
     static __style = ``;
     __getStatic() {
         return CalendarDayDefault;
@@ -8539,10 +8442,10 @@ const CalendarDayDefault = class CalendarDayDefault extends CalendarDay {
         return "CalendarDayDefault";
     }
 }
-CalendarDayDefault.Namespace=`${moduleName}`;
-CalendarDayDefault.Tag=`rk-calendar-day-default`;
-_.CalendarDayDefault=CalendarDayDefault;
-if(!window.customElements.get('rk-calendar-day-default')){window.customElements.define('rk-calendar-day-default', CalendarDayDefault);Aventus.WebComponentInstance.registerDefinition(CalendarDayDefault);}
+Components.CalendarDayDefault.Namespace=`${moduleName}.Components`;
+Components.CalendarDayDefault.Tag=`rk-calendar-day-default`;
+_.Components.CalendarDayDefault=Components.CalendarDayDefault;
+if(!window.customElements.get('rk-calendar-day-default')){window.customElements.define('rk-calendar-day-default', Components.CalendarDayDefault);Aventus.WebComponentInstance.registerDefinition(Components.CalendarDayDefault);}
 
 Components.Calendar = class Calendar extends Aventus.WebComponent {
     static get observedAttributes() {return ["date", "show_selector"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
@@ -8764,7 +8667,7 @@ Components.Calendar = class Calendar extends Aventus.WebComponent {
         this.date = newDate;
     }
     defineCalendarDay() {
-        return CalendarDayDefault;
+        return Components.CalendarDayDefault;
     }
     renderDates() {
         if (!this.isConnected)
@@ -8909,7 +8812,7 @@ Components.Calendar.Tag=`rk-calendar`;
 _.Components.Calendar=Components.Calendar;
 if(!window.customElements.get('rk-calendar')){window.customElements.define('rk-calendar', Components.Calendar);Aventus.WebComponentInstance.registerDefinition(Components.Calendar);}
 
-const DatePickerCalendarDay = class DatePickerCalendarDay extends CalendarDay {
+Components.DatePickerCalendarDay = class DatePickerCalendarDay extends Components.CalendarDay {
     get 'selected'() { return this.getBoolAttr('selected') }
     set 'selected'(val) { this.setBoolAttr('selected', val) }    static __style = `:host([selected]){background-color:var(--primary-color)}`;
     constructor() { super(); this.checkIfSelected=this.checkIfSelected.bind(this) }
@@ -8934,7 +8837,7 @@ const DatePickerCalendarDay = class DatePickerCalendarDay extends CalendarDay {
     __listBoolProps() { return ["selected"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
     init(dateDisplayed, dateDay, calendar) {
         super.init(dateDisplayed, dateDay, calendar);
-        if (calendar instanceof DatePickerCalendar) {
+        if (calendar instanceof Components.DatePickerCalendar) {
             if (Lib.DateTools.isSameDate(calendar.picker.value, dateDay)) {
                 this.selected = true;
             }
@@ -8949,10 +8852,10 @@ const DatePickerCalendarDay = class DatePickerCalendarDay extends CalendarDay {
         this.calendar.onDateClicked.remove(this.checkIfSelected);
     }
 }
-DatePickerCalendarDay.Namespace=`${moduleName}`;
-DatePickerCalendarDay.Tag=`rk-date-picker-calendar-day`;
-_.DatePickerCalendarDay=DatePickerCalendarDay;
-if(!window.customElements.get('rk-date-picker-calendar-day')){window.customElements.define('rk-date-picker-calendar-day', DatePickerCalendarDay);Aventus.WebComponentInstance.registerDefinition(DatePickerCalendarDay);}
+Components.DatePickerCalendarDay.Namespace=`${moduleName}.Components`;
+Components.DatePickerCalendarDay.Tag=`rk-date-picker-calendar-day`;
+_.Components.DatePickerCalendarDay=Components.DatePickerCalendarDay;
+if(!window.customElements.get('rk-date-picker-calendar-day')){window.customElements.define('rk-date-picker-calendar-day', Components.DatePickerCalendarDay);Aventus.WebComponentInstance.registerDefinition(Components.DatePickerCalendarDay);}
 
 Components.FormElement = class FormElement extends Aventus.WebComponent {
     get 'has_errors'() { return this.getBoolAttr('has_errors') }
@@ -9068,6 +8971,147 @@ Components.FormElement.Tag=`rk-form-element`;
 _.Components.FormElement=Components.FormElement;
 if(!window.customElements.get('rk-form-element')){window.customElements.define('rk-form-element', Components.FormElement);Aventus.WebComponentInstance.registerDefinition(Components.FormElement);}
 
+Components.Textarea = class Textarea extends Components.FormElement {
+    static get observedAttributes() {return ["label", "placeholder", "icon", "value"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'resize'() { return this.getBoolAttr('resize') }
+    set 'resize'(val) { this.setBoolAttr('resize', val) }get 'autogrow'() { return this.getBoolAttr('autogrow') }
+    set 'autogrow'(val) { this.setBoolAttr('autogrow', val) }    get 'label'() { return this.getStringProp('label') }
+    set 'label'(val) { this.setStringAttr('label', val) }get 'placeholder'() { return this.getStringProp('placeholder') }
+    set 'placeholder'(val) { this.setStringAttr('placeholder', val) }get 'icon'() { return this.getStringProp('icon') }
+    set 'icon'(val) { this.setStringAttr('icon', val) }get 'value'() { return this.getStringProp('value') }
+    set 'value'(val) { this.setStringAttr('value', val) }    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("value", ((target) => {
+    target.inputEl.value = target.value;
+})); }
+    static __style = `:host{--_textarea-height: var(--textarea-height, 30px);--_textarea-background-color: var(--textarea-background-color, var(--form-element-background, white));--_textarea-icon-height: var(--textarea-icon-height, calc(var(--_textarea-height) / 2));--_textarea-error-logo-size: var(--textarea-error-logo-size, calc(var(--_textarea-height) / 2));--_textarea-font-size: var(--textarea-font-size, var(--form-element-font-size, 16px));--_textarea-font-size-label: var(--textarea-font-size-label, var(--form-element-font-size-label, calc(var(--_textarea-font-size) * 0.95)));--_textarea-input-border: var(--textarea-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_textarea-border-radius: var(--textarea-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_textarea-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_textarea-background-color);border:var(--_textarea-input-border);border-radius:var(--_textarea-border-radius);display:flex;height:var(--_textarea-height);padding:0 10px;position:relative;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_textarea-icon-height);margin-right:10px}:host .input textarea{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-family:"Roboto",sans-serif;font-size:var(--_textarea-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px;resize:none}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:50%;color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_textarea-error-logo-size) - 5px);height:var(--_textarea-error-logo-size);justify-content:center;width:var(--_textarea-error-logo-size)}:host .input rk-resize{display:none}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}:host([resize]) .input rk-resize{display:block}:host([autogrow]) .input textarea{overflow:hidden}`;
+    __getStatic() {
+        return Textarea;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(Textarea.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        blocks: { 'default':`<label for="input" _id="textarea_0"></label><div class="input" _id="textarea_1">    <rk-img class="icon" _id="textarea_2"></rk-img>    <textarea rows="1" id="input" _id="textarea_3"></textarea>    <div class="error-logo">!</div>    <rk-resize _id="textarea_4"></rk-resize></div><div class="errors">    <template _id="textarea_5"></template></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "inputCont",
+      "ids": [
+        "textarea_1"
+      ]
+    },
+    {
+      "name": "inputEl",
+      "ids": [
+        "textarea_3"
+      ]
+    },
+    {
+      "name": "resizeEl",
+      "ids": [
+        "textarea_4"
+      ]
+    }
+  ],
+  "content": {
+    "textarea_0°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__1d98574e598563b66bef89b75eeea5admethod1())}`,
+      "once": true
+    },
+    "textarea_2°src": {
+      "fct": (c) => `${c.print(c.comp.__1d98574e598563b66bef89b75eeea5admethod2())}`,
+      "once": true
+    },
+    "textarea_3°placeholder": {
+      "fct": (c) => `${c.print(c.comp.__1d98574e598563b66bef89b75eeea5admethod3())}`,
+      "once": true
+    }
+  },
+  "events": [
+    {
+      "eventName": "focus",
+      "id": "textarea_3",
+      "fct": (e, c) => c.comp.removeErrors(e)
+    },
+    {
+      "eventName": "input",
+      "id": "textarea_3",
+      "fct": (e, c) => c.comp.onValueChange(e)
+    }
+  ]
+});const templ0 = new Aventus.Template(this);templ0.setTemplate(`        <template _id="textarea_6"></template>    `);this.__getStatic().__template.addLoop({
+                    anchorId: 'textarea_5',
+                    template: templ0,
+                simple:{data: "this.errors",item:"error"}});const templ1 = new Aventus.Template(this);templ1.setTemplate(`            <div _id="textarea_7"></div>        `);templ1.setActions({
+  "content": {
+    "textarea_7°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__1d98574e598563b66bef89b75eeea5admethod4(c.data.error))}`,
+      "once": true
+    }
+  }
+});templ0.addIf({
+                    anchorId: 'textarea_6',
+                    parts: [{once: true,
+                    condition: (c) => true,
+                    template: templ1
+                }]
+            }); }
+    getClassName() {
+        return "Textarea";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('resize')) { this.attributeChangedCallback('resize', false, false); }if(!this.hasAttribute('autogrow')) { this.attributeChangedCallback('autogrow', false, false); }if(!this.hasAttribute('label')){ this['label'] = undefined; }if(!this.hasAttribute('placeholder')){ this['placeholder'] = undefined; }if(!this.hasAttribute('icon')){ this['icon'] = undefined; }if(!this.hasAttribute('value')){ this['value'] = ""; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('resize');this.__upgradeProperty('autogrow');this.__upgradeProperty('label');this.__upgradeProperty('placeholder');this.__upgradeProperty('icon');this.__upgradeProperty('value'); }
+    __listBoolProps() { return ["resize","autogrow"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    removeErrors() {
+        this.errors = [];
+    }
+    calculateAutoGrow() {
+        if (this.autogrow) {
+            this.inputEl.style.height = 'auto';
+            let h = this.inputEl.scrollHeight + 'px';
+            this.inputEl.style.height = h;
+            this.inputCont.style.height = h;
+        }
+    }
+    onValueChange() {
+        this.calculateAutoGrow();
+        this.value = this.inputEl.value;
+        this.onChange.trigger([this.value]);
+        if (this.formPart) {
+            Components.FormElement.setValue(this.formPart, this.value);
+            if (this.formPart.validateOnChange !== false) {
+                this.validate();
+            }
+        }
+    }
+    postCreation() {
+        if (this.resize) {
+            this.resizeEl.init(this.inputCont);
+        }
+        this.calculateAutoGrow();
+    }
+    __1d98574e598563b66bef89b75eeea5admethod1() {
+        return this.label;
+    }
+    __1d98574e598563b66bef89b75eeea5admethod2() {
+        return this.icon;
+    }
+    __1d98574e598563b66bef89b75eeea5admethod3() {
+        return this.placeholder;
+    }
+    __1d98574e598563b66bef89b75eeea5admethod4(error) {
+        return error;
+    }
+}
+Components.Textarea.Namespace=`${moduleName}.Components`;
+Components.Textarea.Tag=`rk-textarea`;
+_.Components.Textarea=Components.Textarea;
+if(!window.customElements.get('rk-textarea')){window.customElements.define('rk-textarea', Components.Textarea);Aventus.WebComponentInstance.registerDefinition(Components.Textarea);}
+
 Components.Switch = class Switch extends Components.FormElement {
     static get observedAttributes() {return ["label", "disabled", "checked"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'label_end'() { return this.getBoolAttr('label_end') }
@@ -9108,7 +9152,7 @@ Components.Switch = class Switch extends Components.FormElement {
     }
     __getHtml() {super.__getHtml();
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<label for="element" class="label" _id="switch_0"></label><div class="bar">    <input id="element" type="checkbox" _id="switch_1" />    <div class="bar-content">        <div class="bar-fill"></div>        <div class="dot" _id="switch_2"></div>    </div></div>` }
+        blocks: { 'default':`<div class="label" _id="switch_0"></div><div class="bar" _id="switch_1">    <input id="element" type="checkbox" _id="switch_2" />    <div class="bar-content">        <div class="bar-fill"></div>        <div class="dot"></div>    </div></div>` }
     });
 }
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
@@ -9116,7 +9160,7 @@ Components.Switch = class Switch extends Components.FormElement {
     {
       "name": "checkboxEl",
       "ids": [
-        "switch_1"
+        "switch_2"
       ]
     }
   ],
@@ -9128,7 +9172,11 @@ Components.Switch = class Switch extends Components.FormElement {
   },
   "pressEvents": [
     {
-      "id": "switch_2",
+      "id": "switch_0",
+      "onPress": (e, pressInstance, c) => { c.comp.toggleActive(e, pressInstance); }
+    },
+    {
+      "id": "switch_1",
       "onPress": (e, pressInstance, c) => { c.comp.toggleActive(e, pressInstance); }
     }
   ]
@@ -9679,7 +9727,7 @@ Components.Checkbox = class Checkbox extends Components.FormElement {
     __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("checked", ((target) => {
     target.value = target.checked;
 })); }
-    static __style = `:host{--_checkbox-size: var(--checkbox-size, 18px);--_checkbox-height: var(--checkbox-height, var(--_checkbox-size));--_checkbox-width: var(--checkbox-width, var(--_checkbox-size));--_checkbox-size: 20px;--_checkbox-border-radius: var(--checkbox-border-radius, 2px);--_checkbox-border: var(--checkbox-border, var(--form-element-border));--_checkbox-border-active: var(--checkbox-border-active, var(--form-element-border-active, var(--_checkbox-border)));--_checkbox-background: var(--checkbox-background, var(--form-element-background, white));--_checkbox-background-active: var(--checkbox-background-active, var(--form-element-background-active, white));--_checkbox-tick-color: var(--checkbox-tick-color, var(--_checkbox-background));--_checkbox-tick-size: var(--checkbox-tick-size, 2px);--_checkbox-tick-padding: var(--checkbox-tick-padding, 10%);--_checkbox-font-size-label: var(--checkbox-font-size-label, var(--form-element-font-size-label, calc(var(--_input-font-size) * 0.95)));--_checkbox-margin-label: var(--checkbox-margin-label, 5px)}:host{align-items:center;display:flex;width:min-content}:host .label:not(:empty){cursor:pointer;font-size:var(--_checkbox-font-size-label);margin-left:var(--_checkbox-margin-label)}:host .square{background-color:var(--_checkbox-background);border:var(--_checkbox-border);border-radius:var(--_checkbox-border-radius);cursor:pointer;flex-shrink:0;height:var(--_checkbox-height);position:relative;transition:border .4s var(--bezier-curve),background-color .4s var(--bezier-curve);width:var(--_checkbox-width);display:flex;align-items:center;justify-content:center}:host .square rk-img{--img-stroke-color: var(--_checkbox-tick-color);--img-stroke-width: var(--_checkbox-tick-size);height:calc(100% - var(--_checkbox-tick-padding));opacity:0;visibility:hidden;width:calc(100% - var(--_checkbox-tick-padding))}:host([checked]) .square{background-color:var(--_checkbox-background-active);border:var(--_checkbox-border-active)}:host([checked]) .square rk-img{opacity:1;visibility:visible}:host([checked]) .square rk-img::part(tick){animation:dash .3s linear forwards;animation-delay:.2s;stroke-dasharray:100;stroke-dashoffset:100}:host([left_label]) .label:not(:empty){margin-left:0;margin-right:var(--_checkbox-margin-label);order:1}:host([left_label]) .square{order:2}@keyframes dash{to{stroke-dashoffset:70}}`;
+    static __style = `:host{--_checkbox-size: var(--checkbox-size, 18px);--_checkbox-height: var(--checkbox-height, var(--_checkbox-size));--_checkbox-width: var(--checkbox-width, var(--_checkbox-size));--_checkbox-size: 20px;--_checkbox-border-radius: var(--checkbox-border-radius, 2px);--_checkbox-border: var(--checkbox-border, var(--form-element-border));--_checkbox-border-active: var(--checkbox-border-active, var(--form-element-border-active, var(--_checkbox-border)));--_checkbox-background: var(--checkbox-background, var(--form-element-background, white));--_checkbox-background-active: var(--checkbox-background-active, var(--form-element-background-active, white));--_checkbox-tick-color: var(--checkbox-tick-color, var(--_checkbox-background));--_checkbox-tick-size: var(--checkbox-tick-size, 2px);--_checkbox-tick-padding: var(--checkbox-tick-padding, 10%);--_checkbox-font-size-label: var(--checkbox-font-size-label, var(--form-element-font-size-label, calc(var(--_input-font-size) * 0.95)));--_checkbox-margin-label: var(--checkbox-margin-label, 5px)}:host{align-items:center;display:flex}:host .label:not(:empty){cursor:pointer;font-size:var(--_checkbox-font-size-label);margin-left:var(--_checkbox-margin-label)}:host .square{background-color:var(--_checkbox-background);border:var(--_checkbox-border);border-radius:var(--_checkbox-border-radius);cursor:pointer;flex-shrink:0;height:var(--_checkbox-height);position:relative;transition:border .4s var(--bezier-curve),background-color .4s var(--bezier-curve);width:var(--_checkbox-width);display:flex;align-items:center;justify-content:center}:host .square rk-img{--img-stroke-color: var(--_checkbox-tick-color);--img-stroke-width: var(--_checkbox-tick-size);height:calc(100% - var(--_checkbox-tick-padding));opacity:0;visibility:hidden;width:calc(100% - var(--_checkbox-tick-padding))}:host([checked]) .square{background-color:var(--_checkbox-background-active);border:var(--_checkbox-border-active)}:host([checked]) .square rk-img{opacity:1;visibility:visible}:host([checked]) .square rk-img::part(tick){animation:dash .3s linear forwards;animation-delay:.2s;stroke-dasharray:100;stroke-dashoffset:100}:host([left_label]) .label:not(:empty){margin-left:0;margin-right:var(--_checkbox-margin-label);order:1}:host([left_label]) .square{order:2}@keyframes dash{to{stroke-dashoffset:70}}`;
     __getStatic() {
         return Checkbox;
     }
@@ -9995,12 +10043,17 @@ State.CreateOrUpdate=class CreateOrUpdate extends State.ApplicationStorableState
             if (ramResult.errors.length > 0) {
                 let noPrintErrors = [];
                 for (let error of ramResult.errors) {
-                    if (error instanceof AventusSharp.Data.DataError &&
-                        error.code == AventusSharp.Data.DataErrorCode.ValidationError &&
-                        error.details.length > 0 &&
-                        error.details[0] instanceof AventusSharp.Data.FieldErrorInfo) {
-                        let fieldInfo = error.details[0];
-                        if (this.form.addFieldError(fieldInfo.Name, error.message)) {
+                    if (error.details) {
+                        let found = false;
+                        for (let detail of error.details) {
+                            if (detail instanceof AventusSharp.Data.FieldErrorInfo) {
+                                if (this.form.addFieldError(detail.Name, error.message)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (found) {
                             continue;
                         }
                     }
@@ -10094,7 +10147,7 @@ Components.Button.Tag=`rk-button`;
 _.Components.Button=Components.Button;
 if(!window.customElements.get('rk-button')){window.customElements.define('rk-button', Components.Button);Aventus.WebComponentInstance.registerDefinition(Components.Button);}
 
-const DatePickerCalendar = class DatePickerCalendar extends Components.Calendar {
+Components.DatePickerCalendar = class DatePickerCalendar extends Components.Calendar {
     picker;
     static __style = ``;
     __getStatic() {
@@ -10114,13 +10167,13 @@ const DatePickerCalendar = class DatePickerCalendar extends Components.Calendar 
         return "DatePickerCalendar";
     }
     defineCalendarDay() {
-        return DatePickerCalendarDay;
+        return Components.DatePickerCalendarDay;
     }
 }
-DatePickerCalendar.Namespace=`${moduleName}`;
-DatePickerCalendar.Tag=`rk-date-picker-calendar`;
-_.DatePickerCalendar=DatePickerCalendar;
-if(!window.customElements.get('rk-date-picker-calendar')){window.customElements.define('rk-date-picker-calendar', DatePickerCalendar);Aventus.WebComponentInstance.registerDefinition(DatePickerCalendar);}
+Components.DatePickerCalendar.Namespace=`${moduleName}.Components`;
+Components.DatePickerCalendar.Tag=`rk-date-picker-calendar`;
+_.Components.DatePickerCalendar=Components.DatePickerCalendar;
+if(!window.customElements.get('rk-date-picker-calendar')){window.customElements.define('rk-date-picker-calendar', Components.DatePickerCalendar);Aventus.WebComponentInstance.registerDefinition(Components.DatePickerCalendar);}
 
 Components.DatePicker = class DatePicker extends Components.FormElement {
     static get observedAttributes() {return ["label", "icon"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
@@ -10130,7 +10183,8 @@ Components.DatePicker = class DatePicker extends Components.FormElement {
     set 'day_format'(val) { this.setStringAttr('day_format', val) }get 'locale'() { return this.getStringAttr('locale') }
     set 'locale'(val) { this.setStringAttr('locale', val) }get 'time_zone'() { return this.getStringAttr('time_zone') }
     set 'time_zone'(val) { this.setStringAttr('time_zone', val) }get 'hide_on_select'() { return this.getBoolAttr('hide_on_select') }
-    set 'hide_on_select'(val) { this.setBoolAttr('hide_on_select', val) }    get 'label'() { return this.getStringProp('label') }
+    set 'hide_on_select'(val) { this.setBoolAttr('hide_on_select', val) }get 'show_close'() { return this.getBoolAttr('show_close') }
+    set 'show_close'(val) { this.setBoolAttr('show_close', val) }    get 'label'() { return this.getStringProp('label') }
     set 'label'(val) { this.setStringAttr('label', val) }get 'icon'() { return this.getStringProp('icon') }
     set 'icon'(val) { this.setStringAttr('icon', val) }    get 'value'() {
 						return this.__watch["value"];
@@ -10143,7 +10197,7 @@ Components.DatePicker = class DatePicker extends Components.FormElement {
     target.renderDate();
 }));    super.__registerWatchesActions();
 }
-    static __style = `:host{--_datepicker-height: var(--input-height, 30px);--_datepicker-background-color: var(--input-background-color, var(--form-element-background, white));--_datepicker-icon-height: var(--input-icon-height, calc(var(--_datepicker-height) / 2));--_datepicker-error-logo-size: var(--input-error-logo-size, calc(var(--_datepicker-height) / 2));--_datepicker-font-size: var(--input-font-size, var(--form-element-font-size, 16px));--_datepicker-font-size-label: var(--input-font-size-label, var(--form-element-font-size-label, calc(var(--_datepicker-font-size) * 0.95)));--_datepicker-input-border: var(--input-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_datepicker-border-radius: var(--input-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_datepicker-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_datepicker-background-color);border:var(--_datepicker-input-border);border-radius:var(--_datepicker-border-radius);display:flex;height:var(--_datepicker-height);padding:0 10px;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_datepicker-icon-height);margin-right:10px}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_datepicker-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:50%;color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_datepicker-error-logo-size) - 5px);height:var(--_datepicker-error-logo-size);justify-content:center;width:var(--_datepicker-error-logo-size)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}`;
+    static __style = `:host{--_datepicker-height: var(--input-height, 30px);--_datepicker-background-color: var(--input-background-color, var(--form-element-background, white));--_datepicker-icon-height: var(--input-icon-height, calc(var(--_datepicker-height) / 2));--_datepicker-error-logo-size: var(--input-error-logo-size, calc(var(--_datepicker-height) / 2));--_datepicker-font-size: var(--input-font-size, var(--form-element-font-size, 16px));--_datepicker-font-size-label: var(--input-font-size-label, var(--form-element-font-size-label, calc(var(--_datepicker-font-size) * 0.95)));--_datepicker-input-border: var(--input-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_datepicker-border-radius: var(--input-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_datepicker-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_datepicker-background-color);border:var(--_datepicker-input-border);border-radius:var(--_datepicker-border-radius);display:flex;height:var(--_datepicker-height);padding:0 10px;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_datepicker-icon-height);margin-right:10px}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_datepicker-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px}:host .input .close-icon{font-size:18px;flex-shrink:0;display:none}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:50%;color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_datepicker-error-logo-size) - 5px);height:var(--_datepicker-error-logo-size);justify-content:center;width:var(--_datepicker-error-logo-size)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}:host([show_close]) .input .close-icon{display:inline-block}`;
     constructor() {
             super();
             this.bindCalendar();
@@ -10158,7 +10212,7 @@ Components.DatePicker = class DatePicker extends Components.FormElement {
     }
     __getHtml() {super.__getHtml();
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<label for="input" _id="datepicker_0"></label><div class="input" _id="datepicker_1">    <rk-img class="icon" _id="datepicker_2"></rk-img>    <input id="input" readonly _id="datepicker_3" />    <div class="error-logo">!</div></div><div class="errors">    <template _id="datepicker_4"></template></div><rk-calendar-container _id="datepicker_6"></rk-calendar-container>` }
+        blocks: { 'default':`<label for="input" _id="datepicker_0"></label><div class="input" _id="datepicker_1">    <rk-img class="icon" _id="datepicker_2"></rk-img>    <input id="input" readonly _id="datepicker_3" />    <mi-icon class="close-icon touch" icon="close" _id="datepicker_4"></mi-icon>    <div class="error-logo">!</div></div><div class="errors">    <template _id="datepicker_5"></template></div><rk-calendar-container _id="datepicker_7"></rk-calendar-container>` }
     });
 }
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
@@ -10172,7 +10226,7 @@ Components.DatePicker = class DatePicker extends Components.FormElement {
     {
       "name": "calendarContainer",
       "ids": [
-        "datepicker_6"
+        "datepicker_7"
       ]
     }
   ],
@@ -10202,32 +10256,37 @@ Components.DatePicker = class DatePicker extends Components.FormElement {
     {
       "id": "datepicker_1",
       "onPress": (e, pressInstance, c) => { c.comp.showCalendar(e, pressInstance); }
+    },
+    {
+      "id": "datepicker_4",
+      "onPress": (e, pressInstance, c) => { c.comp.clearValue(e, pressInstance); }
     }
   ]
-});const templ0 = new Aventus.Template(this);templ0.setTemplate(`         <div _id="datepicker_5"></div>    `);templ0.setActions({
+});const templ0 = new Aventus.Template(this);templ0.setTemplate(`         <div _id="datepicker_6"></div>    `);templ0.setActions({
   "content": {
-    "datepicker_5°@HTML": {
+    "datepicker_6°@HTML": {
       "fct": (c) => `${c.print(c.comp.__e3c5860a3719823edab2c4b36e42865dmethod3(c.data.error))}`,
       "once": true
     }
   }
 });this.__getStatic().__template.addLoop({
-                    anchorId: 'datepicker_4',
+                    anchorId: 'datepicker_5',
                     template: templ0,
                 simple:{data: "this.errors",item:"error"}}); }
     getClassName() {
         return "DatePicker";
     }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('year_format')){ this['year_format'] = "numeric"; }if(!this.hasAttribute('month_format')){ this['month_format'] = "2-digit"; }if(!this.hasAttribute('day_format')){ this['day_format'] = "2-digit"; }if(!this.hasAttribute('locale')){ this['locale'] = undefined; }if(!this.hasAttribute('time_zone')){ this['time_zone'] = undefined; }if(!this.hasAttribute('hide_on_select')) { this.attributeChangedCallback('hide_on_select', false, false); }if(!this.hasAttribute('label')){ this['label'] = undefined; }if(!this.hasAttribute('icon')){ this['icon'] = undefined; } }
-    __defaultValuesWatch(w) { super.__defaultValuesWatch(w); w["value"] = new Date(); }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('year_format');this.__upgradeProperty('month_format');this.__upgradeProperty('day_format');this.__upgradeProperty('locale');this.__upgradeProperty('time_zone');this.__upgradeProperty('hide_on_select');this.__upgradeProperty('label');this.__upgradeProperty('icon');this.__correctGetter('value'); }
-    __listBoolProps() { return ["hide_on_select"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('year_format')){ this['year_format'] = "numeric"; }if(!this.hasAttribute('month_format')){ this['month_format'] = "2-digit"; }if(!this.hasAttribute('day_format')){ this['day_format'] = "2-digit"; }if(!this.hasAttribute('locale')){ this['locale'] = undefined; }if(!this.hasAttribute('time_zone')){ this['time_zone'] = undefined; }if(!this.hasAttribute('hide_on_select')) { this.attributeChangedCallback('hide_on_select', false, false); }if(!this.hasAttribute('show_close')) { this.attributeChangedCallback('show_close', false, false); }if(!this.hasAttribute('label')){ this['label'] = undefined; }if(!this.hasAttribute('icon')){ this['icon'] = undefined; } }
+    __defaultValuesWatch(w) { super.__defaultValuesWatch(w); w["value"] = undefined; }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('year_format');this.__upgradeProperty('month_format');this.__upgradeProperty('day_format');this.__upgradeProperty('locale');this.__upgradeProperty('time_zone');this.__upgradeProperty('hide_on_select');this.__upgradeProperty('show_close');this.__upgradeProperty('label');this.__upgradeProperty('icon');this.__correctGetter('value'); }
+    __listBoolProps() { return ["hide_on_select","show_close"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
     defineCalendar() {
-        return DatePickerCalendar;
+        return Components.DatePickerCalendar;
     }
     renderDate() {
         if (!this.value) {
             this.inputEl.value = '';
+            this.show_close = false;
         }
         else {
             this.inputEl.value = this.value.toLocaleDateString(this.locale, {
@@ -10236,6 +10295,7 @@ Components.DatePicker = class DatePicker extends Components.FormElement {
                 day: this.day_format,
                 timeZone: this.time_zone,
             });
+            this.show_close = true;
         }
         this.calendar.date = this.value ?? new Date();
     }
@@ -10250,6 +10310,10 @@ Components.DatePicker = class DatePicker extends Components.FormElement {
                 this.validate();
             }
         }
+    }
+    clearValue() {
+        this.value = undefined;
+        this.onValueChange();
     }
     showCalendar() {
         this.calendarContainer.show();
@@ -10312,7 +10376,7 @@ Components.DatePicker.Tag=`rk-date-picker`;
 _.Components.DatePicker=Components.DatePicker;
 if(!window.customElements.get('rk-date-picker')){window.customElements.define('rk-date-picker', Components.DatePicker);Aventus.WebComponentInstance.registerDefinition(Components.DatePicker);}
 
-const CalendarContainer = class CalendarContainer extends Aventus.WebComponent {
+Components.CalendarContainer = class CalendarContainer extends Aventus.WebComponent {
     get 'visible'() { return this.getBoolAttr('visible') }
     set 'visible'(val) { this.setBoolAttr('visible', val) }    picker;
     static __style = `:host{display:none;position:absolute;z-index:800}:host([visible]){display:block}`;
@@ -10373,10 +10437,10 @@ const CalendarContainer = class CalendarContainer extends Aventus.WebComponent {
         this.setAttribute("tabindex", "-1");
     }
 }
-CalendarContainer.Namespace=`${moduleName}`;
-CalendarContainer.Tag=`rk-calendar-container`;
-_.CalendarContainer=CalendarContainer;
-if(!window.customElements.get('rk-calendar-container')){window.customElements.define('rk-calendar-container', CalendarContainer);Aventus.WebComponentInstance.registerDefinition(CalendarContainer);}
+Components.CalendarContainer.Namespace=`${moduleName}.Components`;
+Components.CalendarContainer.Tag=`rk-calendar-container`;
+_.Components.CalendarContainer=Components.CalendarContainer;
+if(!window.customElements.get('rk-calendar-container')){window.customElements.define('rk-calendar-container', Components.CalendarContainer);Aventus.WebComponentInstance.registerDefinition(Components.CalendarContainer);}
 
 Components.GenericSelect = class GenericSelect extends Components.FormElement {
     static get observedAttributes() {return ["label", "placeholder", "icon", "searchable"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
@@ -11198,6 +11262,7 @@ Components.Table = class Table extends Aventus.WebComponent {
             this.options = this.configure(this.defaultOptions());
             this.normalizeSchema();
             this.auto_hide_scroll = this.autoHideScroll();
+            this.style.display = 'none';
 if (this.constructor == Table) { throw "can't instanciate an abstract class"; } }
     __getStatic() {
         return Table;
@@ -11412,7 +11477,7 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
                 displayName: "",
                 name: "",
                 type: "custom",
-                cell: TableCellCheckbox,
+                cell: Components.TableCellCheckbox,
                 width: 50,
                 sortable: false
             });
@@ -11520,6 +11585,7 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
         if (!this.headerContainer || !this.bodyContainer) {
             return;
         }
+        let isFirst = this.isFirstRender;
         this.firstRender();
         this.hadGlobalSearch = false;
         if (!onlySort) {
@@ -11551,6 +11617,9 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
         }
         this.nbItems = this.rowsFiltered.length;
         this.renderPage();
+        if (isFirst) {
+            this.style.display = '';
+        }
     }
     renderPage() {
         this.correctPage();
@@ -11738,9 +11807,6 @@ Components.TableRow = class TableRow extends Aventus.WebComponent {
     getCell(cellConfig) {
         return cellConfig.cell ?? Components.TableCellString;
     }
-    getContent(cellConfig, data) {
-        return cellConfig.name ? Aventus.getValueFromObject(cellConfig.name, data) : undefined;
-    }
     addCellOption(cell, cellConfig, data) {
     }
     init(options, data) {
@@ -11751,29 +11817,27 @@ Components.TableRow = class TableRow extends Aventus.WebComponent {
         for (let cellConfig of options.schema) {
             let cellInfo = this.getCell(cellConfig);
             let cell;
-            let applyContent = true;
-            if (Aventus.isClass(cellInfo)) {
-                let cst = cellInfo;
-                cell = new cst();
-            }
-            else {
-                let fct = cellInfo;
-                cell = fct(data);
-                applyContent = false;
-            }
+            let cst = cellInfo;
+            cell = new cst();
             cell.index = i;
             cell.row = this;
             cell.data = data;
             cell.label = cellConfig.name;
             cell.grid = this.grid;
             this.addCellOption(cell, cellConfig, data);
-            if (applyContent) {
-                const v = this.getContent(cellConfig, data);
-                cell.setContent(v, data);
-            }
+            this.setCellContent(cell, cellConfig, data);
             this.rowContentEl.appendChild(cell);
             this.cells[cellConfig.displayName] = cell;
             i++;
+        }
+    }
+    setCellContent(cell, cellConfig, data) {
+        if (cellConfig.cellContent) {
+            cellConfig.cellContent(data, cell);
+        }
+        else {
+            const v = cellConfig.name ? Aventus.getValueFromObject(cellConfig.name, data) : undefined;
+            cell.setContent(v, data);
         }
     }
     globalSearch(search) {
@@ -11810,6 +11874,52 @@ Components.TableRow.Namespace=`${moduleName}.Components`;
 Components.TableRow.Tag=`rk-table-row`;
 _.Components.TableRow=Components.TableRow;
 if(!window.customElements.get('rk-table-row')){window.customElements.define('rk-table-row', Components.TableRow);Aventus.WebComponentInstance.registerDefinition(Components.TableRow);}
+
+Components.TableRowData = class TableRowData extends Components.TableRow {
+    ram;
+    static __style = ``;
+    constructor() { super(); this.onUpdated=this.onUpdated.bind(this) }
+    __getStatic() {
+        return TableRowData;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(TableRowData.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "TableRowData";
+    }
+    init(options, data) {
+        super.init(options, data);
+        if (this.table instanceof Components.TableData) {
+            this.ram = this.table.defineRAM();
+            this.ram.onUpdated(this.onUpdated);
+        }
+    }
+    onUpdated(element) {
+        if (element.Id == this.data.Id) {
+            for (let cellConfig of this.options.schema) {
+                this.setCellContent(this.cells[cellConfig.displayName], cellConfig, element);
+            }
+        }
+    }
+    postDestruction() {
+        if (this.ram) {
+            this.ram.offUpdated(this.onUpdated);
+        }
+    }
+}
+Components.TableRowData.Namespace=`${moduleName}.Components`;
+Components.TableRowData.Tag=`rk-table-row-data`;
+_.Components.TableRowData=Components.TableRowData;
+if(!window.customElements.get('rk-table-row-data')){window.customElements.define('rk-table-row-data', Components.TableRowData);Aventus.WebComponentInstance.registerDefinition(Components.TableRowData);}
 
 Components.TableCell = class TableCell extends Aventus.WebComponent {
     static get observedAttributes() {return ["grid", "label"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
@@ -12177,8 +12287,8 @@ Components.TableRowHeader = class TableRowHeader extends Components.TableRow {
     getClassName() {
         return "TableRowHeader";
     }
-    getContent(cellConfig, data) {
-        return cellConfig.displayName;
+    setCellContent(cell, cellConfig, data) {
+        cell.setContent(cellConfig.displayName, data);
     }
     addCellOption(cell, cellConfig, data) {
         if (cell instanceof Components.TableCellHeader) {
@@ -12329,7 +12439,7 @@ Components.TableCellCustom.Tag=`rk-table-cell-custom`;
 _.Components.TableCellCustom=Components.TableCellCustom;
 if(!window.customElements.get('rk-table-cell-custom')){window.customElements.define('rk-table-cell-custom', Components.TableCellCustom);Aventus.WebComponentInstance.registerDefinition(Components.TableCellCustom);}
 
-const TableCellCheckbox = class TableCellCheckbox extends Components.TableCell {
+Components.TableCellCheckbox = class TableCellCheckbox extends Components.TableCell {
     static __style = `:host span{cursor:pointer}`;
     __getStatic() {
         return TableCellCheckbox;
@@ -12379,10 +12489,10 @@ const TableCellCheckbox = class TableCellCheckbox extends Components.TableCell {
         }
     }
 }
-TableCellCheckbox.Namespace=`${moduleName}`;
-TableCellCheckbox.Tag=`rk-table-cell-checkbox`;
-_.TableCellCheckbox=TableCellCheckbox;
-if(!window.customElements.get('rk-table-cell-checkbox')){window.customElements.define('rk-table-cell-checkbox', TableCellCheckbox);Aventus.WebComponentInstance.registerDefinition(TableCellCheckbox);}
+Components.TableCellCheckbox.Namespace=`${moduleName}.Components`;
+Components.TableCellCheckbox.Tag=`rk-table-cell-checkbox`;
+_.Components.TableCellCheckbox=Components.TableCellCheckbox;
+if(!window.customElements.get('rk-table-cell-checkbox')){window.customElements.define('rk-table-cell-checkbox', Components.TableCellCheckbox);Aventus.WebComponentInstance.registerDefinition(Components.TableCellCheckbox);}
 
 Components.TableCellBoolean = class TableCellBoolean extends Components.TableCell {
     static __style = ``;
@@ -12457,8 +12567,9 @@ if(!window.customElements.get('rk-table-cell-action')){window.customElements.def
 Components.TableData = class TableData extends Components.Table {
     get 'add_btn'() { return this.getBoolAttr('add_btn') }
     set 'add_btn'(val) { this.setBoolAttr('add_btn', val) }    application;
+    ram;
     static __style = `:host{position:relative}:host .add-btn{bottom:10px;display:none;position:absolute;right:10px;z-index:10;box-shadow:var(--elevation-4)}:host([grid][add_btn]) .add-btn{display:block}`;
-    constructor() { super(); if (this.constructor == TableData) { throw "can't instanciate an abstract class"; } }
+    constructor() { super(); if (this.constructor == TableData) { throw "can't instanciate an abstract class"; } this.onCreatedData=this.onCreatedData.bind(this)this.onUpdatedData=this.onUpdatedData.bind(this)this.onDeletedData=this.onDeletedData.bind(this) }
     __getStatic() {
         return TableData;
     }
@@ -12488,35 +12599,38 @@ Components.TableData = class TableData extends Components.Table {
     __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('add_btn'); }
     __listBoolProps() { return ["add_btn"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
     async loadData() {
-        let ram = this.defineRAM();
-        this.data = await this.application?.executeWithLoading(ram.getListWithError());
-        ram.onCreated((data) => {
-            if (!this.data) {
-                this.data = [data];
-            }
-            else {
-                this.data.push(data);
-            }
-        });
-        ram.onDeleted((data) => {
-            if (!this.data)
-                return;
+        this.ram = this.defineRAM();
+        this.data = await this.application?.executeWithLoading(this.ram.getListWithError());
+        this.ram.onCreated(this.onCreatedData);
+        this.ram.onUpdated(this.onUpdatedData);
+        this.ram.onDeleted(this.onDeletedData);
+    }
+    onCreatedData(data) {
+        if (!this.data) {
+            this.data = [data];
+        }
+        else {
+            this.data.push(data);
+        }
+    }
+    onUpdatedData(data) {
+        if (!this.data) {
+            this.data = [data];
+        }
+        else {
             const index = this.data.findIndex(p => p.Id == data.Id);
             if (index != -1) {
-                this.data.splice(index, 1);
+                this.filterData(true);
             }
-        });
-        ram.onUpdated((data) => {
-            if (!this.data) {
-                this.data = [data];
-            }
-            else {
-                const index = this.data.findIndex(p => p.Id == data.Id);
-                if (index != -1) {
-                    this.filterData(true);
-                }
-            }
-        });
+        }
+    }
+    onDeletedData(data) {
+        if (!this.data)
+            return;
+        const index = this.data.findIndex(p => p.Id == data.Id);
+        if (index != -1) {
+            this.data.splice(index, 1);
+        }
     }
     async newData() {
         let state = this.defineNewState();
@@ -12545,10 +12659,20 @@ Components.TableData = class TableData extends Components.Table {
             this.add_btn = true;
         }
     }
+    defaultOptions() {
+        let result = super.defaultOptions();
+        result.row = Components.TableRowData;
+        return result;
+    }
     postCreation() {
         super.postCreation();
         this.application = this.findParentByType(System.Application) ?? undefined;
         this.loadData();
+    }
+    postDestruction() {
+        this.ram?.offCreated(this.onCreatedData);
+        this.ram?.offUpdated(this.onUpdatedData);
+        this.ram?.offDeleted(this.onDeletedData);
     }
 }
 Components.TableData.Namespace=`${moduleName}.Components`;
@@ -12616,6 +12740,30 @@ Errors.DesktopError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(Errors.DesktopError.Fullname, Errors.DesktopError);
 
 _.Errors.DesktopError=Errors.DesktopError;
+Permissions.Permission=class Permission {
+    static saved = {};
+    static async can(query) {
+        if (!query.additionalInfo) {
+            query.additionalInfo = "";
+        }
+        let key = query.enumName + "$" + query.value + "$" + query.additionalInfo;
+        if (Object.keys(this.saved).includes(key)) {
+            return this.saved[key];
+        }
+        let response = await new Routes.PermissionRouter().Can({ permissionQuery: query });
+        if (response.success && response.result !== undefined) {
+            this.saved[key] = response.result;
+            return this.saved[key];
+        }
+        else {
+            console.log(response.errors);
+        }
+        return false;
+    }
+}
+Permissions.Permission.Namespace=`${moduleName}.Permissions`;
+
+_.Permissions.Permission=Permissions.Permission;
 Permissions.PermissionQuery=class PermissionQuery {
     $type;
     value;
@@ -12646,6 +12794,14 @@ Permissions.DesktopPermissionQuery.$schema={...(Permissions.PermissionQuery?.$sc
 Aventus.Converter.register(Permissions.DesktopPermissionQuery.Fullname, Permissions.DesktopPermissionQuery);
 
 _.Permissions.DesktopPermissionQuery=Permissions.DesktopPermissionQuery;
+Errors.CoreError=class CoreError extends Aventus.GenericError {
+    static get Fullname() { return "Core.Tools.CoreError, Core"; }
+}
+Errors.CoreError.Namespace=`${moduleName}.Errors`;
+Errors.CoreError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
+Aventus.Converter.register(Errors.CoreError.Fullname, Errors.CoreError);
+
+_.Errors.CoreError=Errors.CoreError;
 Errors.ImageFileError=class ImageFileError extends Aventus.GenericError {
     static get Fullname() { return "Core.Tools.ImageFileError, Core"; }
 }
@@ -12694,17 +12850,52 @@ Tools.VoidWithPdfError.$schema={...(AventusSharp.Tools.VoidWithError?.$schema ??
 Aventus.Converter.register(Tools.VoidWithPdfError.Fullname, Tools.VoidWithPdfError);
 
 _.Tools.VoidWithPdfError=Tools.VoidWithPdfError;
-Websocket.RayukiEndPointType= AventusSharp.WebSocket.EndPoint.WithRoute({
-    routes: Websocket.RayukiEndPointRoutes,
-    events: Websocket.RayukiEndPointEvents
-});
-
-_.Websocket.RayukiEndPointType=Websocket.RayukiEndPointType;
-Websocket.RayukiEndPoint=class RayukiEndPoint extends Websocket.RayukiEndPointType {
+Websocket.Routes.ApplicationRouter=class ApplicationRouter extends AventusSharp.WebSocket.Route {
+    events;
+    constructor(endpoint) {
+        super(endpoint ?? Websocket.MainEndPoint.getInstance());
+        this.events = {
+            GetAll2: new Websocket.Routes.ApplicationRouter_GetAll2(this.endpoint, this.getPrefix),
+            GetAll3: new Websocket.Routes.ApplicationRouter_GetAll3(this.endpoint, this.getPrefix),
+            GetAll5: new Websocket.Events.ApplicationTestEvent(this.endpoint, this.getPrefix),
+        };
+        for (let key in this.events) {
+            this.events[key].init();
+        }
+    }
+    async GetAll2(options = {}) {
+        const info = {
+            channel: `${this.getPrefix()}/application2`,
+            ...options,
+        };
+        return await this.endpoint.sendMessageAndWait(info);
+    }
+    async GetAll3(body, options = {}) {
+        const info = {
+            channel: `${this.getPrefix()}/application3`,
+            body: body,
+            ...options,
+        };
+        return await this.endpoint.sendMessageAndWait(info);
+    }
+    async GetAll4(options = {}) {
+        const info = {
+            channel: `${this.getPrefix()}/application4`,
+            ...options,
+        };
+        return await this.endpoint.sendMessage(info);
+    }
+    async GetAll5(options = {}) {
+        const info = {
+            channel: `${this.getPrefix()}/getall5`,
+            ...options,
+        };
+        return await this.endpoint.sendMessageAndWait(info);
+    }
 }
-Websocket.RayukiEndPoint.Namespace=`${moduleName}.Websocket`;
+Websocket.Routes.ApplicationRouter.Namespace=`${moduleName}.Websocket.Routes`;
 
-_.Websocket.RayukiEndPoint=Websocket.RayukiEndPoint;
+_.Websocket.Routes.ApplicationRouter=Websocket.Routes.ApplicationRouter;
 
 for(let key in _) { Core[key] = _[key] }
 })(Core);
