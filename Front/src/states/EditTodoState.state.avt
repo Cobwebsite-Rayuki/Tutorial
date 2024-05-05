@@ -1,0 +1,60 @@
+import { TodoRAM } from "../ram/Todo.ram.avt";
+import { Todo } from "../generated/Data/Todo.data.avt";
+
+namespace States {
+    // Cela represente les champs que nous souhaitons éditer
+    export type EditTodoSchema = {
+        Name: string,
+        Done: boolean;
+    };
+    export class EditTodoState extends Core.State.CreateOrUpdate<Todo, EditTodoSchema> implements Aventus.IState {
+        /**
+         * @inheritdoc
+         */
+        protected override defineRAM(): Aventus.Ram<Todo> {
+            return TodoRAM.getInstance();
+        }
+        /**
+         * @inheritdoc
+         */
+        protected override defineObjectName(): string {
+            // notre objet est un todo
+            // cela est utilisé pour générer les routes
+            return "todo";
+        }
+        /**
+         * @inheritdoc
+         */
+        protected override defineFormSchema(): Core.Components.FormData<EditTodoSchema> {
+            // on doit créer le schéma du formulaire
+            return {
+                Name: {
+                    value: {
+                        get: () => this.item.Name,
+                        set: (value) => this.item.Name = value
+                    },
+                    // on peut ajouter une validation sur la valeur du champs
+                    validate: (value) => {
+                        return true;
+                    }
+                },
+                Done: {
+                    value: {
+                        get: () => this.item.Done,
+                        set: (value) => this.item.Done = value
+                    }
+                }
+            };
+        }
+        /**
+         * @inheritdoc
+         */
+        public override newElement(): Todo {
+            // On crée le nouvel élément avec les champs par defaut voulu
+            const result = new Todo();
+            result.Name = "Ma tâche";
+            return result;
+        }
+
+    }
+}

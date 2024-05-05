@@ -1,5 +1,6 @@
 import { TodoFrame } from "./frame/TodoFrame/TodoFrame.wcl.avt";
 import { Index } from "./frame/Index/Index.wcl.avt";
+import { TodoEditFrame } from "./frame/TodoEditFrame/TodoEditFrame.wcl.avt";
 
 namespace Application {
     export class Main extends Core.System.Application implements Aventus.DefaultComponent {
@@ -31,6 +32,7 @@ namespace Application {
         protected override async defineRoutes(): Promise<void> {
             this.addRoute("/", Index);
             this.addRoute("/todo", TodoFrame);
+            this.addRoute("/todo/{id:number}", TodoEditFrame);
         }
         //#endregion
 

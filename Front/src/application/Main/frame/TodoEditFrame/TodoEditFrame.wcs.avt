@@ -1,0 +1,7 @@
+:host {
+	
+    rk-checkbox {
+        margin: 10px 0;
+        --checkbox-margin-label:10px;
+    }
+}

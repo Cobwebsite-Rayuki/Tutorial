@@ -1,0 +1,98 @@
+import { EditTodoState } from "../../states/EditTodoState.state.avt";
+import type { Todo } from "../../generated/Data/Todo.data.avt";
+import { TodoRAM } from "../../ram/Todo.ram.avt";
+
+namespace Component {
+    export class TodoDisplay extends Aventus.WebComponent implements Aventus.DefaultComponent {
+
+        //#region static
+
+        //#endregion
+
+
+        //#region props
+        @Attribute()
+        protected done!: boolean;
+        //#endregion
+
+
+        //#region variables
+        @Watch((target: TodoDisplay, action: Aventus.WatchAction, path: string, value: any) => {
+            if(target.todo?.Done) {
+                target.done = true;
+            }
+            else {
+                target.done = false;
+            }
+        })
+        public todo?: Todo;
+        //#endregion
+
+
+        //#region constructor
+
+        //#endregion
+
+
+        //#region methods
+        /**
+         * 
+         */
+        protected edit() {
+            const application = this.findParentByType(Core.System.Application);
+            if(!application) {
+                Core.System.Os.instance.alert({
+                    title: "Erreur",
+                    description: "L'application n'a pas pu être trouvé"
+                });
+                return;
+            }
+
+
+            if(!this.todo) {
+                application.alert({
+                    title: "Erreur",
+                    description: "Il n'y a pas de todo à modifier"
+                });
+                return;
+            }
+            application.navigate(new EditTodoState(this.todo));
+        }
+
+        protected async destroy() {
+            // on cherche l'application parent
+            const application = this.findParentByType(Core.System.Application);
+            if(!application) {
+                // on affiche une erreur dans le systeme
+                Core.System.Os.instance.alert({
+                    title: "Erreur",
+                    description: "L'application n'a pas pu être trouvé"
+                });
+                return;
+            }
+
+            if(!this.todo) {
+                application.alert({
+                    title: "Erreur",
+                    description: "Il n'y a pas de todo à supprimer"
+                });
+                return;
+            }
+
+            // on demande confirmation
+            const result = await application.confirm({
+                title: "Confirmation de suppression",
+                description: "Etes-vous sûr de bien vouloir supprimer la tâche `" + this.todo.Name + "`?",
+                min_width: '400px'
+            });
+
+            if(result) {
+                // on supprime dans la ram
+                const ram = TodoRAM.getInstance();
+                await application.executeWithLoading(ram.deleteWithError(this.todo));
+            }
+        }
+        //#endregion
+
+    }
+}

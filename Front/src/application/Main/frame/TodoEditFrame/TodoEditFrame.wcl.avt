@@ -1,0 +1,72 @@
+import { EditTodoState, type EditTodoSchema } from "../../../../states/EditTodoState.state.avt";
+
+namespace Application.Main.Frame {
+    export class TodoEditFrame extends Core.System.Frame implements Aventus.DefaultComponent {
+
+        //#region static
+
+        //#endregion
+
+
+        //#region props
+
+        //#endregion
+
+
+        //#region variables
+        // il s'agit ici du formulaire que vous allez lier au input
+        // Vu que la valeur change on utilise l'attribut Watch
+        @Watch()
+        protected form!: Core.Components.VirtualForm<EditTodoSchema>;
+        //#endregion
+
+
+        //#region constructor
+
+        //#endregion
+
+
+        //#region methods
+        /**
+         * @inheritdoc
+         */
+        public override pageTitle(): string | undefined {
+            return "Création de tâche";
+        }
+        /**
+         * @inheritdoc
+         */
+        public override onShow() {
+            if(!(this.state instanceof EditTodoState)) {
+                // on empeche d'afficher la vue si on ne passe pas le bon state
+                this.application.navigate("/todo");
+                return;
+            }
+
+            this.form = this.state.form;
+        }
+        /**
+         * @inheritdoc
+         */
+        public override onHide() {
+        }
+
+        /**
+         * 
+         */
+        protected async save() {
+            if(this.state instanceof EditTodoState) {
+                // On demande au state d'effectuer une sauvegarde vers la base de données
+                const result = await this.state.save();
+                // si il y a un resultat, cela signife que tt s'est bien passé.
+                if(result) {
+                    // On peut donc retourner à la liste des todos
+                    this.state.back();
+                }
+            }
+        }
+
+        //#endregion
+
+    }
+}

@@ -1,0 +1,8 @@
+namespace Routes {
+	export class TutorialRouter extends Aventus.HttpRouter {
+		protected override defineOptions(options: Aventus.HttpRouterOptions): Aventus.HttpRouterOptions {
+			options.url = location.protocol + "//" + location.host + "/Tutorial";
+			return options;
+		}
+	}
+}

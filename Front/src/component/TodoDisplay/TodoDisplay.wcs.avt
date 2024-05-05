@@ -1,0 +1,30 @@
+:host {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	margin: 10px;
+	width: 100%;
+
+	.action {
+		align-items: center;
+		display: flex;
+		flex-wrap: nowrap;
+		gap: 5px;
+
+		mi-icon[icon="delete"] {
+			color: var(--red);
+		}
+
+        mi-icon[icon="edit"] {
+			color: var(--blue);
+		}
+	}
+}
+
+
+:host([done]) {
+    .name {
+        text-decoration: line-through;
+    }
+}

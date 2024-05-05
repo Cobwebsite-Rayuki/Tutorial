@@ -1,0 +1,34 @@
+import { TodoRoute } from "../generated/Websocket/Route/TodoRoute.lib.avt";
+import { Todo } from "../generated/Data/Todo.data.avt";
+
+namespace Ram {
+	
+	export class TodoRAM extends AventusSharp.RAM.RamWebSocket<Todo> implements Aventus.IRam {
+        /**
+         * @inheritdoc
+         */
+        public override defineRoutes(): AventusSharp.WebSocket.StorableWsRoute<Todo> {
+            return new TodoRoute();
+        }
+	
+		/**
+		 * Create a singleton to store data
+		 */
+		public static getInstance(): TodoRAM {
+			return Aventus.Instance.get(TodoRAM);
+		}
+	
+		/**
+		 * @inheritdoc
+		 */
+		public override defineIndexKey(): keyof Todo {
+			return 'Id';
+		}
+		/**
+		 * @inheritdoc
+		 */
+		protected override getTypeForData(objJson: Aventus.KeysObject<Todo> | Todo): new () => Todo {
+			return Todo;
+		}
+	}
+}

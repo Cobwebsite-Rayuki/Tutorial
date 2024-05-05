@@ -1,1 +1,9 @@
 <h1>Vos tâches</h1>
+
+<rk-button class="add-btn" @press="addTodo">Ajouter une tâche</rk-button>
+
+<div class="todo-list">
+    for(let todo of this.todos) { 
+        <tutorial-todo-display :todo="todo"></tutorial-todo-display>
+    }
+</div>

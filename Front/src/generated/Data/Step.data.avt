@@ -1,0 +1,10 @@
+namespace Data {
+
+	@Convertible()
+	export class Step extends AventusSharp.Data.Storable implements Aventus.IData {
+		public static override get Fullname(): string { return "Tutorial.Data.Step, Tutorial"; }
+		public Name: string = "";
+		public TodoId!: number;
+	}
+
+}

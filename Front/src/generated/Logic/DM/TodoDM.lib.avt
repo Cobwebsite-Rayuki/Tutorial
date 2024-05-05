@@ -1,0 +1,12 @@
+namespace Logic.DM {
+
+	export enum TodoErrorCode {
+		CommencePasMajuscule
+	}
+
+	@Convertible()
+	export class TodoError extends Aventus.GenericError<typeof TodoErrorCode>  {
+		public static get Fullname(): string { return "Tutorial.Logic.DM.TodoError, Tutorial"; }
+	}
+
+}

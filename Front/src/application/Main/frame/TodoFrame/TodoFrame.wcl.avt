@@ -1,3 +1,7 @@
+import { EditTodoState } from "../../../../states/EditTodoState.state.avt";
+import { Todo } from "../../../../generated/Data/Todo.data.avt";
+import { TodoRAM } from "../../../../ram/Todo.ram.avt";
+
 namespace Application.Main.Frame {
     export class TodoFrame extends Core.System.Frame implements Aventus.DefaultComponent {
 
@@ -12,16 +16,86 @@ namespace Application.Main.Frame {
 
 
         //#region variables
-
+        @Watch()
+        protected todos: Todo[] = [];
         //#endregion
 
 
         //#region constructor
-
+        // on supprime le constructeur car vous n'en avez plus besoin
         //#endregion
 
 
         //#region methods
+
+        /**
+         * Load all todos and add a binding to CUD events
+         */
+        protected async bindToRam() {
+            const ram = TodoRAM.getInstance();
+            // on va charger les todos depuis notre Ram
+            // on utilise la fonction executeWithLoading qui va permettre d'afficher 
+            // un loading si le temps de chargement est trop grand et d'afficher les 
+            // erreurs potentielles venant du serveur
+            let result = await this.application.executeWithLoading(ram.getListWithError());
+            if(result) {
+                // si on a un resultat => list de todos
+                this.todos = result;
+            }
+
+            ram.onCreated(this.onCreated);
+            ram.onUpdated(this.onUpdated);
+            ram.onDeleted(this.onDeleted);
+
+        }
+
+        /**
+         * Remove CUD events
+         */
+        protected async unbindFromRam() {
+            const ram = TodoRAM.getInstance();
+            ram.offCreated(this.onCreated);
+            ram.offUpdated(this.onUpdated);
+            ram.offDeleted(this.onDeleted);
+        }
+
+        /**
+         * Trigger quand un todo est créé
+         * Le @BindThis permet de forcer le scope de la fonction à cette classe
+         * Plus d'info: https://cmorinan.medium.com/passing-functions-as-arguments-in-javascript-tips-and-pitfalls-d29bbd4522a9#8094
+         */
+        @BindThis()
+        protected onCreated(todo: Todo) {
+            // lorsqu'on a un new todo on le rajoute simplement dans notre liste
+            // la propriété etant watch le changement se fera tout seul
+            this.todos.push(todo);
+        }
+
+        @BindThis()
+        protected onUpdated(todo: Todo) {
+            // lorsqu'un todo est mise à jour
+            let index = this.todos.findIndex(t => t.Id == todo.Id);
+            if(index > -1) {
+                // si le todo existe on informe notre watch de la mise à jour
+                Aventus.Watcher.trigger("UPDATED", this.todos[index]);
+            }
+            else {
+                // si le todo n'existe pas on le rajoute
+                this.todos.push(todo);
+            }
+        }
+
+        @BindThis()
+        protected onDeleted(todo: Todo) {
+            // lorsqu'un todo est supprimé
+            let index = this.todos.findIndex(t => t.Id == todo.Id);
+            if(index > -1) {
+                // on supprime le todo du tableau
+                this.todos.splice(index, 1);
+            }
+        }
+
+
         /**
          * @inheritdoc
          */
@@ -39,6 +113,32 @@ namespace Application.Main.Frame {
         public override onHide() {
         }
 
+        /**
+         * 
+         */
+        protected addTodo() {
+            this.application.navigate(new EditTodoState());
+        }
+
+        /**
+         * Le postCreation est appelé lorsque le composant 
+         * est connecté pour la première fois à la vue
+         */
+        protected override postCreation(): void {
+            super.postConnect();
+            // on bind la ram ici car avant cela, l'application n'existe pas
+            this.bindToRam();
+        }
+
+        /**
+         * Le postDestruction est appelé lorsque le composant est detruit
+         */
+        protected override postDestruction(): void {
+            super.postDestruction();
+            // On doit unbind la ram quand le composant est détruit afin 
+            // d'éviter la surcharge de ressources
+            this.unbindFromRam();
+        }
         //#endregion
 
     }

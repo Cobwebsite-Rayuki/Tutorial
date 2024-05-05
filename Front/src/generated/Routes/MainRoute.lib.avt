@@ -1,0 +1,18 @@
+import { Todo } from '../Data/Todo.data.avt';
+import { TutorialRouter } from '../TutorialRouter.lib.avt';
+
+namespace Routes {
+
+	export class MainRoute extends Aventus.HttpRoute {
+		public constructor(router?: Aventus.HttpRouter) {
+			super(router ?? new TutorialRouter());
+		}
+		public async CreateTodo(body: { todo: Todo } | FormData): Promise<Aventus.ResultWithError<Todo, Aventus.GenericError<number>>> {
+			const request = new Aventus.HttpRequest(`${this.getPrefix()}/todo`, Aventus.HttpMethod.POST);
+			request.setBody(body);
+			type TypeResult = Todo;
+			return await request.queryJSON<TypeResult>(this.router);
+		}
+	}
+
+}

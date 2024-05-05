@@ -1,0 +1,15 @@
+import { Todo } from '../Data/Todo.data.avt';
+import { TutorialRouter } from '../TutorialRouter.lib.avt';
+
+namespace Routes {
+
+	export class TodoRoute extends AventusSharp.Routes.StorableRoute<Todo> {
+		public constructor(router?: Aventus.HttpRouter) {
+			super(router ?? new TutorialRouter());
+		}
+		public StorableName() {
+			return "Todo";
+		}
+	}
+
+}

@@ -1,0 +1,10 @@
+<h1>Création de tâche</h1>
+<!--
+    Le : permet d'injecter une variable dans le composant
+    Ici on injecte la partie du formulaire correspondante
+-->
+<rk-input label="Nom" :formPart="this.form.Name"></rk-input>
+
+<rk-checkbox label="Fini ?" left_label :formPart="this.form.Done"></rk-checkbox>
+
+<rk-button color="green" @press="save">Valider</rk-button>

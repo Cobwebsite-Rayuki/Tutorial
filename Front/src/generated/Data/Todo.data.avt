@@ -1,0 +1,13 @@
+import { Step } from './Step.data.avt';
+
+namespace Data {
+
+	@Convertible()
+	export class Todo extends AventusSharp.Data.Storable implements Aventus.IData {
+		public static override get Fullname(): string { return "Tutorial.Data.Todo, Tutorial"; }
+		public Name: string = "";
+		public Done: boolean = false;
+		public Steps: Step[] = [];
+	}
+
+}
