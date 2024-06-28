@@ -1,10 +1,24 @@
+// Object.defineProperty(CSSStyleSheet.prototype, "innerHTML", {
+//     get: function() {
+//         return Aventus.Style.getInstance().sheetToString(this)
+//     },
+//     set: function(value) {
+//         this.replaceSync(value);
+//     }
+// });
+
+var QrCodeGenerator=function(t){"use strict";var r,e=function(){return"function"==typeof Promise&&Promise.prototype&&Promise.prototype.then},n=[0,26,44,70,100,134,172,196,242,292,346,404,466,532,581,655,733,815,901,991,1085,1156,1258,1364,1474,1588,1706,1828,1921,2051,2185,2323,2465,2611,2761,2876,3034,3196,3362,3532,3706],o=function(t){if(!t)throw new Error('"version" cannot be null or undefined');if(t<1||t>40)throw new Error('"version" should be in range from 1 to 40');return 4*t+17},a=function(t){return n[t]},i=function(t){for(var r=0;0!==t;)r++,t>>>=1;return r},u=function(t){if("function"!=typeof t)throw new Error('"toSJISFunc" is not a valid function.');r=t},s=function(){return void 0!==r},f=function(t){return r(t)};function h(t,r){return t(r={exports:{}},r.exports),r.exports}var c=h((function(t,r){r.L={bit:1},r.M={bit:0},r.Q={bit:3},r.H={bit:2},r.isValid=function(t){return t&&void 0!==t.bit&&t.bit>=0&&t.bit<4},r.from=function(t,e){if(r.isValid(t))return t;try{return function(t){if("string"!=typeof t)throw new Error("Param is not a string");switch(t.toLowerCase()){case"l":case"low":return r.L;case"m":case"medium":return r.M;case"q":case"quartile":return r.Q;case"h":case"high":return r.H;default:throw new Error("Unknown EC Level: "+t)}}(t)}catch(t){return e}}}));function g(){this.buffer=[],this.length=0}c.L,c.M,c.Q,c.H,c.isValid,g.prototype={get:function(t){var r=Math.floor(t/8);return 1==(this.buffer[r]>>>7-t%8&1)},put:function(t,r){for(var e=0;e<r;e++)this.putBit(1==(t>>>r-e-1&1))},getLengthInBits:function(){return this.length},putBit:function(t){var r=Math.floor(this.length/8);this.buffer.length<=r&&this.buffer.push(0),t&&(this.buffer[r]|=128>>>this.length%8),this.length++}};var d=g;function l(t){if(!t||t<1)throw new Error("BitMatrix size must be defined and greater than 0");this.size=t,this.data=new Uint8Array(t*t),this.reservedBit=new Uint8Array(t*t)}l.prototype.set=function(t,r,e,n){var o=t*this.size+r;this.data[o]=e,n&&(this.reservedBit[o]=!0)},l.prototype.get=function(t,r){return this.data[t*this.size+r]},l.prototype.xor=function(t,r,e){this.data[t*this.size+r]^=e},l.prototype.isReserved=function(t,r){return this.reservedBit[t*this.size+r]};var v=l,p=h((function(t,r){var e=o;r.getRowColCoords=function(t){if(1===t)return[];for(var r=Math.floor(t/7)+2,n=e(t),o=145===n?26:2*Math.ceil((n-13)/(2*r-2)),a=[n-7],i=1;i<r-1;i++)a[i]=a[i-1]-o;return a.push(6),a.reverse()},r.getPositions=function(t){for(var e=[],n=r.getRowColCoords(t),o=n.length,a=0;a<o;a++)for(var i=0;i<o;i++)0===a&&0===i||0===a&&i===o-1||a===o-1&&0===i||e.push([n[a],n[i]]);return e}}));p.getRowColCoords,p.getPositions;var w=o,m=function(t){var r=w(t);return[[0,0],[r-7,0],[0,r-7]]},E=h((function(t,r){r.Patterns={PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7};var e=3,n=3,o=40,a=10;function i(t,e,n){switch(t){case r.Patterns.PATTERN000:return(e+n)%2==0;case r.Patterns.PATTERN001:return e%2==0;case r.Patterns.PATTERN010:return n%3==0;case r.Patterns.PATTERN011:return(e+n)%3==0;case r.Patterns.PATTERN100:return(Math.floor(e/2)+Math.floor(n/3))%2==0;case r.Patterns.PATTERN101:return e*n%2+e*n%3==0;case r.Patterns.PATTERN110:return(e*n%2+e*n%3)%2==0;case r.Patterns.PATTERN111:return(e*n%3+(e+n)%2)%2==0;default:throw new Error("bad maskPattern:"+t)}}r.isValid=function(t){return null!=t&&""!==t&&!isNaN(t)&&t>=0&&t<=7},r.from=function(t){return r.isValid(t)?parseInt(t,10):void 0},r.getPenaltyN1=function(t){for(var r=t.size,n=0,o=0,a=0,i=null,u=null,s=0;s<r;s++){o=a=0,i=u=null;for(var f=0;f<r;f++){var h=t.get(s,f);h===i?o++:(o>=5&&(n+=e+(o-5)),i=h,o=1),(h=t.get(f,s))===u?a++:(a>=5&&(n+=e+(a-5)),u=h,a=1)}o>=5&&(n+=e+(o-5)),a>=5&&(n+=e+(a-5))}return n},r.getPenaltyN2=function(t){for(var r=t.size,e=0,o=0;o<r-1;o++)for(var a=0;a<r-1;a++){var i=t.get(o,a)+t.get(o,a+1)+t.get(o+1,a)+t.get(o+1,a+1);4!==i&&0!==i||e++}return e*n},r.getPenaltyN3=function(t){for(var r=t.size,e=0,n=0,a=0,i=0;i<r;i++){n=a=0;for(var u=0;u<r;u++)n=n<<1&2047|t.get(i,u),u>=10&&(1488===n||93===n)&&e++,a=a<<1&2047|t.get(u,i),u>=10&&(1488===a||93===a)&&e++}return e*o},r.getPenaltyN4=function(t){for(var r=0,e=t.data.length,n=0;n<e;n++)r+=t.data[n];return Math.abs(Math.ceil(100*r/e/5)-10)*a},r.applyMask=function(t,r){for(var e=r.size,n=0;n<e;n++)for(var o=0;o<e;o++)r.isReserved(o,n)||r.xor(o,n,i(t,o,n))},r.getBestMask=function(t,e){for(var n=Object.keys(r.Patterns).length,o=0,a=1/0,i=0;i<n;i++){e(i),r.applyMask(i,t);var u=r.getPenaltyN1(t)+r.getPenaltyN2(t)+r.getPenaltyN3(t)+r.getPenaltyN4(t);r.applyMask(i,t),u<a&&(a=u,o=i)}return o}}));E.Patterns,E.isValid,E.getPenaltyN1,E.getPenaltyN2,E.getPenaltyN3,E.getPenaltyN4,E.applyMask,E.getBestMask;var y=[1,1,1,1,1,1,1,1,1,1,2,2,1,2,2,4,1,2,4,4,2,4,4,4,2,4,6,5,2,4,6,6,2,5,8,8,4,5,8,8,4,5,8,11,4,8,10,11,4,9,12,16,4,9,16,16,6,10,12,18,6,10,17,16,6,11,16,19,6,13,18,21,7,14,21,25,8,16,20,25,8,17,23,25,9,17,23,34,9,18,25,30,10,20,27,32,12,21,29,35,12,23,34,37,12,25,34,40,13,26,35,42,14,28,38,45,15,29,40,48,16,31,43,51,17,33,45,54,18,35,48,57,19,37,51,60,19,38,53,63,20,40,56,66,21,43,59,70,22,45,62,74,24,47,65,77,25,49,68,81],A=[7,10,13,17,10,16,22,28,15,26,36,44,20,36,52,64,26,48,72,88,36,64,96,112,40,72,108,130,48,88,132,156,60,110,160,192,72,130,192,224,80,150,224,264,96,176,260,308,104,198,288,352,120,216,320,384,132,240,360,432,144,280,408,480,168,308,448,532,180,338,504,588,196,364,546,650,224,416,600,700,224,442,644,750,252,476,690,816,270,504,750,900,300,560,810,960,312,588,870,1050,336,644,952,1110,360,700,1020,1200,390,728,1050,1260,420,784,1140,1350,450,812,1200,1440,480,868,1290,1530,510,924,1350,1620,540,980,1440,1710,570,1036,1530,1800,570,1064,1590,1890,600,1120,1680,1980,630,1204,1770,2100,660,1260,1860,2220,720,1316,1950,2310,750,1372,2040,2430],I=function(t,r){switch(r){case c.L:return y[4*(t-1)+0];case c.M:return y[4*(t-1)+1];case c.Q:return y[4*(t-1)+2];case c.H:return y[4*(t-1)+3];default:return}},M=function(t,r){switch(r){case c.L:return A[4*(t-1)+0];case c.M:return A[4*(t-1)+1];case c.Q:return A[4*(t-1)+2];case c.H:return A[4*(t-1)+3];default:return}},N=new Uint8Array(512),B=new Uint8Array(256);!function(){for(var t=1,r=0;r<255;r++)N[r]=t,B[t]=r,256&(t<<=1)&&(t^=285);for(var e=255;e<512;e++)N[e]=N[e-255]}();var C=function(t){return N[t]},P=function(t,r){return 0===t||0===r?0:N[B[t]+B[r]]},R=h((function(t,r){r.mul=function(t,r){for(var e=new Uint8Array(t.length+r.length-1),n=0;n<t.length;n++)for(var o=0;o<r.length;o++)e[n+o]^=P(t[n],r[o]);return e},r.mod=function(t,r){for(var e=new Uint8Array(t);e.length-r.length>=0;){for(var n=e[0],o=0;o<r.length;o++)e[o]^=P(r[o],n);for(var a=0;a<e.length&&0===e[a];)a++;e=e.slice(a)}return e},r.generateECPolynomial=function(t){for(var e=new Uint8Array([1]),n=0;n<t;n++)e=r.mul(e,new Uint8Array([1,C(n)]));return e}}));function T(t){this.genPoly=void 0,this.degree=t,this.degree&&this.initialize(this.degree)}R.mul,R.mod,R.generateECPolynomial,T.prototype.initialize=function(t){this.degree=t,this.genPoly=R.generateECPolynomial(this.degree)},T.prototype.encode=function(t){if(!this.genPoly)throw new Error("Encoder not initialized");var r=new Uint8Array(t.length+this.degree);r.set(t);var e=R.mod(r,this.genPoly),n=this.degree-e.length;if(n>0){var o=new Uint8Array(this.degree);return o.set(e,n),o}return e};var L=T,b=function(t){return!isNaN(t)&&t>=1&&t<=40},U="(?:[u3000-u303F]|[u3040-u309F]|[u30A0-u30FF]|[uFF00-uFFEF]|[u4E00-u9FAF]|[u2605-u2606]|[u2190-u2195]|u203B|[u2010u2015u2018u2019u2025u2026u201Cu201Du2225u2260]|[u0391-u0451]|[u00A7u00A8u00B1u00B4u00D7u00F7])+",x="(?:(?![A-Z0-9 $%*+\\-./:]|"+(U=U.replace(/u/g,"\\u"))+")(?:.|[\r\n]))+",k=new RegExp(U,"g"),F=new RegExp("[^A-Z0-9 $%*+\\-./:]+","g"),S=new RegExp(x,"g"),D=new RegExp("[0-9]+","g"),Y=new RegExp("[A-Z $%*+\\-./:]+","g"),_=new RegExp("^"+U+"$"),z=new RegExp("^[0-9]+$"),H=new RegExp("^[A-Z0-9 $%*+\\-./:]+$"),J={KANJI:k,BYTE_KANJI:F,BYTE:S,NUMERIC:D,ALPHANUMERIC:Y,testKanji:function(t){return _.test(t)},testNumeric:function(t){return z.test(t)},testAlphanumeric:function(t){return H.test(t)}},K=h((function(t,r){r.NUMERIC={id:"Numeric",bit:1,ccBits:[10,12,14]},r.ALPHANUMERIC={id:"Alphanumeric",bit:2,ccBits:[9,11,13]},r.BYTE={id:"Byte",bit:4,ccBits:[8,16,16]},r.KANJI={id:"Kanji",bit:8,ccBits:[8,10,12]},r.MIXED={bit:-1},r.getCharCountIndicator=function(t,r){if(!t.ccBits)throw new Error("Invalid mode: "+t);if(!b(r))throw new Error("Invalid version: "+r);return r>=1&&r<10?t.ccBits[0]:r<27?t.ccBits[1]:t.ccBits[2]},r.getBestModeForData=function(t){return J.testNumeric(t)?r.NUMERIC:J.testAlphanumeric(t)?r.ALPHANUMERIC:J.testKanji(t)?r.KANJI:r.BYTE},r.toString=function(t){if(t&&t.id)return t.id;throw new Error("Invalid mode")},r.isValid=function(t){return t&&t.bit&&t.ccBits},r.from=function(t,e){if(r.isValid(t))return t;try{return function(t){if("string"!=typeof t)throw new Error("Param is not a string");switch(t.toLowerCase()){case"numeric":return r.NUMERIC;case"alphanumeric":return r.ALPHANUMERIC;case"kanji":return r.KANJI;case"byte":return r.BYTE;default:throw new Error("Unknown mode: "+t)}}(t)}catch(t){return e}}}));K.NUMERIC,K.ALPHANUMERIC,K.BYTE,K.KANJI,K.MIXED,K.getCharCountIndicator,K.getBestModeForData,K.isValid;var O=h((function(t,r){var e=i(7973);function n(t,r){return K.getCharCountIndicator(t,r)+4}function o(t,r){var e=0;return t.forEach((function(t){var o=n(t.mode,r);e+=o+t.getBitsLength()})),e}r.from=function(t,r){return b(t)?parseInt(t,10):r},r.getCapacity=function(t,r,e){if(!b(t))throw new Error("Invalid QR Code version");void 0===e&&(e=K.BYTE);var o=8*(a(t)-M(t,r));if(e===K.MIXED)return o;var i=o-n(e,t);switch(e){case K.NUMERIC:return Math.floor(i/10*3);case K.ALPHANUMERIC:return Math.floor(i/11*2);case K.KANJI:return Math.floor(i/13);case K.BYTE:default:return Math.floor(i/8)}},r.getBestVersionForData=function(t,e){var n,a=c.from(e,c.M);if(Array.isArray(t)){if(t.length>1)return function(t,e){for(var n=1;n<=40;n++){if(o(t,n)<=r.getCapacity(n,e,K.MIXED))return n}}(t,a);if(0===t.length)return 1;n=t[0]}else n=t;return function(t,e,n){for(var o=1;o<=40;o++)if(e<=r.getCapacity(o,n,t))return o}(n.mode,n.getLength(),a)},r.getEncodedBits=function(t){if(!b(t)||t<7)throw new Error("Invalid QR Code version");for(var r=t<<12;i(r)-e>=0;)r^=7973<<i(r)-e;return t<<12|r}}));O.getCapacity,O.getBestVersionForData,O.getEncodedBits;var Q=i(1335),V=function(t,r){for(var e=t.bit<<3|r,n=e<<10;i(n)-Q>=0;)n^=1335<<i(n)-Q;return 21522^(e<<10|n)};function q(t){this.mode=K.NUMERIC,this.data=t.toString()}q.getBitsLength=function(t){return 10*Math.floor(t/3)+(t%3?t%3*3+1:0)},q.prototype.getLength=function(){return this.data.length},q.prototype.getBitsLength=function(){return q.getBitsLength(this.data.length)},q.prototype.write=function(t){var r,e,n;for(r=0;r+3<=this.data.length;r+=3)e=this.data.substr(r,3),n=parseInt(e,10),t.put(n,10);var o=this.data.length-r;o>0&&(e=this.data.substr(r),n=parseInt(e,10),t.put(n,3*o+1))};var j=q,$=["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"," ","$","%","*","+","-",".","/",":"];function X(t){this.mode=K.ALPHANUMERIC,this.data=t}X.getBitsLength=function(t){return 11*Math.floor(t/2)+t%2*6},X.prototype.getLength=function(){return this.data.length},X.prototype.getBitsLength=function(){return X.getBitsLength(this.data.length)},X.prototype.write=function(t){var r;for(r=0;r+2<=this.data.length;r+=2){var e=45*$.indexOf(this.data[r]);e+=$.indexOf(this.data[r+1]),t.put(e,11)}this.data.length%2&&t.put($.indexOf(this.data[r]),6)};var Z=X;function W(t){this.mode=K.BYTE,this.data=new Uint8Array(function(t){for(var r=[],e=t.length,n=0;n<e;n++){var o=t.charCodeAt(n);if(o>=55296&&o<=56319&&e>n+1){var a=t.charCodeAt(n+1);a>=56320&&a<=57343&&(o=1024*(o-55296)+a-56320+65536,n+=1)}o<128?r.push(o):o<2048?(r.push(o>>6|192),r.push(63&o|128)):o<55296||o>=57344&&o<65536?(r.push(o>>12|224),r.push(o>>6&63|128),r.push(63&o|128)):o>=65536&&o<=1114111?(r.push(o>>18|240),r.push(o>>12&63|128),r.push(o>>6&63|128),r.push(63&o|128)):r.push(239,191,189)}return new Uint8Array(r).buffer}(t))}W.getBitsLength=function(t){return 8*t},W.prototype.getLength=function(){return this.data.length},W.prototype.getBitsLength=function(){return W.getBitsLength(this.data.length)},W.prototype.write=function(t){for(var r=0,e=this.data.length;r<e;r++)t.put(this.data[r],8)};var G=W;function tt(t){this.mode=K.KANJI,this.data=t}tt.getBitsLength=function(t){return 13*t},tt.prototype.getLength=function(){return this.data.length},tt.prototype.getBitsLength=function(){return tt.getBitsLength(this.data.length)},tt.prototype.write=function(t){var r;for(r=0;r<this.data.length;r++){var e=f(this.data[r]);if(e>=33088&&e<=40956)e-=33088;else{if(!(e>=57408&&e<=60351))throw new Error("Invalid SJIS character: "+this.data[r]+"\nMake sure your charset is UTF-8");e-=49472}e=192*(e>>>8&255)+(255&e),t.put(e,13)}};var rt=tt,et=h((function(t){var r={single_source_shortest_paths:function(t,e,n){var o={},a={};a[e]=0;var i,u,s,f,h,c,g,d=r.PriorityQueue.make();for(d.push(e,0);!d.empty();)for(s in u=(i=d.pop()).value,f=i.cost,h=t[u]||{})h.hasOwnProperty(s)&&(c=f+h[s],g=a[s],(void 0===a[s]||g>c)&&(a[s]=c,d.push(s,c),o[s]=u));if(void 0!==n&&void 0===a[n]){var l=["Could not find a path from ",e," to ",n,"."].join("");throw new Error(l)}return o},extract_shortest_path_from_predecessor_list:function(t,r){for(var e=[],n=r;n;)e.push(n),n=t[n];return e.reverse(),e},find_path:function(t,e,n){var o=r.single_source_shortest_paths(t,e,n);return r.extract_shortest_path_from_predecessor_list(o,n)},PriorityQueue:{make:function(t){var e,n=r.PriorityQueue,o={};for(e in t=t||{},n)n.hasOwnProperty(e)&&(o[e]=n[e]);return o.queue=[],o.sorter=t.sorter||n.default_sorter,o},default_sorter:function(t,r){return t.cost-r.cost},push:function(t,r){var e={value:t,cost:r};this.queue.push(e),this.queue.sort(this.sorter)},pop:function(){return this.queue.shift()},empty:function(){return 0===this.queue.length}}};t.exports=r})),nt=h((function(t,r){function e(t){return unescape(encodeURIComponent(t)).length}function n(t,r,e){for(var n,o=[];null!==(n=t.exec(e));)o.push({data:n[0],index:n.index,mode:r,length:n[0].length});return o}function o(t){var r,e,o=n(J.NUMERIC,K.NUMERIC,t),a=n(J.ALPHANUMERIC,K.ALPHANUMERIC,t);return s()?(r=n(J.BYTE,K.BYTE,t),e=n(J.KANJI,K.KANJI,t)):(r=n(J.BYTE_KANJI,K.BYTE,t),e=[]),o.concat(a,r,e).sort((function(t,r){return t.index-r.index})).map((function(t){return{data:t.data,mode:t.mode,length:t.length}}))}function a(t,r){switch(r){case K.NUMERIC:return j.getBitsLength(t);case K.ALPHANUMERIC:return Z.getBitsLength(t);case K.KANJI:return rt.getBitsLength(t);case K.BYTE:return G.getBitsLength(t)}}function i(t,r){var e,n=K.getBestModeForData(t);if((e=K.from(r,n))!==K.BYTE&&e.bit<n.bit)throw new Error('"'+t+'" cannot be encoded with mode '+K.toString(e)+".\n Suggested mode is: "+K.toString(n));switch(e!==K.KANJI||s()||(e=K.BYTE),e){case K.NUMERIC:return new j(t);case K.ALPHANUMERIC:return new Z(t);case K.KANJI:return new rt(t);case K.BYTE:return new G(t)}}r.fromArray=function(t){return t.reduce((function(t,r){return"string"==typeof r?t.push(i(r,null)):r.data&&t.push(i(r.data,r.mode)),t}),[])},r.fromString=function(t,n){for(var i=function(t,r){for(var e={},n={start:{}},o=["start"],i=0;i<t.length;i++){for(var u=t[i],s=[],f=0;f<u.length;f++){var h=u[f],c=""+i+f;s.push(c),e[c]={node:h,lastCount:0},n[c]={};for(var g=0;g<o.length;g++){var d=o[g];e[d]&&e[d].node.mode===h.mode?(n[d][c]=a(e[d].lastCount+h.length,h.mode)-a(e[d].lastCount,h.mode),e[d].lastCount+=h.length):(e[d]&&(e[d].lastCount=h.length),n[d][c]=a(h.length,h.mode)+4+K.getCharCountIndicator(h.mode,r))}}o=s}for(var l=0;l<o.length;l++)n[o[l]].end=0;return{map:n,table:e}}(function(t){for(var r=[],n=0;n<t.length;n++){var o=t[n];switch(o.mode){case K.NUMERIC:r.push([o,{data:o.data,mode:K.ALPHANUMERIC,length:o.length},{data:o.data,mode:K.BYTE,length:o.length}]);break;case K.ALPHANUMERIC:r.push([o,{data:o.data,mode:K.BYTE,length:o.length}]);break;case K.KANJI:r.push([o,{data:o.data,mode:K.BYTE,length:e(o.data)}]);break;case K.BYTE:r.push([{data:o.data,mode:K.BYTE,length:e(o.data)}])}}return r}(o(t)),n),u=et.find_path(i.map,"start","end"),s=[],f=1;f<u.length-1;f++)s.push(i.table[u[f]].node);return r.fromArray(function(t){return t.reduce((function(t,r){var e=t.length-1>=0?t[t.length-1]:null;return e&&e.mode===r.mode?(t[t.length-1].data+=r.data,t):(t.push(r),t)}),[])}(s))},r.rawSplit=function(t){return r.fromArray(o(t))}}));function ot(t,r,e){var n,o,a=t.size,i=V(r,e);for(n=0;n<15;n++)o=1==(i>>n&1),n<6?t.set(n,8,o,!0):n<8?t.set(n+1,8,o,!0):t.set(a-15+n,8,o,!0),n<8?t.set(8,a-n-1,o,!0):n<9?t.set(8,15-n-1+1,o,!0):t.set(8,15-n-1,o,!0);t.set(a-8,8,1,!0)}function at(t,r,e){var n=new d;e.forEach((function(r){n.put(r.mode.bit,4),n.put(r.getLength(),K.getCharCountIndicator(r.mode,t)),r.write(n)}));var o=8*(a(t)-M(t,r));for(n.getLengthInBits()+4<=o&&n.put(0,4);n.getLengthInBits()%8!=0;)n.putBit(0);for(var i=(o-n.getLengthInBits())/8,u=0;u<i;u++)n.put(u%2?17:236,8);return function(t,r,e){for(var n=a(r),o=M(r,e),i=n-o,u=I(r,e),s=u-n%u,f=Math.floor(n/u),h=Math.floor(i/u),c=h+1,g=f-h,d=new L(g),l=0,v=new Array(u),p=new Array(u),w=0,m=new Uint8Array(t.buffer),E=0;E<u;E++){var y=E<s?h:c;v[E]=m.slice(l,l+y),p[E]=d.encode(v[E]),l+=y,w=Math.max(w,y)}var A,N,B=new Uint8Array(n),C=0;for(A=0;A<w;A++)for(N=0;N<u;N++)A<v[N].length&&(B[C++]=v[N][A]);for(A=0;A<g;A++)for(N=0;N<u;N++)B[C++]=p[N][A];return B}(n,t,r)}function it(t,r,e,n){var a;if(Array.isArray(t))a=nt.fromArray(t);else{if("string"!=typeof t)throw new Error("Invalid data");var i=r;if(!i){var u=nt.rawSplit(t);i=O.getBestVersionForData(u,e)}a=nt.fromString(t,i||40)}var s=O.getBestVersionForData(a,e);if(!s)throw new Error("The amount of data is too big to be stored in a QR Code");if(r){if(r<s)throw new Error("\nThe chosen QR Code version cannot contain this amount of data.\nMinimum version required to store current data is: "+s+".\n")}else r=s;var f=at(r,e,a),h=o(r),c=new v(h);return function(t,r){for(var e=t.size,n=m(r),o=0;o<n.length;o++)for(var a=n[o][0],i=n[o][1],u=-1;u<=7;u++)if(!(a+u<=-1||e<=a+u))for(var s=-1;s<=7;s++)i+s<=-1||e<=i+s||(u>=0&&u<=6&&(0===s||6===s)||s>=0&&s<=6&&(0===u||6===u)||u>=2&&u<=4&&s>=2&&s<=4?t.set(a+u,i+s,!0,!0):t.set(a+u,i+s,!1,!0))}(c,r),function(t){for(var r=t.size,e=8;e<r-8;e++){var n=e%2==0;t.set(e,6,n,!0),t.set(6,e,n,!0)}}(c),function(t,r){for(var e=p.getPositions(r),n=0;n<e.length;n++)for(var o=e[n][0],a=e[n][1],i=-2;i<=2;i++)for(var u=-2;u<=2;u++)-2===i||2===i||-2===u||2===u||0===i&&0===u?t.set(o+i,a+u,!0,!0):t.set(o+i,a+u,!1,!0)}(c,r),ot(c,e,0),r>=7&&function(t,r){for(var e,n,o,a=t.size,i=O.getEncodedBits(r),u=0;u<18;u++)e=Math.floor(u/3),n=u%3+a-8-3,o=1==(i>>u&1),t.set(e,n,o,!0),t.set(n,e,o,!0)}(c,r),function(t,r){for(var e=t.size,n=-1,o=e-1,a=7,i=0,u=e-1;u>0;u-=2)for(6===u&&u--;;){for(var s=0;s<2;s++)if(!t.isReserved(o,u-s)){var f=!1;i<r.length&&(f=1==(r[i]>>>a&1)),t.set(o,u-s,f),-1===--a&&(i++,a=7)}if((o+=n)<0||e<=o){o-=n,n=-n;break}}}(c,f),isNaN(n)&&(n=E.getBestMask(c,ot.bind(null,c,e))),E.applyMask(n,c),ot(c,e,n),{modules:c,version:r,errorCorrectionLevel:e,maskPattern:n,segments:a}}nt.fromArray,nt.fromString,nt.rawSplit;var ut=function(t,r){if(void 0===t||""===t)throw new Error("No input text");var e,n,o=c.M;return void 0!==r&&(o=c.from(r.errorCorrectionLevel,c.M),e=O.from(r.version),n=E.from(r.maskPattern),r.toSJISFunc&&u(r.toSJISFunc)),it(t,e,o,n)},st=h((function(t,r){function e(t){if("number"==typeof t&&(t=t.toString()),"string"!=typeof t)throw new Error("Color should be defined as hex string");var r=t.slice().replace("#","").split("");if(r.length<3||5===r.length||r.length>8)throw new Error("Invalid hex color: "+t);3!==r.length&&4!==r.length||(r=Array.prototype.concat.apply([],r.map((function(t){return[t,t]})))),6===r.length&&r.push("F","F");var e=parseInt(r.join(""),16);return{r:e>>24&255,g:e>>16&255,b:e>>8&255,a:255&e,hex:"#"+r.slice(0,6).join("")}}r.getOptions=function(t){t||(t={}),t.color||(t.color={});var r=void 0===t.margin||null===t.margin||t.margin<0?4:t.margin,n=t.width&&t.width>=21?t.width:void 0,o=t.scale||4;return{width:n,scale:n?4:o,margin:r,color:{dark:e(t.color.dark||"#000000ff"),light:e(t.color.light||"#ffffffff")},type:t.type,rendererOpts:t.rendererOpts||{}}},r.getScale=function(t,r){return r.width&&r.width>=t+2*r.margin?r.width/(t+2*r.margin):r.scale},r.getImageWidth=function(t,e){var n=r.getScale(t,e);return Math.floor((t+2*e.margin)*n)},r.qrToImageData=function(t,e,n){for(var o=e.modules.size,a=e.modules.data,i=r.getScale(o,n),u=Math.floor((o+2*n.margin)*i),s=n.margin*i,f=[n.color.light,n.color.dark],h=0;h<u;h++)for(var c=0;c<u;c++){var g=4*(h*u+c),d=n.color.light;if(h>=s&&c>=s&&h<u-s&&c<u-s)d=f[a[Math.floor((h-s)/i)*o+Math.floor((c-s)/i)]?1:0];t[g++]=d.r,t[g++]=d.g,t[g++]=d.b,t[g]=d.a}}}));st.getOptions,st.getScale,st.getImageWidth,st.qrToImageData;var ft=h((function(t,r){r.render=function(t,r,e){var n=e,o=r;void 0!==n||r&&r.getContext||(n=r,r=void 0),r||(o=function(){try{return document.createElement("canvas")}catch(t){throw new Error("You need to specify a canvas element")}}()),n=st.getOptions(n);var a=st.getImageWidth(t.modules.size,n),i=o.getContext("2d"),u=i.createImageData(a,a);return st.qrToImageData(u.data,t,n),function(t,r,e){t.clearRect(0,0,r.width,r.height),r.style||(r.style={}),r.height=e,r.width=e,r.style.height=e+"px",r.style.width=e+"px"}(i,o,a),i.putImageData(u,0,0),o},r.renderToDataURL=function(t,e,n){var o=n;void 0!==o||e&&e.getContext||(o=e,e=void 0),o||(o={});var a=r.render(t,e,o),i=o.type||"image/png",u=o.rendererOpts||{};return a.toDataURL(i,u.quality)}}));function ht(t,r){var e=t.a/255,n=r+'="'+t.hex+'"';return e<1?n+" "+r+'-opacity="'+e.toFixed(2).slice(1)+'"':n}function ct(t,r,e){var n=t+r;return void 0!==e&&(n+=" "+e),n}ft.render,ft.renderToDataURL;var gt=function(t,r,e){var n=st.getOptions(r),o=t.modules.size,a=t.modules.data,i=o+2*n.margin,u=n.color.light.a?"<path "+ht(n.color.light,"fill")+' d="M0 0h'+i+"v"+i+'H0z"/>':"",s="<path "+ht(n.color.dark,"stroke")+' d="'+function(t,r,e){for(var n="",o=0,a=!1,i=0,u=0;u<t.length;u++){var s=Math.floor(u%r),f=Math.floor(u/r);s||a||(a=!0),t[u]?(i++,u>0&&s>0&&t[u-1]||(n+=a?ct("M",s+e,.5+f+e):ct("m",o,0),o=0,a=!1),s+1<r&&t[u+1]||(n+=ct("h",i),i=0)):o++}return n}(a,o,n.margin)+'"/>',f='viewBox="0 0 '+i+" "+i+'"',h='<svg xmlns="http://www.w3.org/2000/svg" '+(n.width?'width="'+n.width+'" height="'+n.width+'" ':"")+f+' shape-rendering="crispEdges">'+u+s+"</svg>\n";return"function"==typeof e&&e(null,h),h};function dt(t,r,n,o,a){var i=[].slice.call(arguments,1),u=i.length,s="function"==typeof i[u-1];if(!s&&!e())throw new Error("Callback required as last argument");if(!s){if(u<1)throw new Error("Too few arguments provided");return 1===u?(n=r,r=o=void 0):2!==u||r.getContext||(o=n,n=r,r=void 0),new Promise((function(e,a){try{var i=ut(n,o);e(t(i,r,o))}catch(t){a(t)}}))}if(u<2)throw new Error("Too few arguments provided");2===u?(a=n,n=r,r=o=void 0):3===u&&(r.getContext&&void 0===a?(a=o,o=void 0):(a=o,o=n,n=r,r=void 0));try{var f=ut(n,o);a(null,t(f,r,o))}catch(t){a(t)}}var lt=ut,vt=dt.bind(null,ft.render),pt=dt.bind(null,ft.renderToDataURL),wt=dt.bind(null,(function(t,r,e){return gt(t,e)})),mt={create:lt,toCanvas:vt,toDataURL:pt,toString:wt};return t.create=lt,t.default=mt,t.toCanvas=vt,t.toDataURL=pt,t.toString=wt,Object.defineProperty(t,"__esModule",{value:!0}),t}({});
+
+
 
 var Core;
 (Core||(Core = {}));
 (function (Core) {
 const moduleName = `Core`;
 const _ = {};
-Aventus.Style.store("@default", `:host{--img-fill-color: var(--text-color);box-sizing:border-box;display:inline-block}:host *{box-sizing:border-box}.touch{cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0)}.touch.disable,.touch.disabled{cursor:default}.green{background-color:var(--green)}.red{background-color:var(--red)}.orange{background-color:var(--orange)}.blue{background-color:var(--blue)}`)
+Aventus.Style.store("@default", `:host{--img-fill-color: var(--text-color);box-sizing:border-box;display:inline-block;touch-action:manipulation;font-family:var(--font-family)}:host *{box-sizing:border-box;touch-action:manipulation}.touch{cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0)}.touch.disable,.touch.disabled{cursor:default}.primary{background-color:var(--primary);color:var(--text-color-primary)}.text-primary{color:var(--primary)}.secondary{background-color:var(--secondary);color:var(--text-color-secondary)}.text-secondary{color:var(--secondary)}.green{background-color:var(--green);color:var(--text-color-green)}.text-green{color:var(--green)}.success{background-color:var(--success);color:var(--text-color-success)}.text-success{color:var(--success)}.red{background-color:var(--red);color:var(--text-color-red)}.text-red{color:var(--red)}.error{background-color:var(--error);color:var(--text-color-error)}.text-error{color:var(--error)}.orange{background-color:var(--orange);color:var(--text-color-orange)}.text-orange{color:var(--orange)}.warning{background-color:var(--warning);color:var(--text-color-warning)}.text-warning{color:var(--warning)}.blue{background-color:var(--blue);color:var(--text-color-blue)}.text-blue{color:var(--blue)}.information{background-color:var(--information);color:var(--text-color-information)}.text-information{color:var(--information)}`)
+const Lib = {};
+_.Lib = {};
 const Websocket = {};
 _.Websocket = {};
 Websocket.Events = {};
@@ -15,18 +29,18 @@ const Permissions = {};
 _.Permissions = {};
 const Data = {};
 _.Data = {};
-Data.DataTypes = {};
-_.Data.DataTypes = {};
 const App = {};
 _.App = {};
 const Components = {};
 _.Components = {};
-const Lib = {};
-_.Lib = {};
+Data.DataTypes = {};
+_.Data.DataTypes = {};
 const System = {};
 _.System = {};
 Websocket.Routes = {};
 _.Websocket.Routes = {};
+Permissions.Tree = {};
+_.Permissions.Tree = {};
 const Routes = {};
 _.Routes = {};
 const State = {};
@@ -36,6 +50,27 @@ _.RAM = {};
 const Tools = {};
 _.Tools = {};
 let _n;
+Lib.StringTools=class StringTools {
+    static removeAccents(value) {
+        return value
+            .replace(/[áàãâä]/gi, "a")
+            .replace(/[éè¨ê]/gi, "e")
+            .replace(/[íìïî]/gi, "i")
+            .replace(/[óòöôõ]/gi, "o")
+            .replace(/[úùüû]/gi, "u")
+            .replace(/[ç]/gi, "c")
+            .replace(/[ñ]/gi, "n")
+            .replace(/[^a-zA-Z0-9]/g, " ");
+    }
+    static contains(src, search) {
+        const _src = this.removeAccents((src + '').toLowerCase());
+        const _search = this.removeAccents((search + '').toLowerCase());
+        return _src.includes(_search);
+    }
+}
+Lib.StringTools.Namespace=`Core.Lib`;
+
+_.Lib.StringTools=Lib.StringTools;
 Websocket.Events.ApplicationTestEvent2=class ApplicationTestEvent2 extends AventusSharp.WebSocket.Event {
     /**
      * @inheritdoc
@@ -44,7 +79,7 @@ Websocket.Events.ApplicationTestEvent2=class ApplicationTestEvent2 extends Avent
         return `${this.getPrefix()}/application/test/2`;
     }
 }
-Websocket.Events.ApplicationTestEvent2.Namespace=`${moduleName}.Websocket.Events`;
+Websocket.Events.ApplicationTestEvent2.Namespace=`Core.Websocket.Events`;
 
 _.Websocket.Events.ApplicationTestEvent2=Websocket.Events.ApplicationTestEvent2;
 Websocket.Events.Body=class Body {
@@ -52,7 +87,7 @@ Websocket.Events.Body=class Body {
     id;
     name;
 }
-Websocket.Events.Body.Namespace=`${moduleName}.Websocket.Events`;
+Websocket.Events.Body.Namespace=`Core.Websocket.Events`;
 Websocket.Events.Body.$schema={"id":"number","name":"string"};
 Aventus.Converter.register(Websocket.Events.Body.Fullname, Websocket.Events.Body);
 
@@ -73,61 +108,53 @@ _.Errors.ImageFileErrorCode=Errors.ImageFileErrorCode;
     CoreErrorCode[CoreErrorCode["NotImplemented"] = 0] = "NotImplemented";
     CoreErrorCode[CoreErrorCode["NotAvailable"] = 1] = "NotAvailable";
     CoreErrorCode[CoreErrorCode["Impossible"] = 2] = "Impossible";
+    CoreErrorCode[CoreErrorCode["NotAllowed"] = 3] = "NotAllowed";
+    CoreErrorCode[CoreErrorCode["NotLogin"] = 4] = "NotLogin";
+    CoreErrorCode[CoreErrorCode["ConversionFailed"] = 5] = "ConversionFailed";
+    CoreErrorCode[CoreErrorCode["SeederError"] = 6] = "SeederError";
 })(Errors.CoreErrorCode || (Errors.CoreErrorCode = {}));
 
 _.Errors.CoreErrorCode=Errors.CoreErrorCode;
+(function (UserPermission) {
+    UserPermission[UserPermission["CanEdit"] = 0] = "CanEdit";
+    UserPermission[UserPermission["CanDelete"] = 1] = "CanDelete";
+    UserPermission[UserPermission["CanCreate"] = 2] = "CanCreate";
+})(Permissions.UserPermission || (Permissions.UserPermission = {}));
+
+_.Permissions.UserPermission=Permissions.UserPermission;
 (function (DesktopPermission) {
     DesktopPermission[DesktopPermission["CanEdit"] = 0] = "CanEdit";
-    DesktopPermission[DesktopPermission["CanDelete"] = 1] = "CanDelete";
-    DesktopPermission[DesktopPermission["CanCreate"] = 2] = "CanCreate";
-    DesktopPermission[DesktopPermission["CanTemplate"] = 3] = "CanTemplate";
 })(Permissions.DesktopPermission || (Permissions.DesktopPermission = {}));
 
 _.Permissions.DesktopPermission=Permissions.DesktopPermission;
-(function (ApplicationPermission) {
-    ApplicationPermission[ApplicationPermission["DenyAccess"] = 0] = "DenyAccess";
-})(Permissions.ApplicationPermission || (Permissions.ApplicationPermission = {}));
-
-_.Permissions.ApplicationPermission=Permissions.ApplicationPermission;
 (function (DesktopErrorCode) {
     DesktopErrorCode[DesktopErrorCode["NoDefaultDesktop"] = 0] = "NoDefaultDesktop";
 })(Errors.DesktopErrorCode || (Errors.DesktopErrorCode = {}));
 
 _.Errors.DesktopErrorCode=Errors.DesktopErrorCode;
+Data.Settings=class Settings extends AventusSharp.Data.Storable {
+    static get Fullname() { return "Core.Data.Settings, Core"; }
+    Key;
+    Value;
+    UserId = undefined;
+}
+Data.Settings.Namespace=`Core.Data`;
+Data.Settings.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Key":"string","Value":"string","UserId":"number"};
+Aventus.Converter.register(Data.Settings.Fullname, Data.Settings);
+
+_.Data.Settings=Data.Settings;
 (function (DemoEnum) {
     DemoEnum[DemoEnum["Value1"] = 0] = "Value1";
     DemoEnum[DemoEnum["Value2"] = 1] = "Value2";
 })(Data.DemoEnum || (Data.DemoEnum = {}));
 
 _.Data.DemoEnum=Data.DemoEnum;
-Data.Permission=class Permission extends AventusSharp.Data.Storable {
-    static get Fullname() { return "Core.Data.Permission, Core"; }
-    EnumName;
-    AdditionalInfo = "";
-    EnumValue;
-}
-Data.Permission.Namespace=`${moduleName}.Data`;
-Data.Permission.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "EnumName":"string","AdditionalInfo":"string","EnumValue":"Aventus.Enum"};
-Aventus.Converter.register(Data.Permission.Fullname, Data.Permission);
-
-_.Data.Permission=Data.Permission;
-Data.DataTypes.Pdf=class Pdf extends AventusSharp.Data.AventusFile {
-    static get Fullname() { return "Core.Data.DataTypes.Pdf, Core"; }
-    Name = "";
-    Html = "";
-    Debug = false;
-}
-Data.DataTypes.Pdf.Namespace=`${moduleName}.Data.DataTypes`;
-Data.DataTypes.Pdf.$schema={...(AventusSharp.Data.AventusFile?.$schema ?? {}), "Name":"string","Html":"string","Debug":"boolean"};
-Aventus.Converter.register(Data.DataTypes.Pdf.Fullname, Data.DataTypes.Pdf);
-
-_.Data.DataTypes.Pdf=Data.DataTypes.Pdf;
 Data.Company=class Company extends AventusSharp.Data.Storable {
     static get Fullname() { return "Core.Data.Company, Core"; }
     Name = "";
     Logo = "";
 }
-Data.Company.Namespace=`${moduleName}.Data`;
+Data.Company.Namespace=`Core.Data`;
 Data.Company.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Name":"string","Logo":"string"};
 Aventus.Converter.register(Data.Company.Fullname, Data.Company);
 
@@ -146,7 +173,7 @@ _.App.AppErrorCode=App.AppErrorCode;
 Components.UserProfilPicture = class UserProfilPicture extends Aventus.WebComponent {
     static get observedAttributes() {return ["uri"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'uri'() { return this.getStringProp('uri') }
-    set 'uri'(val) { this.setStringAttr('uri', val) }    static __style = `:host{border-radius:1000px;flex-shrink:0;height:100px;overflow:hidden;width:100px}:host rk-img{height:100%;width:100%}:host .bg-default{align-items:center;background-color:var(--secondary-color);border-radius:1000px;box-shadow:var(--elevation-4);color:var(--text-color-reverse);display:flex;flex-shrink:0;height:100%;justify-content:center;width:100%}:host .bg-default svg{fill:var(--text-color-reverse);height:70%;width:70%}`;
+    set 'uri'(val) { this.setStringAttr('uri', val) }    static __style = `:host{border-radius:var(--border-radius-round);flex-shrink:0;height:100px;overflow:hidden;width:100px}:host rk-img{height:100%;width:100%}:host .bg-default{align-items:center;background-color:var(--secondary-color);border-radius:var(--border-radius-round);box-shadow:var(--elevation-4);color:var(--text-color-reverse);display:flex;flex-shrink:0;height:100%;justify-content:center;width:100%}:host .bg-default svg{fill:var(--text-color-reverse);height:70%;width:70%}`;
     __getStatic() {
         return UserProfilPicture;
     }
@@ -193,130 +220,6 @@ Components.UserProfilPicture.Namespace=`${moduleName}.Components`;
 Components.UserProfilPicture.Tag=`rk-user-profil-picture`;
 _.Components.UserProfilPicture=Components.UserProfilPicture;
 if(!window.customElements.get('rk-user-profil-picture')){window.customElements.define('rk-user-profil-picture', Components.UserProfilPicture);Aventus.WebComponentInstance.registerDefinition(Components.UserProfilPicture);}
-
-Components.Tooltip = class Tooltip extends Aventus.WebComponent {
-    get 'visible'() { return this.getBoolAttr('visible') }
-    set 'visible'(val) { this.setBoolAttr('visible', val) }get 'position'() { return this.getStringAttr('position') }
-    set 'position'(val) { this.setStringAttr('position', val) }get 'color'() { return this.getStringAttr('color') }
-    set 'color'(val) { this.setStringAttr('color', val) }get 'use_absolute'() { return this.getBoolAttr('use_absolute') }
-    set 'use_absolute'(val) { this.setBoolAttr('use_absolute', val) }    parent = null;
-    isDestroyed = false;
-    timeoutEnter = false;
-    timeout = 0;
-    static __style = `:host{--local-tooltip-from-y: 0;--local-tooltip-from-x: 0;--local-tooltip-to-y: 0;--local-tooltip-to-x: 0;--_tooltip-background-color: var(--tooltip-background-color, var(--primary-color));--_tooltip-elevation: var(--tooltip-elevation, var(--elevation-4));--_tooltip-color: var(--tooltip-color, var(--text-color))}:host{background-color:var(--_tooltip-background-color);border-radius:5px;box-shadow:var(--elevation-4);color:var(--_tooltip-color);opacity:0;padding:5px 15px;pointer-events:none;position:absolute;transition:.5s opacity var(--bezier-curve),.5s visibility var(--bezier-curve),.5s top var(--bezier-curve),.5s bottom var(--bezier-curve),.5s right var(--bezier-curve),.5s left var(--bezier-curve),.5s transform var(--bezier-curve);visibility:hidden;width:max-content;z-index:1}:host::after{content:"";position:absolute}:host([visible]){opacity:1;visibility:visible}:host([position=bottom]){transform:translateX(-50%)}:host([position=bottom])::after{border-bottom:9px solid var(--_tooltip-background-color);border-left:6px solid rgba(0,0,0,0);border-right:6px solid rgba(0,0,0,0);left:50%;top:-8px;transform:translateX(-50%)}:host([use_absolute][position=bottom]){left:var(--local-tooltip-from-x);top:var(--local-tooltip-from-y)}:host([use_absolute][visible][position=bottom]){top:var(--local-tooltip-to-y)}:host([position=bottom]:not([use_absolute])){left:50%;bottom:0px;transform:translateX(-50%) translateY(calc(100% - 10px))}:host([position=bottom][visible]:not([use_absolute])){transform:translateX(-50%) translateY(calc(100% + 10px))}:host([position=top]){transform:translateX(-50%)}:host([position=top])::after{border-left:6px solid rgba(0,0,0,0);border-right:6px solid rgba(0,0,0,0);border-top:9px solid var(--_tooltip-background-color);bottom:-8px;left:50%;transform:translateX(-50%)}:host([use_absolute][position=top]){bottom:var(--local-tooltip-from-y);left:var(--local-tooltip-from-x)}:host([use_absolute][visible][position=top]){bottom:var(--local-tooltip-to-y)}:host([position=top]:not([use_absolute])){left:50%;top:0px;transform:translateX(-50%) translateY(calc(-100% + 10px))}:host([position=top][visible]:not([use_absolute])){transform:translateX(-50%) translateY(calc(-100% - 10px))}:host([position=right]){transform:translateY(-50%)}:host([position=right])::after{border-bottom:6px solid rgba(0,0,0,0);border-right:9px solid var(--_tooltip-background-color);border-top:6px solid rgba(0,0,0,0);left:-8px;top:50%;transform:translateY(-50%)}:host([use_absolute][position=right]){left:var(--local-tooltip-from-x);top:var(--local-tooltip-from-y)}:host([use_absolute][visible][position=right]){left:var(--local-tooltip-to-x)}:host([position=right]:not([use_absolute])){right:0;top:50%;transform:translateX(calc(100% - 10px)) translateY(-50%)}:host([visible][position=right]:not([use_absolute])){transform:translateX(calc(100% + 10px)) translateY(-50%)}:host([position=left]){right:var(--local-tooltip-from-x);top:var(--local-tooltip-from-y);transform:translateY(-50%)}:host([position=left])::after{border-bottom:6px solid rgba(0,0,0,0);border-left:9px solid var(--_tooltip-background-color);border-top:6px solid rgba(0,0,0,0);right:-8px;top:50%;transform:translateY(-50%)}:host([use_absolute][position=left]){right:var(--local-tooltip-from-x);top:var(--local-tooltip-from-y)}:host([use_absolute][visible][position=left]){right:var(--local-tooltip-to-x)}:host([position=left]:not([use_absolute])){left:0;top:50%;transform:translateX(calc(-100% + 10px)) translateY(-50%)}:host([visible][position=left]:not([use_absolute])){transform:translateX(calc(-100% - 10px)) translateY(-50%)}:host([color=primary]){--_tooltip-background-color: var(--primary-color);--_tooltip-color: var(--text-color)}:host([color=green]){--_tooltip-background-color: var(--green);--_tooltip-color: var(--text-color-green)}:host([color=red]){--_tooltip-background-color: var(--red);--_tooltip-color: var(--text-color-red)}:host([color=orange]){--_tooltip-background-color: var(--orange);--_tooltip-color: var(--text-color-orange)}:host([color=blue]){--_tooltip-background-color: var(--blue);--_tooltip-color: var(--text-color-blue)}`;
-    constructor() { super(); this.onMouseEnter=this.onMouseEnter.bind(this)this.onMouseLeave=this.onMouseLeave.bind(this)this.onTransitionEnd=this.onTransitionEnd.bind(this) }
-    __getStatic() {
-        return Tooltip;
-    }
-    __getStyle() {
-        let arrStyle = super.__getStyle();
-        arrStyle.push(Tooltip.__style);
-        return arrStyle;
-    }
-    __getHtml() {
-    this.__getStatic().__template.setHTML({
-        slots: { 'default':`<slot></slot>` }, 
-        blocks: { 'default':`<slot></slot>` }
-    });
-}
-    getClassName() {
-        return "Tooltip";
-    }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('visible')) { this.attributeChangedCallback('visible', false, false); }if(!this.hasAttribute('position')){ this['position'] = 'left'; }if(!this.hasAttribute('color')){ this['color'] = undefined; }if(!this.hasAttribute('use_absolute')) { this.attributeChangedCallback('use_absolute', false, false); } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('visible');this.__upgradeProperty('position');this.__upgradeProperty('color');this.__upgradeProperty('use_absolute'); }
-    __listBoolProps() { return ["visible","use_absolute"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
-    calculatePosition() {
-        if (!this.parent || !this.use_absolute)
-            return;
-        let rect = this.parent.getBoundingClientRect();
-        let center = {
-            x: rect.left + rect.width / 2,
-            y: rect.y + rect.height / 2
-        };
-        if (this.position == 'bottom') {
-            let bottom = rect.y + rect.height;
-            this.style.setProperty("--local-tooltip-from-y", bottom - 10 + 'px');
-            this.style.setProperty("--local-tooltip-from-x", center.x + 'px');
-            this.style.setProperty("--local-tooltip-to-x", center.x + 'px');
-            this.style.setProperty("--local-tooltip-to-y", bottom + 10 + 'px');
-        }
-        else if (this.position == 'top') {
-            let bottom = document.body.offsetHeight - rect.top;
-            this.style.setProperty("--local-tooltip-from-y", bottom - 10 + 'px');
-            this.style.setProperty("--local-tooltip-from-x", center.x + 'px');
-            this.style.setProperty("--local-tooltip-to-x", center.x + 'px');
-            this.style.setProperty("--local-tooltip-to-y", bottom + 10 + 'px');
-        }
-        else if (this.position == 'right') {
-            let left = rect.x + rect.width;
-            this.style.setProperty("--local-tooltip-from-y", center.y + 'px');
-            this.style.setProperty("--local-tooltip-from-x", left - 10 + 'px');
-            this.style.setProperty("--local-tooltip-to-x", left + 10 + 'px');
-            this.style.setProperty("--local-tooltip-to-y", center.y + 10 + 'px');
-        }
-        else if (this.position == 'left') {
-            let left = document.body.offsetWidth - rect.left;
-            this.style.setProperty("--local-tooltip-from-y", center.y + 'px');
-            this.style.setProperty("--local-tooltip-from-x", left - 10 + 'px');
-            this.style.setProperty("--local-tooltip-to-x", left + 10 + 'px');
-            this.style.setProperty("--local-tooltip-to-y", center.y + 'px');
-        }
-    }
-    onMouseEnter() {
-        this.calculatePosition();
-        if (this.use_absolute) {
-            document.body.appendChild(this);
-            this.timeoutEnter = false;
-            this.timeout = setTimeout(() => {
-                this.timeoutEnter = true;
-                this.visible = true;
-            }, 50);
-        }
-        else {
-            this.visible = true;
-        }
-    }
-    onMouseLeave() {
-        this.visible = false;
-        if (this.use_absolute) {
-            if (!this.timeoutEnter) {
-                clearTimeout(this.timeout);
-                this.onTransitionEnd();
-            }
-        }
-    }
-    onTransitionEnd() {
-        if (!this.use_absolute || this.visible)
-            return;
-        if (this.parent && !this.isDestroyed)
-            this.parent?.appendChild(this);
-        else
-            this.remove();
-    }
-    registerAction() {
-        if (!this.parent)
-            return;
-        this.parent.addEventListener("mouseenter", this.onMouseEnter);
-        this.parent.addEventListener("mouseleave", this.onMouseLeave);
-        this.addEventListener("transitionend", this.onTransitionEnd);
-    }
-    postCreation() {
-        this.parent = this.parentElement;
-        this.registerAction();
-    }
-    postDestruction() {
-        this.isDestroyed = true;
-        super.postDestruction();
-        if (!this.parent)
-            return;
-        this.parent.removeEventListener("mouseenter", this.onMouseEnter);
-        this.parent.removeEventListener("mouseleave", this.onMouseLeave);
-    }
-}
-Components.Tooltip.Namespace=`${moduleName}.Components`;
-Components.Tooltip.Tag=`rk-tooltip`;
-_.Components.Tooltip=Components.Tooltip;
-if(!window.customElements.get('rk-tooltip')){window.customElements.define('rk-tooltip', Components.Tooltip);Aventus.WebComponentInstance.registerDefinition(Components.Tooltip);}
 
 Components.Tab = class Tab extends Aventus.WebComponent {
     get 'label'() { return this.getStringAttr('label') }
@@ -569,7 +472,7 @@ _.Components.Col=Components.Col;
 if(!window.customElements.get('rk-col')){window.customElements.define('rk-col', Components.Col);Aventus.WebComponentInstance.registerDefinition(Components.Col);}
 
 Components.Card = class Card extends Aventus.WebComponent {
-    static __style = `:host{--internal-card-background-color: var(--card-background-color, white)}:host{border-color:rgba(47,43,61,.16);background-color:var(--internal-card-background-color);border-radius:6px;border-style:solid;border-width:0;box-shadow:var(--elevation-2);display:block;overflow:hidden;overflow-wrap:break-word;padding:24px;position:relative;text-decoration:none;transition-duration:.28s;transition-property:box-shadow,opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);z-index:0}`;
+    static __style = `:host{--internal-card-background-color: var(--card-background-color, white)}:host{border-color:rgba(47,43,61,.16);background-color:var(--internal-card-background-color);border-radius:var(--border-radius-sm);border-style:solid;border-width:0;box-shadow:var(--elevation-2);display:block;overflow:hidden;overflow-wrap:break-word;padding:24px;position:relative;text-decoration:none;transition-duration:.28s;transition-property:box-shadow,opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);z-index:0}`;
     __getStatic() {
         return Card;
     }
@@ -593,194 +496,13 @@ Components.Card.Tag=`rk-card`;
 _.Components.Card=Components.Card;
 if(!window.customElements.get('rk-card')){window.customElements.define('rk-card', Components.Card);Aventus.WebComponentInstance.registerDefinition(Components.Card);}
 
-Components.Img = class Img extends Aventus.WebComponent {
-    static get observedAttributes() {return ["src", "mode"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
-    get 'cache'() { return this.getBoolAttr('cache') }
-    set 'cache'(val) { this.setBoolAttr('cache', val) }    get 'src'() { return this.getStringProp('src') }
-    set 'src'(val) { this.setStringAttr('src', val) }get 'mode'() { return this.getStringProp('mode') }
-    set 'mode'(val) { this.setStringAttr('mode', val) }    isCalculing;
-    maxCalculateSize = 10;
-    ratio = 1;
-    resizeObserver;
-    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("src", ((target) => {
-    target.onSrcChanged();
-}));this.__addPropertyActions("mode", ((target) => {
-    if (target.src != "") {
-        target.calculateSize();
-    }
-})); }
-    static __style = `:host{--_img-color: var(--img-color);--_img-stroke-color: var(--img-stroke-color, var(--_img-color));--_img-fill-color: var(--img-fill-color, var(--_img-color));--_img-color-transition: var(--img-color-transition, none);--_img-stroke-width: var(--img-stroke-width, 1px)}:host{display:inline-block;font-size:0;overflow:hidden}:host *{box-sizing:border-box}:host img{opacity:0;transition:filter .3s linear}:host .svg{display:none;height:100%;width:100%}:host .svg svg{height:100%;width:100%}:host([src$=".svg"]) img{display:none}:host([src$=".svg"]) .svg{display:flex}:host([src$=".svg"]) .svg svg{fill:var(--_img-fill-color);stroke:var(--_img-stroke-color);stroke-width:var(--_img-stroke-width);transition:var(--_img-color-transition)}:host([display_bigger]) img{cursor:pointer}:host([display_bigger]) img:hover{filter:brightness(50%)}`;
-    __getStatic() {
-        return Img;
-    }
-    __getStyle() {
-        let arrStyle = super.__getStyle();
-        arrStyle.push(Img.__style);
-        return arrStyle;
-    }
-    __getHtml() {
-    this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<img _id="img_0" /><div class="svg" _id="img_1"></div>` }
-    });
-}
-    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
-  "elements": [
-    {
-      "name": "imgEl",
-      "ids": [
-        "img_0"
-      ]
-    },
-    {
-      "name": "svgEl",
-      "ids": [
-        "img_1"
-      ]
-    }
-  ]
-}); }
-    getClassName() {
-        return "Img";
-    }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('cache')) { this.attributeChangedCallback('cache', false, false); }if(!this.hasAttribute('src')){ this['src'] = undefined; }if(!this.hasAttribute('mode')){ this['mode'] = "contains"; } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('cache');this.__upgradeProperty('src');this.__upgradeProperty('mode'); }
-    __listBoolProps() { return ["cache"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
-    calculateSize(attempt = 0) {
-        if (this.isCalculing || !this.imgEl || !this.svgEl) {
-            return;
-        }
-        if (this.src == "") {
-            return;
-        }
-        this.isCalculing = true;
-        if (getComputedStyle(this).display == 'none') {
-            return;
-        }
-        if (attempt == this.maxCalculateSize) {
-            this.isCalculing = false;
-            return;
-        }
-        let element = this.imgEl;
-        if (this.src?.endsWith(".svg")) {
-            element = this.svgEl;
-        }
-        this.style.width = '';
-        this.style.height = '';
-        element.style.width = '';
-        element.style.height = '';
-        if (element.offsetWidth == 0 && element.offsetHeight == 0) {
-            setTimeout(() => {
-                this.isCalculing = false;
-                this.calculateSize(attempt + 1);
-            }, 100);
-            return;
-        }
-        let style = getComputedStyle(this);
-        let addedY = Number(style.paddingTop.replace("px", "")) + Number(style.paddingBottom.replace("px", "")) + Number(style.borderTopWidth.replace("px", "")) + Number(style.borderBottomWidth.replace("px", ""));
-        let addedX = Number(style.paddingLeft.replace("px", "")) + Number(style.paddingRight.replace("px", "")) + Number(style.borderLeftWidth.replace("px", "")) + Number(style.borderRightWidth.replace("px", ""));
-        let availableHeight = this.offsetHeight - addedY;
-        let availableWidth = this.offsetWidth - addedX;
-        let sameWidth = (element.offsetWidth == availableWidth);
-        let sameHeight = (element.offsetHeight == availableHeight);
-        this.ratio = element.offsetWidth / element.offsetHeight;
-        if (sameWidth && !sameHeight) {
-            // height is set
-            element.style.width = (availableHeight * this.ratio) + 'px';
-            element.style.height = availableHeight + 'px';
-        }
-        else if (!sameWidth && sameHeight) {
-            // width is set
-            element.style.width = availableWidth + 'px';
-            element.style.height = (availableWidth / this.ratio) + 'px';
-        }
-        else if (!sameWidth && !sameHeight) {
-            if (this.mode == "stretch") {
-                element.style.width = '100%';
-                element.style.height = '100%';
-            }
-            else if (this.mode == "contains") {
-                // suppose this height is max
-                let newWidth = (availableHeight * this.ratio);
-                if (newWidth <= availableWidth) {
-                    //we can apply this value
-                    element.style.width = newWidth + 'px';
-                    element.style.height = availableHeight + 'px';
-                }
-                else {
-                    element.style.width = availableWidth + 'px';
-                    element.style.height = (availableWidth / this.ratio) + 'px';
-                }
-            }
-            else if (this.mode == "cover") {
-                // suppose this height is min
-                let newWidth = (availableHeight * this.ratio);
-                if (newWidth >= availableWidth) {
-                    //we can apply this value
-                    element.style.width = newWidth + 'px';
-                    element.style.height = availableHeight + 'px';
-                }
-                else {
-                    element.style.width = availableWidth + 'px';
-                    element.style.height = (availableWidth / this.ratio) + 'px';
-                }
-            }
-        }
-        //center img
-        let diffTop = (this.offsetHeight - element.offsetHeight - addedY) / 2;
-        let diffLeft = (this.offsetWidth - element.offsetWidth - addedX) / 2;
-        element.style.transform = "translate(" + diffLeft + "px, " + diffTop + "px)";
-        element.style.opacity = '1';
-        this.isCalculing = false;
-    }
-    async onSrcChanged() {
-        if (!this.src || !this.svgEl || !this.imgEl) {
-            return;
-        }
-        if (this.src.endsWith(".svg")) {
-            let svgContent = await Aventus.ResourceLoader.load(this.src);
-            this.svgEl.innerHTML = svgContent;
-            this.calculateSize();
-        }
-        else if (this.cache) {
-            let base64 = await Aventus.ResourceLoader.load({
-                url: this.src,
-                type: 'img'
-            });
-            this.imgEl.setAttribute("src", base64);
-            this.calculateSize();
-        }
-        else {
-            this.imgEl.setAttribute("src", this.src);
-            this.calculateSize();
-        }
-    }
-    postDestruction() {
-        super.postDestruction();
-        this.resizeObserver?.disconnect();
-        this.resizeObserver = undefined;
-    }
-    postCreation() {
-        this.resizeObserver = new Aventus.ResizeObserver({
-            fps: 10,
-            callback: () => {
-                this.calculateSize();
-            }
-        });
-        this.resizeObserver.observe(this);
-    }
-}
-Components.Img.Namespace=`${moduleName}.Components`;
-Components.Img.Tag=`rk-img`;
-_.Components.Img=Components.Img;
-if(!window.customElements.get('rk-img')){window.customElements.define('rk-img', Components.Img);Aventus.WebComponentInstance.registerDefinition(Components.Img);}
-
 Components.BoxContainer = class BoxContainer extends Aventus.WebComponent {
     static get observedAttributes() {return ["space"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'space'() { return this.getNumberProp('space') }
     set 'space'(val) { this.setNumberAttr('space', val) }    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("space", ((target) => {
     target.style.setProperty("--item-box-margin", target.space + 'px');
 })); }
-    static __style = `:host{--_item-box-box-size: var(--item-box-box-size, 16px);--_item-box-border-radius: var(--item-box-border-radius, 4px);--_item-box-border-color: var(--item-box-border-color, var(--secondary-color, #afafaf))}:host{align-items:center;box-sizing:border-box;display:flex;flex-direction:row;height:var(--_item-box-box-size);justify-content:center}:host ::slotted(*){border:1px solid var(--_item-box-border-color);border-radius:4px;width:var(--_item-box-box-size);max-height:var(--_item-box-box-size);max-width:var(--_item-box-box-size)}:host ::slotted(*:first-child){margin-left:0}:host ::slotted(*:last-child){margin-right:0}:host([space="0"]){border:1px solid var(--_item-box-border-color);border-radius:var(--_item-box-border-radius)}:host([space="0"]) ::slotted(*){border:none;border-radius:0px;border-right:1px solid var(--_item-box-border-color);width:var(--_item-box-box-size)}:host([space="0"]) ::slotted(*:first-child){border-bottom-left-radius:var(--_item-box-border-radius);border-top-left-radius:var(--_item-box-border-radius)}:host([space="0"]) ::slotted(*:last-child){border-bottom-right-radius:var(--_item-box-border-radius);border-right:none;border-top-right-radius:var(--_item-box-border-radius)}`;
+    static __style = `:host{--_item-box-box-size: var(--item-box-box-size, 16px);--_item-box-border-radius: var(--item-box-border-radius, 4px);--_item-box-border-color: var(--item-box-border-color, var(--secondary-color, #afafaf))}:host{align-items:center;box-sizing:border-box;display:flex;flex-direction:row;height:var(--_item-box-box-size);justify-content:center}:host ::slotted(*){border:1px solid var(--_item-box-border-color);border-radius:var(--border-radius-sm);width:var(--_item-box-box-size);max-height:var(--_item-box-box-size);max-width:var(--_item-box-box-size)}:host ::slotted(*:first-child){margin-left:0}:host ::slotted(*:last-child){margin-right:0}:host([space="0"]){border:1px solid var(--_item-box-border-color);border-radius:var(--_item-box-border-radius)}:host([space="0"]) ::slotted(*){border:none;border-radius:0px;border-right:1px solid var(--_item-box-border-color);width:var(--_item-box-box-size)}:host([space="0"]) ::slotted(*:first-child){border-bottom-left-radius:var(--_item-box-border-radius);border-top-left-radius:var(--_item-box-border-radius)}:host([space="0"]) ::slotted(*:last-child){border-bottom-right-radius:var(--_item-box-border-radius);border-right:none;border-top-right-radius:var(--_item-box-border-radius)}`;
     __getStatic() {
         return BoxContainer;
     }
@@ -928,120 +650,415 @@ Components.InputFile.Tag=`rk-input-file`;
 _.Components.InputFile=Components.InputFile;
 if(!window.customElements.get('rk-input-file')){window.customElements.define('rk-input-file', Components.InputFile);Aventus.WebComponentInstance.registerDefinition(Components.InputFile);}
 
-Components.ButtonIcon = class ButtonIcon extends Aventus.WebComponent {
-    static get observedAttributes() {return ["icon"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
-    get 'color'() { return this.getStringAttr('color') }
-    set 'color'(val) { this.setStringAttr('color', val) }get 'outline'() { return this.getBoolAttr('outline') }
-    set 'outline'(val) { this.setBoolAttr('outline', val) }    get 'icon'() { return this.getStringProp('icon') }
-    set 'icon'(val) { this.setStringAttr('icon', val) }    static __style = `:host{--internal-button-background-color: var(--button-background-color);--internal-button-color: var(--button-color);--internal-button-box-shadow: var(--button-box-shadow);--internal-button-box-shadow-hover: var(--button-box-shadow-hover)}:host{aspect-ratio:1/1;background-color:var(--internal-button-background-color);border-radius:50000px;box-shadow:var(--internal-button-box-shadow);color:var(--internal-button-color);cursor:pointer;height:36px;overflow:hidden;position:relative}:host .hider{background-color:var(--darker);inset:0;opacity:0;position:absolute;transform:opacity .3 var(--bezier-curve);z-index:1}:host .content{align-items:center;display:flex;height:100%;justify-content:center;position:relative;z-index:2}:host .content .icon{--img-fill-color: var(--internal-button-color);height:100%;padding:10px 0}:host([outline]){background-color:rgba(0,0,0,0);border:1px solid var(--button-background-color);color:var(--text-color)}:host([color=green]){background-color:var(--green);color:var(--text-color-green)}:host([outline][color=green]){background-color:rgba(0,0,0,0);border:1px solid var(--green);color:var(--text-color)}:host([color=red]){background-color:var(--red);color:var(--text-color-red)}:host([outline][color=red]){background-color:rgba(0,0,0,0);border:1px solid var(--red);color:var(--text-color)}:host([color=orange]){background-color:var(--orange);color:var(--text-color-orange)}:host([outline][color=orange]){background-color:rgba(0,0,0,0);border:1px solid var(--orange);color:var(--text-color)}:host([color=blue]){background-color:var(--blue);color:var(--text-color-blue)}:host([outline][color=blue]){background-color:rgba(0,0,0,0);border:1px solid var(--blue);color:var(--text-color)}@media screen and (min-width: 1225px){:host(:hover){box-shadow:var(--internal-button-box-shadow-hover)}:host(:hover) .hider{opacity:1}}`;
+Components.Img = class Img extends Aventus.WebComponent {
+    static get observedAttributes() {return ["src", "mode"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'cache'() { return this.getBoolAttr('cache') }
+    set 'cache'(val) { this.setBoolAttr('cache', val) }    get 'src'() { return this.getStringProp('src') }
+    set 'src'(val) { this.setStringAttr('src', val) }get 'mode'() { return this.getStringProp('mode') }
+    set 'mode'(val) { this.setStringAttr('mode', val) }    isCalculing;
+    maxCalculateSize = 10;
+    ratio = 1;
+    resizeObserver;
+    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("src", ((target) => {
+    target.onSrcChanged();
+}));this.__addPropertyActions("mode", ((target) => {
+    if (target.src != "") {
+        target.calculateSize();
+    }
+})); }
+    static __style = `:host{--_img-color: var(--img-color);--_img-stroke-color: var(--img-stroke-color, var(--_img-color));--_img-fill-color: var(--img-fill-color, var(--_img-color));--_img-color-transition: var(--img-color-transition, none);--_img-stroke-width: var(--img-stroke-width, 1px)}:host{display:inline-block;font-size:0;overflow:hidden}:host *{box-sizing:border-box}:host img{opacity:0;transition:filter .3s linear}:host .svg{display:none;height:100%;width:100%}:host .svg svg{height:100%;width:100%}:host mi-icon{display:none;font-size:inherit;height:100%;width:100%}:host([src$=".svg"]) img{display:none}:host([src$=".svg"]) .svg{display:flex}:host([src$=".svg"]) .svg svg{fill:var(--_img-fill-color);stroke:var(--_img-stroke-color);stroke-width:var(--_img-stroke-width);transition:var(--_img-color-transition)}:host([src$=".svg"]) mi-icon{display:none}:host([src^=mi-]){font-size:inherit}:host([src^=mi-]) img{display:none}:host([src^=mi-]) .svg{display:none}:host([src^=mi-]) mi-icon{align-items:center;display:flex;justify-content:center}:host([display_bigger]) img{cursor:pointer}:host([display_bigger]) img:hover{filter:brightness(50%)}`;
     __getStatic() {
-        return ButtonIcon;
+        return Img;
     }
     __getStyle() {
         let arrStyle = super.__getStyle();
-        arrStyle.push(ButtonIcon.__style);
+        arrStyle.push(Img.__style);
         return arrStyle;
     }
     __getHtml() {
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<div class="hider"></div><div class="content">    <rk-img class="icon" _id="buttonicon_0"></rk-img></div>` }
+        blocks: { 'default':`<img _id="img_0" /><div class="svg" _id="img_1"></div><mi-icon _id="img_2"></mi-icon>` }
     });
 }
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
-  "content": {
-    "buttonicon_0°src": {
-      "fct": (c) => `${c.print(c.comp.__86a55d8d752358ce167fd0da93753a9emethod0())}`,
-      "once": true
+  "elements": [
+    {
+      "name": "imgEl",
+      "ids": [
+        "img_0"
+      ]
+    },
+    {
+      "name": "svgEl",
+      "ids": [
+        "img_1"
+      ]
+    },
+    {
+      "name": "iconEl",
+      "ids": [
+        "img_2"
+      ]
     }
-  }
+  ]
 }); }
     getClassName() {
-        return "ButtonIcon";
+        return "Img";
     }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('color')){ this['color'] = undefined; }if(!this.hasAttribute('outline')) { this.attributeChangedCallback('outline', false, false); }if(!this.hasAttribute('icon')){ this['icon'] = undefined; } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('color');this.__upgradeProperty('outline');this.__upgradeProperty('icon'); }
-    __listBoolProps() { return ["outline"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
-    __86a55d8d752358ce167fd0da93753a9emethod0() {
-        return this.icon;
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('cache')) { this.attributeChangedCallback('cache', false, false); }if(!this.hasAttribute('src')){ this['src'] = undefined; }if(!this.hasAttribute('mode')){ this['mode'] = "contains"; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('cache');this.__upgradeProperty('src');this.__upgradeProperty('mode'); }
+    __listBoolProps() { return ["cache"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    calculateSize(attempt = 0) {
+        if (this.isCalculing || !this.imgEl || !this.svgEl) {
+            return;
+        }
+        if (this.src == "") {
+            return;
+        }
+        this.isCalculing = true;
+        if (getComputedStyle(this).display == 'none') {
+            return;
+        }
+        if (attempt == this.maxCalculateSize) {
+            this.isCalculing = false;
+            return;
+        }
+        let element = this.imgEl;
+        if (this.src?.endsWith(".svg")) {
+            element = this.svgEl;
+        }
+        else if (this.src?.startsWith("mi-")) {
+            element = this.iconEl;
+        }
+        this.style.width = '';
+        this.style.height = '';
+        element.style.width = '';
+        element.style.height = '';
+        if (element.offsetWidth == 0 && element.offsetHeight == 0) {
+            setTimeout(() => {
+                this.isCalculing = false;
+                this.calculateSize(attempt + 1);
+            }, 100);
+            return;
+        }
+        let style = getComputedStyle(this);
+        let addedY = Number(style.paddingTop.replace("px", "")) + Number(style.paddingBottom.replace("px", "")) + Number(style.borderTopWidth.replace("px", "")) + Number(style.borderBottomWidth.replace("px", ""));
+        let addedX = Number(style.paddingLeft.replace("px", "")) + Number(style.paddingRight.replace("px", "")) + Number(style.borderLeftWidth.replace("px", "")) + Number(style.borderRightWidth.replace("px", ""));
+        let availableHeight = this.offsetHeight - addedY;
+        let availableWidth = this.offsetWidth - addedX;
+        let sameWidth = (element.offsetWidth == availableWidth);
+        let sameHeight = (element.offsetHeight == availableHeight);
+        this.ratio = element.offsetWidth / element.offsetHeight;
+        if (sameWidth && !sameHeight) {
+            // height is set
+            element.style.width = (availableHeight * this.ratio) + 'px';
+            element.style.height = availableHeight + 'px';
+        }
+        else if (!sameWidth && sameHeight) {
+            // width is set
+            element.style.width = availableWidth + 'px';
+            element.style.height = (availableWidth / this.ratio) + 'px';
+        }
+        else if (!sameWidth && !sameHeight) {
+            if (this.mode == "stretch") {
+                element.style.width = '100%';
+                element.style.height = '100%';
+            }
+            else if (this.mode == "contains") {
+                // suppose this height is max
+                let newWidth = (availableHeight * this.ratio);
+                if (newWidth <= availableWidth) {
+                    //we can apply this value
+                    element.style.width = newWidth + 'px';
+                    element.style.height = availableHeight + 'px';
+                }
+                else {
+                    element.style.width = availableWidth + 'px';
+                    element.style.height = (availableWidth / this.ratio) + 'px';
+                }
+            }
+            else if (this.mode == "cover") {
+                // suppose this height is min
+                let newWidth = (availableHeight * this.ratio);
+                if (newWidth >= availableWidth) {
+                    //we can apply this value
+                    element.style.width = newWidth + 'px';
+                    element.style.height = availableHeight + 'px';
+                }
+                else {
+                    element.style.width = availableWidth + 'px';
+                    element.style.height = (availableWidth / this.ratio) + 'px';
+                }
+            }
+        }
+        //center img
+        let diffTop = (this.offsetHeight - element.offsetHeight - addedY) / 2;
+        let diffLeft = (this.offsetWidth - element.offsetWidth - addedX) / 2;
+        element.style.transform = "translate(" + diffLeft + "px, " + diffTop + "px)";
+        element.style.opacity = '1';
+        this.isCalculing = false;
+    }
+    async onSrcChanged() {
+        if (!this.src || !this.svgEl || !this.imgEl || !this.iconEl) {
+            return;
+        }
+        if (this.src.endsWith(".svg")) {
+            let svgContent = await Aventus.ResourceLoader.load(this.src);
+            this.svgEl.innerHTML = svgContent;
+            this.calculateSize();
+        }
+        else if (this.src.startsWith("mi-")) {
+            this.iconEl.icon = this.src.replace("mi-", "");
+            this.calculateSize();
+        }
+        else if (this.cache) {
+            let base64 = await Aventus.ResourceLoader.load({
+                url: this.src,
+                type: 'img'
+            });
+            this.imgEl.setAttribute("src", base64);
+            this.calculateSize();
+        }
+        else {
+            this.imgEl.setAttribute("src", this.src);
+            this.calculateSize();
+        }
+    }
+    postDestruction() {
+        super.postDestruction();
+        this.resizeObserver?.disconnect();
+        this.resizeObserver = undefined;
+    }
+    postCreation() {
+        this.resizeObserver = new Aventus.ResizeObserver({
+            fps: 10,
+            callback: () => {
+                this.calculateSize();
+            }
+        });
+        this.resizeObserver.observe(this);
     }
 }
-Components.ButtonIcon.Namespace=`${moduleName}.Components`;
-Components.ButtonIcon.Tag=`rk-button-icon`;
-_.Components.ButtonIcon=Components.ButtonIcon;
-if(!window.customElements.get('rk-button-icon')){window.customElements.define('rk-button-icon', Components.ButtonIcon);Aventus.WebComponentInstance.registerDefinition(Components.ButtonIcon);}
+Components.Img.Namespace=`${moduleName}.Components`;
+Components.Img.Tag=`rk-img`;
+_.Components.Img=Components.Img;
+if(!window.customElements.get('rk-img')){window.customElements.define('rk-img', Components.Img);Aventus.WebComponentInstance.registerDefinition(Components.Img);}
 
-Components.ButtonIconMi = class ButtonIconMi extends Components.ButtonIcon {
-    static get observedAttributes() {return ["icon"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
-    get 'icon'() { return this.getStringProp('icon') }
-    set 'icon'(val) { this.setStringAttr('icon', val) }    static __style = `:host .content .icon{height:auto;padding:0}`;
+Data.DataTypes.Pdf=class Pdf extends AventusSharp.Data.AventusFile {
+    static get Fullname() { return "Core.Data.DataTypes.Pdf, Core"; }
+    Name = "";
+    Html = "";
+    Debug = false;
+}
+Data.DataTypes.Pdf.Namespace=`Core.Data.DataTypes`;
+Data.DataTypes.Pdf.$schema={...(AventusSharp.Data.AventusFile?.$schema ?? {}), "Name":"string","Html":"string","Debug":"boolean"};
+Aventus.Converter.register(Data.DataTypes.Pdf.Fullname, Data.DataTypes.Pdf);
+
+_.Data.DataTypes.Pdf=Data.DataTypes.Pdf;
+Lib.FontManager=class FontManager {
+    static async loadedFonts() {
+        let fonts = Array.from(document.fonts);
+        const result = [];
+        for (let font of fonts) {
+            if (font.status == 'loaded') {
+                if (!font['__src']) {
+                    let hasLoaded = await this.findFontInsideStylesheet(font);
+                    if (hasLoaded) {
+                        result.push(font);
+                    }
+                    else {
+                        console.warn("can't find src for ", font);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    static urlToBase64(url) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            }
+            catch (e) {
+                reject(e);
+            }
+        });
+    }
+    static async getFontRulesBase64() {
+        const fonts = await this.loadedFonts();
+        const props = {
+            'style': {
+                defaultValue: 'normal',
+                cssName: 'font-style'
+            },
+            'weight': {
+                defaultValue: 'normal',
+                cssName: 'font-weight'
+            },
+            'unicodeRange': {
+                defaultValue: 'U+0-10FFFF',
+                cssName: 'unicode-range'
+            },
+            'display': {
+                defaultValue: 'auto',
+                cssName: 'font-display'
+            },
+            'ascentOverride': {
+                defaultValue: 'normal',
+                cssName: 'ascent-override'
+            },
+            'descentOverride': {
+                defaultValue: 'normal',
+                cssName: 'descent-override'
+            },
+            'featureSettings': {
+                defaultValue: 'normal',
+                cssName: 'font-feature-settings'
+            },
+            'lineGapOverride': {
+                defaultValue: 'normal',
+                cssName: 'line-gap-override'
+            },
+            'stretch': {
+                defaultValue: 'normal',
+                cssName: 'font-stretch'
+            }
+        };
+        let txt = '';
+        for (let font of fonts) {
+            let txtFont = ['@font-face {'];
+            txtFont.push("font-family: " + font.family + ";");
+            txtFont.push("src: url(\"" + await this.urlToBase64(font['__src']) + "\");");
+            for (let prop in props) {
+                if (font[prop] != props[prop].defaultValue) {
+                    txtFont.push(props[prop].cssName + ": " + font[prop] + ";");
+                }
+            }
+            txtFont.push("}");
+            txt += txtFont.join("\n") + "\n";
+        }
+        return txt;
+    }
+    static loadedStyles = {};
+    static async findFontInsideStylesheet(font) {
+        for (let i = 0; i < document.styleSheets.length; i++) {
+            let sheet = document.styleSheets[i];
+            try {
+                let rules = sheet.cssRules;
+            }
+            catch (e) {
+                if (sheet.href) {
+                    if (!this.loadedStyles[sheet.href]) {
+                        try {
+                            let response = await fetch(sheet.href);
+                            let txt = await response.text();
+                            this.loadedStyles[sheet.href] = new CSSStyleSheet();
+                            this.loadedStyles[sheet.href].replaceSync(txt);
+                        }
+                        catch (e2) {
+                            continue;
+                        }
+                    }
+                    sheet = this.loadedStyles[sheet.href] ?? null;
+                }
+                else {
+                    continue;
+                }
+            }
+            try {
+                for (let j = 0; j < sheet.cssRules.length; j++) {
+                    const rule = sheet.cssRules[j];
+                    if (rule instanceof CSSFontFaceRule) {
+                        let styleAny = rule.style;
+                        const family = rule.style.fontFamily.replace(/['"]/g, '');
+                        if (family != font.family)
+                            continue;
+                        const otherCompares = {
+                            'fontStyle': 'style',
+                            'fontWeight': 'weight',
+                            'unicodeRange': 'unicodeRange',
+                            'fontDisplay': 'display',
+                            'ascentOverride': 'ascentOverride',
+                            'descentOverride': 'descentOverride',
+                            'fontFeatureSettings': 'featureSettings',
+                            'lineGapOverride': 'lineGapOverride',
+                            'fontStretch': 'stretch'
+                        };
+                        const defaultValue = {
+                            'fontStyle': 'normal',
+                            'fontWeight': 'normal',
+                            'unicodeRange': 'U+0-10FFFF',
+                            'fontDisplay': 'auto',
+                            'ascentOverride': 'normal',
+                            'descentOverride': 'normal',
+                            'fontFeatureSettings': 'normal',
+                            'lineGapOverride': 'normal',
+                            'fontStretch': 'normal'
+                        };
+                        let isSame = true;
+                        for (let otherCompare in otherCompares) {
+                            let v = otherCompares[otherCompare];
+                            if (styleAny[otherCompare] != font[v]) {
+                                if (styleAny[otherCompare] != '' || defaultValue[otherCompare] != font[v]) {
+                                    isSame = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!isSame)
+                            continue;
+                        let resultMatch = /url\(['|"]?(.*?)['|"]?\)/g.exec(styleAny.src);
+                        if (resultMatch) {
+                            font['__src'] = resultMatch[1];
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                console.error(`Failed to access stylesheet: ${sheet.href}`, e);
+            }
+        }
+        return false;
+    }
+}
+Lib.FontManager.Namespace=`Core.Lib`;
+
+_.Lib.FontManager=Lib.FontManager;
+Components.SheetSplitter = class SheetSplitter extends Aventus.WebComponent {
+    get 'copy'() { return this.getStringAttr('copy') }
+    set 'copy'(val) { this.setStringAttr('copy', val) }get 'name'() { return this.getStringAttr('name') }
+    set 'name'(val) { this.setStringAttr('name', val) }    static __style = `:host{display:none}`;
     __getStatic() {
-        return ButtonIconMi;
+        return SheetSplitter;
     }
     __getStyle() {
         let arrStyle = super.__getStyle();
-        arrStyle.push(ButtonIconMi.__style);
+        arrStyle.push(SheetSplitter.__style);
         return arrStyle;
     }
     __getHtml() {
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<div class="hider"></div><div class="content">    <mi-icon class="icon" _id="buttoniconmi_0"></mi-icon></div>` }
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
     });
 }
-    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
-  "content": {
-    "buttoniconmi_0°icon": {
-      "fct": (c) => `${c.print(c.comp.__6bf11e2b799d6cfde945f27815605c6bmethod0())}`,
-      "once": true
-    }
-  }
-}); }
     getClassName() {
-        return "ButtonIconMi";
+        return "SheetSplitter";
     }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('icon')){ this['icon'] = "square"; } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('icon'); }
-    __6bf11e2b799d6cfde945f27815605c6bmethod0() {
-        return this.icon;
-    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('copy')){ this['copy'] = undefined; }if(!this.hasAttribute('name')){ this['name'] = undefined; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('copy');this.__upgradeProperty('name'); }
 }
-Components.ButtonIconMi.Namespace=`${moduleName}.Components`;
-Components.ButtonIconMi.Tag=`rk-button-icon-mi`;
-_.Components.ButtonIconMi=Components.ButtonIconMi;
-if(!window.customElements.get('rk-button-icon-mi')){window.customElements.define('rk-button-icon-mi', Components.ButtonIconMi);Aventus.WebComponentInstance.registerDefinition(Components.ButtonIconMi);}
+Components.SheetSplitter.Namespace=`${moduleName}.Components`;
+Components.SheetSplitter.Tag=`rk-sheet-splitter`;
+_.Components.SheetSplitter=Components.SheetSplitter;
+if(!window.customElements.get('rk-sheet-splitter')){window.customElements.define('rk-sheet-splitter', Components.SheetSplitter);Aventus.WebComponentInstance.registerDefinition(Components.SheetSplitter);}
 
-Lib.DomTools=class DomTools {
-    static clearElement(element) {
-        const children = Array.from(element.children);
-        for (let child of children) {
-            child.remove();
-        }
-    }
-}
-Lib.DomTools.Namespace=`${moduleName}.Lib`;
-
-_.Lib.DomTools=Lib.DomTools;
-Lib.DateTools=class DateTools {
-    static isSameDate(date1, date2) {
-        if (date1 == null && date2 == null)
-            return true;
-        if (date1 == null || date2 == null)
-            return false;
-        return date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth() && date1.getFullYear() == date2.getFullYear();
-    }
-    static print(date, options, locale) {
-        if (!options) {
-            options = {
-                year: "numeric",
-                month: "long",
-                day: "2-digit"
-            };
-        }
-        return date.toLocaleDateString(locale, options);
-    }
-}
-Lib.DateTools.Namespace=`${moduleName}.Lib`;
-
-_.Lib.DateTools=Lib.DateTools;
 Components.PwaPromptIos = class PwaPromptIos extends Aventus.WebComponent {
     get 'visible'() { return this.getBoolAttr('visible') }
     set 'visible'(val) { this.setBoolAttr('visible', val) }    static get isStandalone() {
@@ -1058,7 +1075,7 @@ Components.PwaPromptIos = class PwaPromptIos extends Aventus.WebComponent {
     static get isAvailable() {
         return this.isiOS && !this.isStandalone;
     }
-    static __style = `:host .noScroll{overflow:hidden}:host .pwaPromptOverlay{background-color:rgba(0,0,0,.8);left:0;min-height:100vh;min-height:-webkit-fill-available;opacity:0;pointer-events:none;position:fixed;top:0;touch-action:none;transition:opacity .2s ease-in;visibility:hidden;width:100vw;z-index:999999}:host .pwaPromptOverlay.modern{background:rgba(10,10,10,.5);color:rgba(235,235,245,.6)}:host .pwaPrompt{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);background-color:rgba(250,250,250,.8);border-radius:10px;bottom:0;color:#000;filter:brightness(1.1);left:0;margin:0 8px 10px;overflow:hidden;pointer-events:none;position:fixed;touch-action:none;transform:translateY(calc(100% + 10px));transition:transform .4s cubic-bezier(0.4, 0.24, 0.3, 1);width:calc(100vw - 16px);z-index:999999}:host .pwaPrompt.modern{background:rgba(65,65,65,.7);filter:brightness(1.1)}:host .pwaPromptHeader{align-items:center;border-bottom:1px solid rgba(0,0,0,.1);border-left:0px;border-right:0px;border-top:0px;border-width:.5px;display:flex;flex-flow:row nowrap;justify-content:space-between;padding:13px 16px}:host .modern .pwaPromptHeader{border-color:rgba(140,140,140,.7)}:host .pwaPromptHeader .pwaPromptTitle{color:#333;font-family:-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:18px;font-weight:500;line-height:1.125;margin:0;padding:0}:host .modern .pwaPromptHeader .pwaPromptTitle{color:#fff}:host .pwaPromptHeader .pwaPromptCancel{background:rgba(0,0,0,0);border:0;color:#2d7cf6;font-size:16px;margin:0;padding:0}:host .modern .pwaPromptHeader .pwaPromptCancel{color:#0984ff}:host .pwaPromptBody{display:flex;width:100%}:host .pwaPromptBody .pwaPromptDescription{border-bottom:1px solid rgba(0,0,0,.1);border-left:0px;border-right:0px;border-top:0px;border-width:.5px;color:inherit;margin:0 16px;padding:16px;width:100%}:host .modern .pwaPromptBody .pwaPromptDescription{border-color:rgba(140,140,140,.7)}:host .pwaPromptCopy{color:#7b7b7a;font-family:-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:13px;line-height:17px;margin:0;padding:0}:host .pwaPromptCopy.bold{font-weight:600}:host .modern .pwaPromptCopy{border-color:rgba(235,235,245,.6);color:rgba(235,235,245,.6)}:host .pwaPromptInstruction{color:inherit;margin:0 16px;padding:16px}:host .pwaPromptInstruction .pwaPromptInstructionStep{align-items:center;display:flex;flex-flow:row nowrap;justify-content:flex-start;margin-bottom:16px;text-align:left}:host .pwaPromptInstruction .pwaPromptInstructionStep:last-of-type{margin-bottom:0}:host .pwaPromptInstruction .pwaPromptShareIcon,:host .pwaPromptInstruction .pwaPromptHomeIcon{flex:0 0 auto;height:30px;margin-right:32px;width:25px}:host .pwaPromptInstruction .pwaPromptHomeIcon{color:#2d7cf6}:host .modern .pwaPromptInstruction .pwaPromptHomeIcon{color:#fff;fill:#fff}:host .pwaPromptInstruction .pwaPromptShareIcon{color:#2d7cf6;fill:#2d7cf6}:host .modern .pwaPromptInstruction .pwaPromptShareIcon{color:#0984ff;fill:#0984ff}:host([visible]) .pwaPromptOverlay{display:block;opacity:1;pointer-events:initial;touch-action:initial;visibility:visible}:host([visible]) .pwaPrompt{display:block;pointer-events:initial;touch-action:initial;transform:translateY(0)}`;
+    static __style = `:host .noScroll{overflow:hidden}:host .pwaPromptOverlay{background-color:rgba(0,0,0,.8);left:0;min-height:100vh;min-height:-webkit-fill-available;opacity:0;pointer-events:none;position:fixed;top:0;touch-action:none;transition:opacity .2s ease-in;visibility:hidden;width:100vw;z-index:999999}:host .pwaPromptOverlay.modern{background:rgba(10,10,10,.5);color:rgba(235,235,245,.6)}:host .pwaPrompt{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);background-color:rgba(250,250,250,.8);border-radius:var(--border-radius);bottom:0;color:#000;filter:brightness(1.1);left:0;margin:0 8px 10px;overflow:hidden;pointer-events:none;position:fixed;touch-action:none;transform:translateY(calc(100% + 10px));transition:transform .4s cubic-bezier(0.4, 0.24, 0.3, 1);width:calc(100vw - 16px);z-index:999999}:host .pwaPrompt.modern{background:rgba(65,65,65,.7);filter:brightness(1.1)}:host .pwaPromptHeader{align-items:center;border-bottom:1px solid rgba(0,0,0,.1);border-left:0px;border-right:0px;border-top:0px;border-width:.5px;display:flex;flex-flow:row nowrap;justify-content:space-between;padding:13px 16px}:host .modern .pwaPromptHeader{border-color:rgba(140,140,140,.7)}:host .pwaPromptHeader .pwaPromptTitle{color:#333;font-family:-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:18px;font-weight:500;line-height:1.125;margin:0;padding:0}:host .modern .pwaPromptHeader .pwaPromptTitle{color:#fff}:host .pwaPromptHeader .pwaPromptCancel{background:rgba(0,0,0,0);border:0;color:#2d7cf6;font-size:16px;margin:0;padding:0}:host .modern .pwaPromptHeader .pwaPromptCancel{color:#0984ff}:host .pwaPromptBody{display:flex;width:100%}:host .pwaPromptBody .pwaPromptDescription{border-bottom:1px solid rgba(0,0,0,.1);border-left:0px;border-right:0px;border-top:0px;border-width:.5px;color:inherit;margin:0 16px;padding:16px;width:100%}:host .modern .pwaPromptBody .pwaPromptDescription{border-color:rgba(140,140,140,.7)}:host .pwaPromptCopy{color:#7b7b7a;font-family:-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:13px;line-height:17px;margin:0;padding:0}:host .pwaPromptCopy.bold{font-weight:600}:host .modern .pwaPromptCopy{border-color:rgba(235,235,245,.6);color:rgba(235,235,245,.6)}:host .pwaPromptInstruction{color:inherit;margin:0 16px;padding:16px}:host .pwaPromptInstruction .pwaPromptInstructionStep{align-items:center;display:flex;flex-flow:row nowrap;justify-content:flex-start;margin-bottom:16px;text-align:left}:host .pwaPromptInstruction .pwaPromptInstructionStep:last-of-type{margin-bottom:0}:host .pwaPromptInstruction .pwaPromptShareIcon,:host .pwaPromptInstruction .pwaPromptHomeIcon{flex:0 0 auto;height:30px;margin-right:32px;width:25px}:host .pwaPromptInstruction .pwaPromptHomeIcon{color:#2d7cf6}:host .modern .pwaPromptInstruction .pwaPromptHomeIcon{color:#fff;fill:#fff}:host .pwaPromptInstruction .pwaPromptShareIcon{color:#2d7cf6;fill:#2d7cf6}:host .modern .pwaPromptInstruction .pwaPromptShareIcon{color:#0984ff;fill:#0984ff}:host([visible]) .pwaPromptOverlay{display:block;opacity:1;pointer-events:initial;touch-action:initial;visibility:visible}:host([visible]) .pwaPrompt{display:block;pointer-events:initial;touch-action:initial;transform:translateY(0)}`;
     __getStatic() {
         return PwaPromptIos;
     }
@@ -1115,157 +1132,39 @@ Components.PwaPromptIos.Tag=`rk-pwa-prompt-ios`;
 _.Components.PwaPromptIos=Components.PwaPromptIos;
 if(!window.customElements.get('rk-pwa-prompt-ios')){window.customElements.define('rk-pwa-prompt-ios', Components.PwaPromptIos);Aventus.WebComponentInstance.registerDefinition(Components.PwaPromptIos);}
 
-System.Loading = class Loading extends Aventus.WebComponent {
-    static get observedAttributes() {return ["text"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
-    get 'background'() { return this.getBoolAttr('background') }
-    set 'background'(val) { this.setBoolAttr('background', val) }    get 'text'() { return this.getStringProp('text') }
-    set 'text'(val) { this.setStringAttr('text', val) }    static __style = `:host{--internal-dot-size: var(--dot-size, 12px);--internal-radius: var(--radius, 50px);--internal-loading-color: var(--loading-color, var(--primary-color, white));--internal-loading-background-color: var(--loading-background-color, var(--emphasize, rgba(0, 0, 0, 0.5)))}:host{align-items:center;background-color:var(--internal-loading-background-color);display:flex;flex-direction:column;height:100%;justify-content:center;left:0;position:absolute;top:0;width:100%;z-index:600}:host .dot-container{--center: (var(--internal-radius) - (var(--internal-dot-size) / 2));display:inline-block;height:calc(var(--internal-radius)*2);position:relative;width:calc(var(--internal-radius)*2);z-index:10}:host .dot-container .dot{animation:lds-default 1.2s linear infinite;background:var(--internal-loading-color);border-radius:50%;height:var(--internal-dot-size);position:absolute;width:var(--internal-dot-size)}:host .dot-container .dot:nth-child(1){--angle: 0deg;animation-delay:0s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(2){--angle: -30deg;animation-delay:-0.1s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(3){--angle: -60deg;animation-delay:-0.2s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(4){--angle: -90deg;animation-delay:-0.3s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(5){--angle: -120deg;animation-delay:-0.4s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(6){--angle: -150deg;animation-delay:-0.5s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(7){--angle: 180deg;animation-delay:-0.6s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(8){--angle: 150deg;animation-delay:-0.7s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(9){--angle: 120deg;animation-delay:-0.8s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(10){--angle: 90deg;animation-delay:-0.9s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(11){--angle: 60deg;animation-delay:-1s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(12){--angle: 30deg;animation-delay:-1.1s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .text{color:var(--internal-loading-color);font-size:var(--font-size-lg);font-weight:bold;letter-spacing:1px;margin-top:25px;padding:0 15px;text-align:center;z-index:10}@keyframes lds-default{0%,20%,80%,100%{transform:scale(1)}50%{transform:scale(1.5)}}:host([background]){background-color:#08162e;background-image:url('data:image/svg+xml;utf8,<svg version="1.1" viewBox="0 0 65.98 57.373" xmlns="http://www.w3.org/2000/svg"><g fill="%23acf4d6"><path d="M 33.949 5.731 L 22.7 5.731 L 22.7 0.001 L 33.788 0.001 C 45.619 0.001 46.363 17.934 36.124 20.216 C 35.379 20.428 34.637 20.48 33.788 20.48 L 28.483 20.48 L 28.483 20.534 L 28.483 34.433 L 22.7 34.433 L 22.7 14.697 L 28.483 20.534 L 42.491 34.433 L 50.342 34.433 L 30.605 14.697 L 33.949 14.697 C 38.883 14.697 38.883 5.731 33.949 5.731 Z" style="" /></g><g fill="%23FFF"><path d="M 7.8 53.573 L 4.94 48.993 L 3.22 48.993 L 3.22 53.573 L 0 53.573 L 0 39.573 L 4.98 39.573 C 8.12 39.573 10.2 41.473 10.2 44.393 C 10.2 46.253 9.32 47.653 7.84 48.373 L 11.2 53.573 L 7.8 53.573 Z M 3.22 42.533 L 3.22 46.253 L 4.78 46.253 C 6.08 46.253 6.98 45.793 6.98 44.393 C 6.98 43.013 6.08 42.533 4.78 42.533 L 3.22 42.533 Z M 20.3 43.173 L 23.46 43.173 L 23.46 53.573 L 20.3 53.573 L 20.3 52.533 C 20.16 52.893 19.22 53.773 17.62 53.773 C 15.24 53.773 12.5 52.073 12.5 48.353 C 12.5 44.773 15.24 42.993 17.62 42.993 C 19.22 42.993 20.16 43.913 20.3 44.133 L 20.3 43.173 Z M 18.08 50.993 C 19.38 50.993 20.44 50.093 20.44 48.353 C 20.44 46.673 19.38 45.773 18.08 45.773 C 16.72 45.773 15.56 46.693 15.56 48.353 C 15.56 50.073 16.72 50.993 18.08 50.993 Z M 33.94 43.133 L 37.08 43.133 L 30.72 57.373 L 27.56 57.373 L 29.48 53.213 L 24.98 43.133 L 28.12 43.133 L 31.04 49.813 L 33.94 43.133 Z M 42.58 53.733 C 40.64 53.733 38.66 52.433 38.66 49.133 L 38.66 43.173 L 41.82 43.173 L 41.82 48.913 C 41.82 50.493 42.36 50.993 43.36 50.993 C 44.78 50.993 45.6 49.613 45.8 49.013 L 45.8 43.173 L 48.96 43.173 L 48.96 53.573 L 45.8 53.573 L 45.8 51.773 C 45.6 52.273 44.54 53.733 42.58 53.733 Z M 58.2 53.573 L 54.82 49.533 L 54.16 50.233 L 54.16 53.573 L 51 53.573 L 51 49.793 L 51 39.433 L 54.16 39.433 L 54.16 46.373 L 57.1 43.173 L 60.88 43.173 L 56.76 47.513 L 61.8 53.573 L 58.2 53.573 Z M 65.98 39.433 L 65.98 42.093 L 62.82 42.093 L 62.82 39.433 L 65.98 39.433 Z M 65.98 43.173 L 65.98 53.573 L 62.82 53.573 L 62.82 43.173 L 65.98 43.173 Z" /></g></svg>');background-position:center center;background-repeat:no-repeat;background-size:50% 50%}:host([background])::after{content:"";position:absolute;inset:0;background-color:rgba(0,0,0,.5);z-index:1}`;
-    __getStatic() {
-        return Loading;
-    }
-    __getStyle() {
-        let arrStyle = super.__getStyle();
-        arrStyle.push(Loading.__style);
-        return arrStyle;
-    }
-    __getHtml() {
-    this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<div class="dot-container">    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div></div><div class="text" _id="loading_0"></div>` }
-    });
-}
-    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
-  "content": {
-    "loading_0°@HTML": {
-      "fct": (c) => `${c.print(c.comp.__f449123065aa1f6c0a81c7fbf3673938method0())}`,
-      "once": true
-    }
-  }
-}); }
-    getClassName() {
-        return "Loading";
-    }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('background')) { this.attributeChangedCallback('background', false, false); }if(!this.hasAttribute('text')){ this['text'] = ""; } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('background');this.__upgradeProperty('text'); }
-    __listBoolProps() { return ["background"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
-    __f449123065aa1f6c0a81c7fbf3673938method0() {
-        return this.text;
+Lib.DomTools=class DomTools {
+    static clearElement(element) {
+        const children = Array.from(element.children);
+        for (let child of children) {
+            child.remove();
+        }
     }
 }
-System.Loading.Namespace=`${moduleName}.System`;
-System.Loading.Tag=`rk-loading`;
-_.System.Loading=System.Loading;
-if(!window.customElements.get('rk-loading')){window.customElements.define('rk-loading', System.Loading);Aventus.WebComponentInstance.registerDefinition(System.Loading);}
+Lib.DomTools.Namespace=`Core.Lib`;
 
-System.AddOnTime = class AddOnTime extends Aventus.WebComponent {
-    days = [
-        'Dim.',
-        'Lun.',
-        'Mar.',
-        'Mer.',
-        'Jeu.',
-        'Ven.',
-        'Sam.'
-    ];
-    months = [
-        'Janvier',
-        'Février',
-        'Mars',
-        'Avril',
-        'Mai',
-        'Juin',
-        'Juillet',
-        'Août',
-        'Septembre',
-        'Octobre',
-        'Novembre',
-        'Décembre'
-    ];
-    static __style = `:host{align-items:center;border-radius:5px;cursor:pointer;display:flex;margin-right:10px;padding:10px;transition:background-color linear .2s}:host .date{font-size:var(--font-size-sm)}:host .hour{font-size:var(--font-size-sm);margin-left:5px}@media screen and (min-width: 1225px){:host(:hover){background-color:var(--lighter-active)}}`;
-    constructor() {
-            super();
-            this.classList.add("touch");
+_.Lib.DomTools=Lib.DomTools;
+Lib.DateTools=class DateTools {
+    static isSameDate(date1, date2) {
+        if (date1 == null && date2 == null)
+            return true;
+        if (date1 == null || date2 == null)
+            return false;
+        return date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth() && date1.getFullYear() == date2.getFullYear();
+    }
+    static print(date, options, locale) {
+        if (!options) {
+            options = {
+                year: "numeric",
+                month: "long",
+                day: "2-digit"
+            };
         }
-    __getStatic() {
-        return AddOnTime;
-    }
-    __getStyle() {
-        let arrStyle = super.__getStyle();
-        arrStyle.push(AddOnTime.__style);
-        return arrStyle;
-    }
-    __getHtml() {
-    this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<div class="date" _id="addontime_0">Dim. 17 juillet</div><div class="hour" _id="addontime_1">10:33</div>` }
-    });
-}
-    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
-  "elements": [
-    {
-      "name": "date",
-      "ids": [
-        "addontime_0"
-      ]
-    },
-    {
-      "name": "hour",
-      "ids": [
-        "addontime_1"
-      ]
-    }
-  ]
-}); }
-    getClassName() {
-        return "AddOnTime";
-    }
-    firstLoading() {
-        let missingSec = 60 - new Date().getSeconds();
-        if (missingSec == 0) {
-            this.displayDate(true);
-            this.normalLoading();
-        }
-        else {
-            this.displayDate(true);
-            setTimeout(() => {
-                this.normalLoading();
-            }, missingSec * 1000);
-        }
-    }
-    displayDate(force = false) {
-        if (!this.hour || !this.date) {
-            return;
-        }
-        let date = new Date();
-        let minutes = date.getMinutes();
-        let hours = date.getHours();
-        this.hour.innerHTML = this.prettyNumber(hours) + ":" + this.prettyNumber(minutes);
-        if (force || (minutes == 0 && hours == 0)) {
-            let day = this.days[date.getDay()];
-            let month = this.months[date.getMonth()];
-            let nb = date.getDate();
-            let txt = day + ' ' + this.prettyNumber(nb) + ' ' + month;
-            this.date.innerHTML = txt;
-        }
-    }
-    prettyNumber(nb) {
-        if (nb < 10) {
-            return '0' + nb;
-        }
-        return nb + '';
-    }
-    normalLoading() {
-        setInterval(() => {
-            this.displayDate();
-        }, 1000 * 60);
-    }
-    postCreation() {
-        this.firstLoading();
+        return date.toLocaleDateString(locale, options);
     }
 }
-System.AddOnTime.Namespace=`${moduleName}.System`;
-System.AddOnTime.Tag=`rk-add-on-time`;
-_.System.AddOnTime=System.AddOnTime;
-if(!window.customElements.get('rk-add-on-time')){window.customElements.define('rk-add-on-time', System.AddOnTime);Aventus.WebComponentInstance.registerDefinition(System.AddOnTime);}
+Lib.DateTools.Namespace=`Core.Lib`;
 
+_.Lib.DateTools=Lib.DateTools;
 System.ApplicationBreakPoint=class ApplicationBreakPoint {
     static xs = 300;
     static sm = 540;
@@ -1273,12 +1172,12 @@ System.ApplicationBreakPoint=class ApplicationBreakPoint {
     static lg = 960;
     static xl = 1140;
 }
-System.ApplicationBreakPoint.Namespace=`${moduleName}.System`;
+System.ApplicationBreakPoint.Namespace=`Core.System`;
 
 _.System.ApplicationBreakPoint=System.ApplicationBreakPoint;
 Lib.Pointer=class Pointer {
     static isTouch(e) {
-        if (e instanceof TouchEvent) {
+        if (window.TouchEvent && e instanceof TouchEvent) {
             return true;
         }
         if (e instanceof PointerEvent && (e.pointerType == "touch" || e.pointerType == "pen")) {
@@ -1287,9 +1186,14 @@ Lib.Pointer=class Pointer {
         return false;
     }
 }
-Lib.Pointer.Namespace=`${moduleName}.Lib`;
+Lib.Pointer.Namespace=`Core.Lib`;
 
 _.Lib.Pointer=Lib.Pointer;
+(function (ApplicationPermission) {
+    ApplicationPermission[ApplicationPermission["AllowAccess"] = 0] = "AllowAccess";
+})(Permissions.ApplicationPermission || (Permissions.ApplicationPermission = {}));
+
+_.Permissions.ApplicationPermission=Permissions.ApplicationPermission;
 Lib.Geometry=class Geometry {
     static getIntersectingRectangle(rect1, rect2) {
         const [r1, r2] = [rect1, rect2].map(r => {
@@ -1313,9 +1217,261 @@ Lib.Geometry=class Geometry {
         return w * h;
     }
 }
-Lib.Geometry.Namespace=`${moduleName}.Lib`;
+Lib.Geometry.Namespace=`Core.Lib`;
 
 _.Lib.Geometry=Lib.Geometry;
+Lib.ApplicationStateManager=class ApplicationStateManager extends Aventus.StateManager {
+    application;
+    constructor(application) {
+        super();
+        this.application = application;
+    }
+    save() {
+        return this.application.saveApplicationHistory();
+    }
+    assignDefaultState(stateName) {
+        let el = new State.ApplicationEmptyState(stateName);
+        el.setManager(this);
+        return el;
+    }
+    setState(state) {
+        if (state instanceof State.ApplicationState) {
+            state.setManager(this);
+        }
+        return super.setState(state);
+    }
+}
+Lib.ApplicationStateManager.Namespace=`Core.Lib`;
+
+_.Lib.ApplicationStateManager=Lib.ApplicationStateManager;
+const Style=class Style {
+    colors = ['green', 'success', 'red', 'error', 'orange', 'warning', 'blue', 'information', 'primary', 'secondary'];
+}
+Style.Namespace=`Core`;
+
+_.Style=Style;
+Components.Tooltip = class Tooltip extends Aventus.WebComponent {
+    get 'visible'() { return this.getBoolAttr('visible') }
+    set 'visible'(val) { this.setBoolAttr('visible', val) }get 'position'() { return this.getStringAttr('position') }
+    set 'position'(val) { this.setStringAttr('position', val) }get 'color'() { return this.getStringAttr('color') }
+    set 'color'(val) { this.setStringAttr('color', val) }get 'use_absolute'() { return this.getBoolAttr('use_absolute') }
+    set 'use_absolute'(val) { this.setBoolAttr('use_absolute', val) }get 'delay'() { return this.getNumberAttr('delay') }
+    set 'delay'(val) { this.setNumberAttr('delay', val) }    parent = null;
+    isDestroyed = false;
+    timeoutEnter = false;
+    timeout = 0;
+    static __style = `:host{--local-tooltip-from-y: 0;--local-tooltip-from-x: 0;--local-tooltip-to-y: 0;--local-tooltip-to-x: 0;--_tooltip-background-color: var(--tooltip-background-color, var(--primary-color));--_tooltip-elevation: var(--tooltip-elevation, var(--elevation-4));--_tooltip-color: var(--tooltip-color, var(--text-color))}:host{background-color:var(--_tooltip-background-color);border-radius:var(--border-radius-sm);box-shadow:var(--elevation-4);color:var(--_tooltip-color);opacity:0;padding:5px 15px;pointer-events:none;position:absolute;transition:.5s opacity var(--bezier-curve),.5s visibility var(--bezier-curve),.5s top var(--bezier-curve),.5s bottom var(--bezier-curve),.5s right var(--bezier-curve),.5s left var(--bezier-curve),.5s transform var(--bezier-curve);visibility:hidden;width:max-content;z-index:1}:host::after{content:"";position:absolute}:host([visible]){opacity:1;visibility:visible}:host([position=bottom]){transform:translateX(-50%)}:host([position=bottom])::after{border-bottom:9px solid var(--_tooltip-background-color);border-left:6px solid rgba(0,0,0,0);border-right:6px solid rgba(0,0,0,0);left:50%;top:-8px;transform:translateX(-50%)}:host([use_absolute][position=bottom]){left:var(--local-tooltip-from-x);top:var(--local-tooltip-from-y)}:host([use_absolute][visible][position=bottom]){top:var(--local-tooltip-to-y)}:host([position=bottom]:not([use_absolute])){bottom:0px;left:50%;transform:translateX(-50%) translateY(calc(100% - 10px))}:host([position=bottom][visible]:not([use_absolute])){transform:translateX(-50%) translateY(calc(100% + 10px))}:host([position=top]){transform:translateX(-50%)}:host([position=top])::after{border-left:6px solid rgba(0,0,0,0);border-right:6px solid rgba(0,0,0,0);border-top:9px solid var(--_tooltip-background-color);bottom:-8px;left:50%;transform:translateX(-50%)}:host([use_absolute][position=top]){bottom:var(--local-tooltip-from-y);left:var(--local-tooltip-from-x)}:host([use_absolute][visible][position=top]){bottom:var(--local-tooltip-to-y)}:host([position=top]:not([use_absolute])){left:50%;top:0px;transform:translateX(-50%) translateY(calc(-100% + 10px))}:host([position=top][visible]:not([use_absolute])){transform:translateX(-50%) translateY(calc(-100% - 10px))}:host([position=right]){transform:translateY(-50%)}:host([position=right])::after{border-bottom:6px solid rgba(0,0,0,0);border-right:9px solid var(--_tooltip-background-color);border-top:6px solid rgba(0,0,0,0);left:-8px;top:50%;transform:translateY(-50%)}:host([use_absolute][position=right]){left:var(--local-tooltip-from-x);top:var(--local-tooltip-from-y)}:host([use_absolute][visible][position=right]){left:var(--local-tooltip-to-x)}:host([position=right]:not([use_absolute])){right:0;top:50%;transform:translateX(calc(100% - 10px)) translateY(-50%)}:host([visible][position=right]:not([use_absolute])){transform:translateX(calc(100% + 10px)) translateY(-50%)}:host([position=left]){right:var(--local-tooltip-from-x);top:var(--local-tooltip-from-y);transform:translateY(-50%)}:host([position=left])::after{border-bottom:6px solid rgba(0,0,0,0);border-left:9px solid var(--_tooltip-background-color);border-top:6px solid rgba(0,0,0,0);right:-8px;top:50%;transform:translateY(-50%)}:host([use_absolute][position=left]){right:var(--local-tooltip-from-x);top:var(--local-tooltip-from-y)}:host([use_absolute][visible][position=left]){right:var(--local-tooltip-to-x)}:host([position=left]:not([use_absolute])){left:0;top:50%;transform:translateX(calc(-100% + 10px)) translateY(-50%)}:host([visible][position=left]:not([use_absolute])){transform:translateX(calc(-100% - 10px)) translateY(-50%)}:host([color=primary]){--_tooltip-background-color: var(--primary);--_tooltip-color: var(--text-color-primary)}:host([color=secondary]){--_tooltip-background-color: var(--secondary);--_tooltip-color: var(--text-color-secondary)}:host([color=green]){--_tooltip-background-color: var(--green);--_tooltip-color: var(--text-color-green)}:host([color=success]){--_tooltip-background-color: var(--success);--_tooltip-color: var(--text-color-success)}:host([color=red]){--_tooltip-background-color: var(--red);--_tooltip-color: var(--text-color-red)}:host([color=error]){--_tooltip-background-color: var(--error);--_tooltip-color: var(--text-color-error)}:host([color=orange]){--_tooltip-background-color: var(--orange);--_tooltip-color: var(--text-color-orange)}:host([color=warning]){--_tooltip-background-color: var(--warning);--_tooltip-color: var(--text-color-warning)}:host([color=blue]){--_tooltip-background-color: var(--blue);--_tooltip-color: var(--text-color-blue)}:host([color=information]){--_tooltip-background-color: var(--information);--_tooltip-color: var(--text-color-information)}`;
+    constructor() { super(); this.onMouseEnter=this.onMouseEnter.bind(this)this.onMouseLeave=this.onMouseLeave.bind(this)this.onTransitionEnd=this.onTransitionEnd.bind(this) }
+    __getStatic() {
+        return Tooltip;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(Tooltip.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "Tooltip";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('visible')) { this.attributeChangedCallback('visible', false, false); }if(!this.hasAttribute('position')){ this['position'] = 'left'; }if(!this.hasAttribute('color')){ this['color'] = undefined; }if(!this.hasAttribute('use_absolute')) { this.attributeChangedCallback('use_absolute', false, false); }if(!this.hasAttribute('delay')){ this['delay'] = undefined; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('visible');this.__upgradeProperty('position');this.__upgradeProperty('color');this.__upgradeProperty('use_absolute');this.__upgradeProperty('delay'); }
+    __listBoolProps() { return ["visible","use_absolute"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    calculatePosition() {
+        if (!this.parent || !this.use_absolute)
+            return;
+        let rect = this.parent.getBoundingClientRect();
+        let center = {
+            x: rect.left + rect.width / 2,
+            y: rect.y + rect.height / 2
+        };
+        if (this.position == 'bottom') {
+            let bottom = rect.y + rect.height;
+            this.style.setProperty("--local-tooltip-from-y", bottom - 10 + 'px');
+            this.style.setProperty("--local-tooltip-from-x", center.x + 'px');
+            this.style.setProperty("--local-tooltip-to-x", center.x + 'px');
+            this.style.setProperty("--local-tooltip-to-y", bottom + 10 + 'px');
+        }
+        else if (this.position == 'top') {
+            let bottom = document.body.offsetHeight - rect.top;
+            this.style.setProperty("--local-tooltip-from-y", bottom - 10 + 'px');
+            this.style.setProperty("--local-tooltip-from-x", center.x + 'px');
+            this.style.setProperty("--local-tooltip-to-x", center.x + 'px');
+            this.style.setProperty("--local-tooltip-to-y", bottom + 10 + 'px');
+        }
+        else if (this.position == 'right') {
+            let left = rect.x + rect.width;
+            this.style.setProperty("--local-tooltip-from-y", center.y + 'px');
+            this.style.setProperty("--local-tooltip-from-x", left - 10 + 'px');
+            this.style.setProperty("--local-tooltip-to-x", left + 10 + 'px');
+            this.style.setProperty("--local-tooltip-to-y", center.y + 10 + 'px');
+        }
+        else if (this.position == 'left') {
+            let left = document.body.offsetWidth - rect.left;
+            this.style.setProperty("--local-tooltip-from-y", center.y + 'px');
+            this.style.setProperty("--local-tooltip-from-x", left - 10 + 'px');
+            this.style.setProperty("--local-tooltip-to-x", left + 10 + 'px');
+            this.style.setProperty("--local-tooltip-to-y", center.y + 'px');
+        }
+    }
+    onMouseEnter() {
+        this.calculatePosition();
+        let delay = this.delay == 0 ? 50 : this.delay;
+        if (this.use_absolute) {
+            document.body.appendChild(this);
+            this.timeoutEnter = false;
+            this.timeout = setTimeout(() => {
+                this.timeoutEnter = true;
+                this.visible = true;
+            }, delay);
+        }
+        else {
+            if (delay == 0) {
+                this.visible = true;
+            }
+            else {
+                this.timeoutEnter = false;
+                this.timeout = setTimeout(() => {
+                    this.timeoutEnter = true;
+                    this.visible = true;
+                }, delay);
+            }
+        }
+    }
+    onMouseLeave() {
+        this.visible = false;
+        if (this.use_absolute) {
+            if (!this.timeoutEnter) {
+                clearTimeout(this.timeout);
+                this.onTransitionEnd();
+            }
+        }
+        else if (this.delay != 0) {
+            if (!this.timeoutEnter) {
+                clearTimeout(this.timeout);
+                this.onTransitionEnd();
+            }
+        }
+    }
+    onTransitionEnd() {
+        if (!this.use_absolute || this.visible)
+            return;
+        if (this.parent && !this.isDestroyed)
+            this.parent?.appendChild(this);
+        else
+            this.remove();
+    }
+    registerAction() {
+        if (!this.parent)
+            return;
+        this.parent.addEventListener("mouseenter", this.onMouseEnter);
+        this.parent.addEventListener("mouseleave", this.onMouseLeave);
+        this.addEventListener("transitionend", this.onTransitionEnd);
+    }
+    postCreation() {
+        this.parent = this.parentElement;
+        this.registerAction();
+    }
+    postDestruction() {
+        this.isDestroyed = true;
+        super.postDestruction();
+        if (!this.parent)
+            return;
+        this.parent.removeEventListener("mouseenter", this.onMouseEnter);
+        this.parent.removeEventListener("mouseleave", this.onMouseLeave);
+    }
+}
+Components.Tooltip.Namespace=`${moduleName}.Components`;
+Components.Tooltip.Tag=`rk-tooltip`;
+_.Components.Tooltip=Components.Tooltip;
+if(!window.customElements.get('rk-tooltip')){window.customElements.define('rk-tooltip', Components.Tooltip);Aventus.WebComponentInstance.registerDefinition(Components.Tooltip);}
+
+Components.ButtonIcon = class ButtonIcon extends Aventus.WebComponent {
+    static get observedAttributes() {return ["icon"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'color'() { return this.getStringAttr('color') }
+    set 'color'(val) { this.setStringAttr('color', val) }get 'outline'() { return this.getBoolAttr('outline') }
+    set 'outline'(val) { this.setBoolAttr('outline', val) }    get 'icon'() { return this.getStringProp('icon') }
+    set 'icon'(val) { this.setStringAttr('icon', val) }    static __style = `:host{--internal-button-background-color: var(--button-background-color);--_button-background-color-hover: var(--button-background-color-hover, var(--darker));--internal-button-color: var(--button-color);--internal-button-box-shadow: var(--button-box-shadow);--internal-button-box-shadow-hover: var(--button-box-shadow-hover);--_button-border-radius: var(--button-border-radius, var(--border-radius-sm, 5px));--_button-padding: var(--button-padding, 0 16px);--_button-icon-fill-color: var(--button-icon-fill-color, --internal-button-color);--_button-icon-stroke-color: var(--button-icon-stroke-color, transparent);--_button-background-color-disable: var(--button-background-color-disable, var(--disable-color));--_button-color-disable: var(--button-color-disable, var(--text-disable))}:host{background-color:var(--internal-button-background-color);border-radius:var(--_button-border-radius);box-shadow:var(--internal-button-box-shadow);color:var(--internal-button-color);cursor:pointer;height:36px;min-width:64px;position:relative}:host .hider{background-color:var(--_button-background-color-hover);border-radius:var(--_button-border-radius);inset:0;opacity:0;position:absolute;transition:opacity .3s var(--bezier-curve),visibility .3s var(--bezier-curve);visibility:hidden;z-index:1}:host .content{align-items:center;display:flex;height:100%;justify-content:center;padding:var(--_button-padding);position:relative;z-index:2}:host .content .icon-before,:host .content .icon-after{--img-stroke-color: var(--_button-icon-stroke-color);--img-fill-color: var(--_button-icon-fill-color);display:none;height:100%;padding:10px 0}:host([disabled]){background-color:var(--_button-background-color-disable) !important;box-shadow:none;color:var(--_button-color-disable);cursor:not-allowed}:host([disabled]) .hider{opacity:1;pointer-events:none;visibility:visible}:host([icon_before]) .icon-before{display:block;margin-right:10px}:host([icon_after]) .icon-after{display:block;margin-left:10px}:host([icon]) .icon-before{margin-right:0px}:host([outline]){background-color:rgba(0,0,0,0);border:1px solid var(--button-background-color);color:var(--text-color)}:host([color=primary]){background-color:var(--primary);color:var(--text-color-primary)}:host([outline][color=primary]){background-color:rgba(0,0,0,0);border:1px solid var(--primary);color:var(--text-color)}:host([color=secondary]){background-color:var(--secondary);color:var(--text-color-secondary)}:host([outline][color=secondary]){background-color:rgba(0,0,0,0);border:1px solid var(--secondary);color:var(--text-color)}:host([color=green]){background-color:var(--green);color:var(--text-color-green)}:host([outline][color=green]){background-color:rgba(0,0,0,0);border:1px solid var(--green);color:var(--text-color)}:host([color=success]){background-color:var(--success);color:var(--text-color-success)}:host([outline][color=success]){background-color:rgba(0,0,0,0);border:1px solid var(--success);color:var(--text-color)}:host([color=red]){background-color:var(--red);color:var(--text-color-red)}:host([outline][color=red]){background-color:rgba(0,0,0,0);border:1px solid var(--red);color:var(--text-color)}:host([color=error]){background-color:var(--error);color:var(--text-color-error)}:host([outline][color=error]){background-color:rgba(0,0,0,0);border:1px solid var(--error);color:var(--text-color)}:host([color=orange]){background-color:var(--orange);color:var(--text-color-orange)}:host([outline][color=orange]){background-color:rgba(0,0,0,0);border:1px solid var(--orange);color:var(--text-color)}:host([color=warning]){background-color:var(--warning);color:var(--text-color-warning)}:host([outline][color=warning]){background-color:rgba(0,0,0,0);border:1px solid var(--warning);color:var(--text-color)}:host([color=blue]){background-color:var(--blue);color:var(--text-color-blue)}:host([outline][color=blue]){background-color:rgba(0,0,0,0);border:1px solid var(--blue);color:var(--text-color)}:host([color=information]){background-color:var(--information);color:var(--text-color-information)}:host([outline][color=information]){background-color:rgba(0,0,0,0);border:1px solid var(--information);color:var(--text-color)}@media screen and (min-width: 1225px){:host(:not([disabled]):hover){box-shadow:var(--internal-button-box-shadow-hover)}:host(:not([disabled]):hover) .hider{opacity:1;visibility:visible}}:host{--_button-padding: var(--button-padding, 0)}:host{aspect-ratio:1/1;height:36px;min-width:auto;border-radius:var(--border-radius-round)}:host .hider{border-radius:var(--border-radius-round)}:host .content .icon{--img-fill-color: var(--_button-color);height:100%;padding:10px 0}`;
+    __getStatic() {
+        return ButtonIcon;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(ButtonIcon.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        blocks: { 'default':`<div class="hider"></div><div class="content">    <rk-img class="icon" _id="buttonicon_0"></rk-img></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "content": {
+    "buttonicon_0°src": {
+      "fct": (c) => `${c.print(c.comp.__86a55d8d752358ce167fd0da93753a9emethod0())}`,
+      "once": true
+    }
+  }
+}); }
+    getClassName() {
+        return "ButtonIcon";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('color')){ this['color'] = undefined; }if(!this.hasAttribute('outline')) { this.attributeChangedCallback('outline', false, false); }if(!this.hasAttribute('icon')){ this['icon'] = undefined; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('color');this.__upgradeProperty('outline');this.__upgradeProperty('icon'); }
+    __listBoolProps() { return ["outline"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    __86a55d8d752358ce167fd0da93753a9emethod0() {
+        return this.icon;
+    }
+}
+Components.ButtonIcon.Namespace=`${moduleName}.Components`;
+Components.ButtonIcon.Tag=`rk-button-icon`;
+_.Components.ButtonIcon=Components.ButtonIcon;
+if(!window.customElements.get('rk-button-icon')){window.customElements.define('rk-button-icon', Components.ButtonIcon);Aventus.WebComponentInstance.registerDefinition(Components.ButtonIcon);}
+
+Components.ButtonIconMi = class ButtonIconMi extends Components.ButtonIcon {
+    static get observedAttributes() {return ["icon"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'icon'() { return this.getStringProp('icon') }
+    set 'icon'(val) { this.setStringAttr('icon', val) }    static __style = `:host .content .icon{height:auto;padding:0;font-size:inherit}`;
+    __getStatic() {
+        return ButtonIconMi;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(ButtonIconMi.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        blocks: { 'default':`<div class="hider"></div><div class="content">    <mi-icon class="icon" _id="buttoniconmi_0"></mi-icon></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "content": {
+    "buttoniconmi_0°icon": {
+      "fct": (c) => `${c.print(c.comp.__6bf11e2b799d6cfde945f27815605c6bmethod0())}`,
+      "once": true
+    }
+  }
+}); }
+    getClassName() {
+        return "ButtonIconMi";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('icon')){ this['icon'] = "square"; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('icon'); }
+    __6bf11e2b799d6cfde945f27815605c6bmethod0() {
+        return this.icon;
+    }
+}
+Components.ButtonIconMi.Namespace=`${moduleName}.Components`;
+Components.ButtonIconMi.Tag=`rk-button-icon-mi`;
+_.Components.ButtonIconMi=Components.ButtonIconMi;
+if(!window.customElements.get('rk-button-icon-mi')){window.customElements.define('rk-button-icon-mi', Components.ButtonIconMi);Aventus.WebComponentInstance.registerDefinition(Components.ButtonIconMi);}
+
 (function (ResizeDirection) {
     ResizeDirection[ResizeDirection["Top"] = 0] = "Top";
     ResizeDirection[ResizeDirection["TopLeft"] = 1] = "TopLeft";
@@ -1339,7 +1495,7 @@ Websocket.MainEndPoint=class MainEndPoint extends AventusSharp.WebSocket.EndPoin
         return "/ws";
     }
 }
-Websocket.MainEndPoint.Namespace=`${moduleName}.Websocket`;
+Websocket.MainEndPoint.Namespace=`Core.Websocket`;
 
 _.Websocket.MainEndPoint=Websocket.MainEndPoint;
 Websocket.Events.ApplicationTestEvent=class ApplicationTestEvent extends AventusSharp.WebSocket.Event {
@@ -1353,7 +1509,7 @@ Websocket.Events.ApplicationTestEvent=class ApplicationTestEvent extends Aventus
         super(endpoint ?? Websocket.MainEndPoint.getInstance(), getPrefix);
     }
 }
-Websocket.Events.ApplicationTestEvent.Namespace=`${moduleName}.Websocket.Events`;
+Websocket.Events.ApplicationTestEvent.Namespace=`Core.Websocket.Events`;
 
 _.Websocket.Events.ApplicationTestEvent=Websocket.Events.ApplicationTestEvent;
 Websocket.Routes.DesktopRouter_RemoveDesktopIcon=class DesktopRouter_RemoveDesktopIcon extends AventusSharp.WebSocket.Event {
@@ -1370,7 +1526,7 @@ Websocket.Routes.DesktopRouter_RemoveDesktopIcon=class DesktopRouter_RemoveDeskt
         return true;
     }
 }
-Websocket.Routes.DesktopRouter_RemoveDesktopIcon.Namespace=`${moduleName}.Websocket.Routes`;
+Websocket.Routes.DesktopRouter_RemoveDesktopIcon.Namespace=`Core.Websocket.Routes`;
 
 _.Websocket.Routes.DesktopRouter_RemoveDesktopIcon=Websocket.Routes.DesktopRouter_RemoveDesktopIcon;
 (function (LoginCode) {
@@ -1384,16 +1540,66 @@ _.Errors.LoginCode=Errors.LoginCode;
 Errors.LoginError=class LoginError extends Aventus.GenericError {
     static get Fullname() { return "Core.Logic.LoginError, Core"; }
 }
-Errors.LoginError.Namespace=`${moduleName}.Errors`;
+Errors.LoginError.Namespace=`Core.Errors`;
 Errors.LoginError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(Errors.LoginError.Fullname, Errors.LoginError);
 
 _.Errors.LoginError=Errors.LoginError;
 Lib.HttpRouter=class HttpRouter extends Aventus.HttpRouter {
 }
-Lib.HttpRouter.Namespace=`${moduleName}.Lib`;
+Lib.HttpRouter.Namespace=`Core.Lib`;
 
 _.Lib.HttpRouter=Lib.HttpRouter;
+Data.Permission=class Permission extends AventusSharp.Data.Storable {
+    static get Fullname() { return "Core.Data.Permission, Core"; }
+    EnumName;
+    AdditionalInfo = "";
+    EnumValue;
+}
+Data.Permission.Namespace=`Core.Data`;
+Data.Permission.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "EnumName":"string","AdditionalInfo":"string","EnumValue":"Aventus.Enum"};
+Aventus.Converter.register(Data.Permission.Fullname, Data.Permission);
+
+_.Data.Permission=Data.Permission;
+Data.PermissionUser=class PermissionUser extends AventusSharp.Data.Storable {
+    static get Fullname() { return "Core.Data.PermissionUser, Core"; }
+    Data;
+    Permission;
+    UserId;
+    Allow;
+}
+Data.PermissionUser.Namespace=`Core.Data`;
+Data.PermissionUser.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Permission":""+moduleName+".Data.Permission","UserId":"number","Allow":"boolean"};
+Aventus.Converter.register(Data.PermissionUser.Fullname, Data.PermissionUser);
+
+_.Data.PermissionUser=Data.PermissionUser;
+Permissions.Tree.PermissionTreeItem=class PermissionTreeItem {
+    static get Fullname() { return "Core.Permissions.Tree.PermissionTreeItem, Core"; }
+    DisplayName = "";
+    Description = "";
+    EnumName = "";
+    Value;
+    PermissionId;
+    Permissions = [];
+}
+Permissions.Tree.PermissionTreeItem.Namespace=`Core.Permissions.Tree`;
+Permissions.Tree.PermissionTreeItem.$schema={"DisplayName":"string","Description":"string","EnumName":"string","Value":"Aventus.Enum","PermissionId":"number","Permissions":"PermissionTreeItem"};
+Aventus.Converter.register(Permissions.Tree.PermissionTreeItem.Fullname, Permissions.Tree.PermissionTreeItem);
+
+_.Permissions.Tree.PermissionTreeItem=Permissions.Tree.PermissionTreeItem;
+Permissions.PermissionQuery=class PermissionQuery {
+    $type;
+    value;
+    additionalInfo;
+    constructor(value, additionalInfo) {
+        this.$type = this.constructor['Fullname'];
+        this.value = value;
+        this.additionalInfo = additionalInfo;
+    }
+}
+Permissions.PermissionQuery.Namespace=`Core.Permissions`;
+
+_.Permissions.PermissionQuery=Permissions.PermissionQuery;
 Components.Tracker=class Tracker {
     velocityMultiplier = window.devicePixelRatio;
     updateTime = Date.now();
@@ -1431,11 +1637,11 @@ Components.Tracker=class Tracker {
         };
     }
 }
-Components.Tracker.Namespace=`${moduleName}.Components`;
+Components.Tracker.Namespace=`Core.Components`;
 
 _.Components.Tracker=Components.Tracker;
 System.Panel = class Panel extends Aventus.WebComponent {
-    static __style = `:host{background-color:var(--primary-color-opacity);border-radius:10px}@media screen and (max-width: 768px){:host{background-color:var(--primary-color)}}@media screen and (max-width: 1224px){:host{border-radius:0px}}`;
+    static __style = `:host{background-color:var(--primary-color-opacity);border-radius:var(--border-radius)}@media screen and (max-width: 768px){:host{background-color:var(--primary-color)}}@media screen and (max-width: 1224px){:host{border-radius:0px}}`;
     __getStatic() {
         return Panel;
     }
@@ -1477,7 +1683,7 @@ System.DesktopActivableLogic=class DesktopActivableLogic {
         this.findDeskstop(el, desktop)?.removeElementFromActive(el);
     }
 }
-System.DesktopActivableLogic.Namespace=`${moduleName}.System`;
+System.DesktopActivableLogic.Namespace=`Core.System`;
 
 _.System.DesktopActivableLogic=System.DesktopActivableLogic;
 App.AppConfiguration=class AppConfiguration {
@@ -1485,7 +1691,7 @@ App.AppConfiguration=class AppConfiguration {
     appsInstalled = [];
     allApps = new Map();
 }
-App.AppConfiguration.Namespace=`${moduleName}.App`;
+App.AppConfiguration.Namespace=`Core.App`;
 App.AppConfiguration.$schema={"appsInstalled":"string","allApps":"Map"};
 Aventus.Converter.register(App.AppConfiguration.Fullname, App.AppConfiguration);
 
@@ -1495,43 +1701,63 @@ Routes.CoreRouter=class CoreRouter extends Aventus.HttpRouter {
         return options;
     }
 }
-Routes.CoreRouter.Namespace=`${moduleName}.Routes`;
+Routes.CoreRouter.Namespace=`Core.Routes`;
 
 _.Routes.CoreRouter=Routes.CoreRouter;
+Routes.PermissionUserRouter=class PermissionUserRouter extends Aventus.HttpRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+        this.GetAllByUser = this.GetAllByUser.bind(this);
+        this.EditPermission = this.EditPermission.bind(this);
+    }
+    async GetAllByUser(body) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/permissionuser/byuser`, Aventus.HttpMethod.POST);
+        request.setBody(body);
+        return await request.queryJSON(this.router);
+    }
+    async EditPermission(body) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/permissionuser/editpermission`, Aventus.HttpMethod.POST);
+        request.setBody(body);
+        return await request.queryJSON(this.router);
+    }
+}
+Routes.PermissionUserRouter.Namespace=`Core.Routes`;
+
+_.Routes.PermissionUserRouter=Routes.PermissionUserRouter;
 Routes.PdfRouter=class PdfRouter extends Aventus.HttpRoute {
     constructor(router) {
         super(router ?? new Routes.CoreRouter());
+        this.Generate = this.Generate.bind(this);
+        this.Build = this.Build.bind(this);
     }
     async Generate(body) {
         const request = new Aventus.HttpRequest(`${this.getPrefix()}/generate`, Aventus.HttpMethod.POST);
         request.setBody(body);
         return await request.queryVoid(this.router);
     }
+    async Build(body) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/build`, Aventus.HttpMethod.POST);
+        request.setBody(body);
+        return await request.queryBlob(this.router);
+    }
 }
-Routes.PdfRouter.Namespace=`${moduleName}.Routes`;
+Routes.PdfRouter.Namespace=`Core.Routes`;
 
 _.Routes.PdfRouter=Routes.PdfRouter;
-Routes.PermissionRouter=class PermissionRouter extends Aventus.HttpRoute {
-    constructor(router) {
-        super(router ?? new Routes.CoreRouter());
-    }
-    async Can(body) {
-        const request = new Aventus.HttpRequest(`${this.getPrefix()}/can`, Aventus.HttpMethod.POST);
-        request.setBody(body);
-        return await request.queryJSON(this.router);
-    }
-}
-Routes.PermissionRouter.Namespace=`${moduleName}.Routes`;
-
-_.Routes.PermissionRouter=Routes.PermissionRouter;
 Routes.MainRouter=class MainRouter extends Aventus.HttpRoute {
     constructor(router) {
         super(router ?? new Routes.CoreRouter());
+        this.LoginAction = this.LoginAction.bind(this);
+        this.Logout = this.Logout.bind(this);
+        this.VapidPublicKey = this.VapidPublicKey.bind(this);
+        this.Register = this.Register.bind(this);
+        this.SendNotification = this.SendNotification.bind(this);
+        this.Restart = this.Restart.bind(this);
     }
     async LoginAction(body) {
         const request = new Aventus.HttpRequest(`${this.getPrefix()}/login`, Aventus.HttpMethod.POST);
         request.setBody(body);
-        return await request.queryVoid(this.router);
+        return await request.queryJSON(this.router);
     }
     async Logout() {
         const request = new Aventus.HttpRequest(`${this.getPrefix()}/logout`, Aventus.HttpMethod.POST);
@@ -1555,7 +1781,7 @@ Routes.MainRouter=class MainRouter extends Aventus.HttpRoute {
         return await request.queryVoid(this.router);
     }
 }
-Routes.MainRouter.Namespace=`${moduleName}.Routes`;
+Routes.MainRouter.Namespace=`Core.Routes`;
 
 _.Routes.MainRouter=Routes.MainRouter;
 Lib.ServiceWorker=class ServiceWorker {
@@ -1564,9 +1790,8 @@ Lib.ServiceWorker=class ServiceWorker {
     }
     subscription;
     async init(registration) {
-        if (await this.getSubscription(registration)) {
-            this.subscribe();
-        }
+        // if(await this.getSubscription(registration)) {
+        //     this.subscribe();
     }
     async getSubscription(registration) {
         try {
@@ -1622,7 +1847,7 @@ Lib.ServiceWorker=class ServiceWorker {
         return outputArray;
     }
 }
-Lib.ServiceWorker.Namespace=`${moduleName}.Lib`;
+Lib.ServiceWorker.Namespace=`Core.Lib`;
 
 _.Lib.ServiceWorker=Lib.ServiceWorker;
 Data.ApplicationData=class ApplicationData extends AventusSharp.Data.Storable {
@@ -1634,7 +1859,7 @@ Data.ApplicationData=class ApplicationData extends AventusSharp.Data.Storable {
     LogoTagName = "";
     Extension;
 }
-Data.ApplicationData.Namespace=`${moduleName}.Data`;
+Data.ApplicationData.Namespace=`Core.Data`;
 Data.ApplicationData.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Name":"string","DisplayName":"string","Version":"number","LogoClassName":"string","LogoTagName":"string","Extension":"string"};
 Aventus.Converter.register(Data.ApplicationData.Fullname, Data.ApplicationData);
 
@@ -1647,7 +1872,7 @@ Websocket.Routes.ApplicationRouter_GetAll3=class ApplicationRouter_GetAll3 exten
         return `${this.getPrefix()}/application3`;
     }
 }
-Websocket.Routes.ApplicationRouter_GetAll3.Namespace=`${moduleName}.Websocket.Routes`;
+Websocket.Routes.ApplicationRouter_GetAll3.Namespace=`Core.Websocket.Routes`;
 
 _.Websocket.Routes.ApplicationRouter_GetAll3=Websocket.Routes.ApplicationRouter_GetAll3;
 Websocket.Routes.ApplicationRouter_GetAll2=class ApplicationRouter_GetAll2 extends AventusSharp.WebSocket.Event {
@@ -1664,7 +1889,7 @@ Websocket.Routes.ApplicationRouter_GetAll2=class ApplicationRouter_GetAll2 exten
         return true;
     }
 }
-Websocket.Routes.ApplicationRouter_GetAll2.Namespace=`${moduleName}.Websocket.Routes`;
+Websocket.Routes.ApplicationRouter_GetAll2.Namespace=`Core.Websocket.Routes`;
 
 _.Websocket.Routes.ApplicationRouter_GetAll2=Websocket.Routes.ApplicationRouter_GetAll2;
 Components.PageCaseContainer = class PageCaseContainer extends Aventus.WebComponent {
@@ -1729,7 +1954,7 @@ Data.ApplicationOpen=class ApplicationOpen {
     history;
     isHidden;
 }
-Data.ApplicationOpen.Namespace=`${moduleName}.Data`;
+Data.ApplicationOpen.Namespace=`Core.Data`;
 Data.ApplicationOpen.$schema={"id":"string","applicationName":"string","number":"number","history":"string","isHidden":"boolean"};
 Aventus.Converter.register(Data.ApplicationOpen.Fullname, Data.ApplicationOpen);
 
@@ -1739,7 +1964,7 @@ Data.ApplicationOpenInfo=class ApplicationOpenInfo {
     DesktopId;
     Info;
 }
-Data.ApplicationOpenInfo.Namespace=`${moduleName}.Data`;
+Data.ApplicationOpenInfo.Namespace=`Core.Data`;
 Data.ApplicationOpenInfo.$schema={"DesktopId":"number","Info":"ApplicationOpen"};
 Aventus.Converter.register(Data.ApplicationOpenInfo.Fullname, Data.ApplicationOpenInfo);
 
@@ -1758,7 +1983,7 @@ Websocket.Routes.DesktopRouter_RemoveApp=class DesktopRouter_RemoveApp extends A
         return true;
     }
 }
-Websocket.Routes.DesktopRouter_RemoveApp.Namespace=`${moduleName}.Websocket.Routes`;
+Websocket.Routes.DesktopRouter_RemoveApp.Namespace=`Core.Websocket.Routes`;
 
 _.Websocket.Routes.DesktopRouter_RemoveApp=Websocket.Routes.DesktopRouter_RemoveApp;
 (function (DesktopLocation) {
@@ -1778,7 +2003,7 @@ _.Data.BackgroundSize=Data.BackgroundSize;
 Data.DataTypes.ImageFile=class ImageFile extends AventusSharp.Data.AventusFile {
     static get Fullname() { return "Core.Data.DataTypes.ImageFile, Core"; }
 }
-Data.DataTypes.ImageFile.Namespace=`${moduleName}.Data.DataTypes`;
+Data.DataTypes.ImageFile.Namespace=`Core.Data.DataTypes`;
 Data.DataTypes.ImageFile.$schema={...(AventusSharp.Data.AventusFile?.$schema ?? {}), };
 Aventus.Converter.register(Data.DataTypes.ImageFile.Fullname, Data.DataTypes.ImageFile);
 
@@ -1793,50 +2018,37 @@ Data.User=class User extends AventusSharp.Data.Storable {
     Picture = new Data.DataTypes.ImageFile();
     IsSuperAdmin = false;
 }
-Data.User.Namespace=`${moduleName}.Data`;
+Data.User.Namespace=`Core.Data`;
 Data.User.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Firstname":"string","Lastname":"string","Username":"string","Password":"string","Token":"string","Picture":""+moduleName+".Data.DataTypes.ImageFile","IsSuperAdmin":"boolean"};
 Aventus.Converter.register(Data.User.Fullname, Data.User);
 
 _.Data.User=Data.User;
-Data.PermissionUser=class PermissionUser extends AventusSharp.Data.Storable {
-    static get Fullname() { return "Core.Data.PermissionUser, Core"; }
-    Data;
-    Permission;
-    Data;
-    User;
-}
-Data.PermissionUser.Namespace=`${moduleName}.Data`;
-Data.PermissionUser.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Permission":""+moduleName+".Data.Permission","User":""+moduleName+".Data.User"};
-Aventus.Converter.register(Data.PermissionUser.Fullname, Data.PermissionUser);
-
-_.Data.PermissionUser=Data.PermissionUser;
 Data.Group=class Group extends AventusSharp.Data.Storable {
     static get Fullname() { return "Core.Data.Group, Core"; }
     Name = "";
     Description = "";
     Users = [];
-    parentGroup = undefined;
 }
-Data.Group.Namespace=`${moduleName}.Data`;
-Data.Group.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Name":"string","Description":"string","Users":""+moduleName+".Data.User","parentGroup":"Group"};
+Data.Group.Namespace=`Core.Data`;
+Data.Group.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Name":"string","Description":"string","Users":""+moduleName+".Data.User"};
 Aventus.Converter.register(Data.Group.Fullname, Data.Group);
 
 _.Data.Group=Data.Group;
-Data.PermissionGroup=class PermissionGroup extends AventusSharp.Data.Storable {
-    static get Fullname() { return "Core.Data.PermissionGroup, Core"; }
-    Data;
-    Permission;
-    Data;
-    Group;
+Routes.GroupRouter=class GroupRouter extends AventusSharp.Routes.StorableRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+    }
+    StorableName() {
+        return "Group";
+    }
 }
-Data.PermissionGroup.Namespace=`${moduleName}.Data`;
-Data.PermissionGroup.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Permission":""+moduleName+".Data.Permission","Group":""+moduleName+".Data.Group"};
-Aventus.Converter.register(Data.PermissionGroup.Fullname, Data.PermissionGroup);
+Routes.GroupRouter.Namespace=`Core.Routes`;
 
-_.Data.PermissionGroup=Data.PermissionGroup;
+_.Routes.GroupRouter=Routes.GroupRouter;
 Routes.UserRouter=class UserRouter extends AventusSharp.Routes.StorableRoute {
     constructor(router) {
         super(router ?? new Routes.CoreRouter());
+        this.GetConnected = this.GetConnected.bind(this);
     }
     async GetConnected() {
         const request = new Aventus.HttpRequest(`${this.getPrefix()}/getconnected`, Aventus.HttpMethod.GET);
@@ -1846,9 +2058,39 @@ Routes.UserRouter=class UserRouter extends AventusSharp.Routes.StorableRoute {
         return "User";
     }
 }
-Routes.UserRouter.Namespace=`${moduleName}.Routes`;
+Routes.UserRouter.Namespace=`Core.Routes`;
 
 _.Routes.UserRouter=Routes.UserRouter;
+const Addon=class Addon {
+    static dependances = {};
+    static need(application, addons) {
+        if (addons.length == 0)
+            return;
+        if (application instanceof System.AppIcon) {
+            let cst = application.constructor;
+            application = cst.Fullname.split(".")[0];
+        }
+        this.dependances[application] = addons;
+    }
+    static async loadForApp(application) {
+        if (!this.dependances[application])
+            return;
+        let proms = [];
+        for (let dep of this.dependances[application]) {
+            proms.push(this.load(dep));
+        }
+        await Promise.all(proms);
+    }
+    static async load(name) {
+        await Aventus.ResourceLoader.loadInHead({
+            url: "/addon/" + name + ".js",
+            type: "js"
+        });
+    }
+}
+Addon.Namespace=`Core`;
+
+_.Addon=Addon;
 State.DesktopStateManager=class DesktopStateManager extends Aventus.StateManager {
     /**
      * Get the instance of the StateManager
@@ -1857,7 +2099,7 @@ State.DesktopStateManager=class DesktopStateManager extends Aventus.StateManager
         return Aventus.Instance.get(State.DesktopStateManager);
     }
 }
-State.DesktopStateManager.Namespace=`${moduleName}.State`;
+State.DesktopStateManager.Namespace=`Core.State`;
 
 _.State.DesktopStateManager=State.DesktopStateManager;
 (function (SpecialTouch) {
@@ -1971,7 +2213,7 @@ Components.ContextMenuItem = class ContextMenuItem extends Aventus.WebComponent 
     action = () => { };
     menu;
     canBeRendered = () => true;
-    static __style = `:host{align-items:center;border-radius:5px;cursor:pointer;display:flex;font-size:var(--font-size);margin:0 5px;padding:5px 10px;-webkit-tap-highlight-color:rgba(0,0,0,0)}:host .title{margin-left:30px}:host .icon{display:none;font-size:var(--font-size-sm);margin-right:10px;width:20px}:host([icon]) .title{margin-left:0px}:host([icon]) .icon{display:inline-block}@media screen and (min-width: 1225px){:host{font-size:var(--font-size)}:host .icon{font-size:var(--font-size)}:host(:hover){background-color:var(--darker)}}`;
+    static __style = `:host{align-items:center;border-radius:var(--border-radius-sm);cursor:pointer;display:flex;font-size:var(--font-size);margin:0 5px;padding:5px 10px;-webkit-tap-highlight-color:rgba(0,0,0,0)}:host .title{margin-left:30px}:host .icon{display:none;font-size:var(--font-size-sm);margin-right:10px;width:20px}:host([icon]) .title{margin-left:0px}:host([icon]) .icon{display:inline-block}@media screen and (min-width: 1225px){:host{font-size:var(--font-size)}:host .icon{font-size:var(--font-size)}:host(:hover){background-color:var(--darker)}}`;
     constructor() { super(); this.onPress=this.onPress.bind(this) }
     __getStatic() {
         return ContextMenuItem;
@@ -2055,7 +2297,7 @@ Components.ContextMenu = class ContextMenu extends Aventus.WebComponent {
     static instance;
     _items = [];
     isTouch = false;
-    static __style = `:host{--scrollbar-container-display: flex;background-color:#fff;border-radius:5px;box-shadow:var(--elevation-3);cursor:pointer;display:flex;flex-direction:column;outline:none;overflow:hidden;position:absolute;-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:502}:host .container{display:flex;flex-direction:column;padding:5px 0}`;
+    static __style = `:host{--scrollbar-container-display: flex;background-color:#fff;border-radius:var(--border-radius-sm);box-shadow:var(--elevation-3);cursor:pointer;display:flex;flex-direction:column;outline:none;overflow:hidden;position:absolute;-webkit-tap-highlight-color:rgba(0,0,0,0);z-index:502}:host .container{display:flex;flex-direction:column;padding:5px 0}`;
     __getStatic() {
         return ContextMenu;
     }
@@ -2266,6 +2508,77 @@ Components.ContextMenu.Tag=`rk-context-menu`;
 _.Components.ContextMenu=Components.ContextMenu;
 if(!window.customElements.get('rk-context-menu')){window.customElements.define('rk-context-menu', Components.ContextMenu);Aventus.WebComponentInstance.registerDefinition(Components.ContextMenu);}
 
+System.Loading = class Loading extends Aventus.WebComponent {
+    static get observedAttributes() {return ["text"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'background'() { return this.getBoolAttr('background') }
+    set 'background'(val) { this.setBoolAttr('background', val) }    get 'text'() { return this.getStringProp('text') }
+    set 'text'(val) { this.setStringAttr('text', val) }    static __style = `:host{--internal-dot-size: var(--dot-size, 12px);--internal-radius: var(--radius, 50px);--internal-loading-color: var(--loading-color, var(--primary-color, white));--internal-loading-background-color: var(--loading-background-color, var(--emphasize, rgba(0, 0, 0, 0.5)))}:host{align-items:center;background-color:var(--internal-loading-background-color);display:flex;flex-direction:column;height:100%;justify-content:center;left:0;position:absolute;top:0;width:100%;z-index:600}:host .dot-container{--center: (var(--internal-radius) - (var(--internal-dot-size) / 2));display:inline-block;height:calc(var(--internal-radius)*2);position:relative;width:calc(var(--internal-radius)*2);z-index:10}:host .dot-container .dot{animation:lds-default 1.2s linear infinite;background:var(--internal-loading-color);border-radius:var(--border-radius-round);height:var(--internal-dot-size);position:absolute;width:var(--internal-dot-size)}:host .dot-container .dot:nth-child(1){--angle: 0deg;animation-delay:0s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(2){--angle: -30deg;animation-delay:-0.1s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(3){--angle: -60deg;animation-delay:-0.2s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(4){--angle: -90deg;animation-delay:-0.3s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(5){--angle: -120deg;animation-delay:-0.4s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(6){--angle: -150deg;animation-delay:-0.5s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(7){--angle: 180deg;animation-delay:-0.6s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(8){--angle: 150deg;animation-delay:-0.7s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(9){--angle: 120deg;animation-delay:-0.8s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(10){--angle: 90deg;animation-delay:-0.9s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(11){--angle: 60deg;animation-delay:-1s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .dot-container .dot:nth-child(12){--angle: 30deg;animation-delay:-1.1s;left:calc(cos(var(--angle))*var(--internal-radius) + var(--center));top:calc(sin(var(--angle))*var(--internal-radius) + var(--center))}:host .text{color:var(--internal-loading-color);font-size:var(--font-size-lg);font-weight:bold;letter-spacing:1px;margin-top:25px;padding:0 15px;text-align:center;z-index:10}@keyframes lds-default{0%,20%,80%,100%{transform:scale(1)}50%{transform:scale(1.5)}}:host([background]){background-color:#08162e;background-image:url('data:image/svg+xml;utf8,<svg version="1.1" viewBox="0 0 65.98 57.373" xmlns="http://www.w3.org/2000/svg"><g fill="%23acf4d6"><path d="M 33.949 5.731 L 22.7 5.731 L 22.7 0.001 L 33.788 0.001 C 45.619 0.001 46.363 17.934 36.124 20.216 C 35.379 20.428 34.637 20.48 33.788 20.48 L 28.483 20.48 L 28.483 20.534 L 28.483 34.433 L 22.7 34.433 L 22.7 14.697 L 28.483 20.534 L 42.491 34.433 L 50.342 34.433 L 30.605 14.697 L 33.949 14.697 C 38.883 14.697 38.883 5.731 33.949 5.731 Z" style="" /></g><g fill="%23FFF"><path d="M 7.8 53.573 L 4.94 48.993 L 3.22 48.993 L 3.22 53.573 L 0 53.573 L 0 39.573 L 4.98 39.573 C 8.12 39.573 10.2 41.473 10.2 44.393 C 10.2 46.253 9.32 47.653 7.84 48.373 L 11.2 53.573 L 7.8 53.573 Z M 3.22 42.533 L 3.22 46.253 L 4.78 46.253 C 6.08 46.253 6.98 45.793 6.98 44.393 C 6.98 43.013 6.08 42.533 4.78 42.533 L 3.22 42.533 Z M 20.3 43.173 L 23.46 43.173 L 23.46 53.573 L 20.3 53.573 L 20.3 52.533 C 20.16 52.893 19.22 53.773 17.62 53.773 C 15.24 53.773 12.5 52.073 12.5 48.353 C 12.5 44.773 15.24 42.993 17.62 42.993 C 19.22 42.993 20.16 43.913 20.3 44.133 L 20.3 43.173 Z M 18.08 50.993 C 19.38 50.993 20.44 50.093 20.44 48.353 C 20.44 46.673 19.38 45.773 18.08 45.773 C 16.72 45.773 15.56 46.693 15.56 48.353 C 15.56 50.073 16.72 50.993 18.08 50.993 Z M 33.94 43.133 L 37.08 43.133 L 30.72 57.373 L 27.56 57.373 L 29.48 53.213 L 24.98 43.133 L 28.12 43.133 L 31.04 49.813 L 33.94 43.133 Z M 42.58 53.733 C 40.64 53.733 38.66 52.433 38.66 49.133 L 38.66 43.173 L 41.82 43.173 L 41.82 48.913 C 41.82 50.493 42.36 50.993 43.36 50.993 C 44.78 50.993 45.6 49.613 45.8 49.013 L 45.8 43.173 L 48.96 43.173 L 48.96 53.573 L 45.8 53.573 L 45.8 51.773 C 45.6 52.273 44.54 53.733 42.58 53.733 Z M 58.2 53.573 L 54.82 49.533 L 54.16 50.233 L 54.16 53.573 L 51 53.573 L 51 49.793 L 51 39.433 L 54.16 39.433 L 54.16 46.373 L 57.1 43.173 L 60.88 43.173 L 56.76 47.513 L 61.8 53.573 L 58.2 53.573 Z M 65.98 39.433 L 65.98 42.093 L 62.82 42.093 L 62.82 39.433 L 65.98 39.433 Z M 65.98 43.173 L 65.98 53.573 L 62.82 53.573 L 62.82 43.173 L 65.98 43.173 Z" /></g></svg>');background-position:center center;background-repeat:no-repeat;background-size:50% 50%}:host([background])::after{content:"";position:absolute;inset:0;background-color:rgba(0,0,0,.5);z-index:1}`;
+    __getStatic() {
+        return Loading;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(Loading.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        blocks: { 'default':`<div class="dot-container">    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div>    <div class="dot"></div></div><div class="text" _id="loading_0"></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "content": {
+    "loading_0°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__f449123065aa1f6c0a81c7fbf3673938method0())}`,
+      "once": true
+    }
+  }
+}); }
+    getClassName() {
+        return "Loading";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('background')) { this.attributeChangedCallback('background', false, false); }if(!this.hasAttribute('text')){ this['text'] = ""; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('background');this.__upgradeProperty('text'); }
+    __listBoolProps() { return ["background"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    onContextMenu(contextMenu, stop) {
+        stop();
+    }
+    __f449123065aa1f6c0a81c7fbf3673938method0() {
+        return this.text;
+    }
+}
+System.Loading.Namespace=`${moduleName}.System`;
+System.Loading.Tag=`rk-loading`;
+_.System.Loading=System.Loading;
+if(!window.customElements.get('rk-loading')){window.customElements.define('rk-loading', System.Loading);Aventus.WebComponentInstance.registerDefinition(System.Loading);}
+
+Components.ContextMenuElement = class ContextMenuElement extends Aventus.WebComponent {
+    static __style = `:host{display:block}`;
+    __getStatic() {
+        return ContextMenuElement;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(ContextMenuElement.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "ContextMenuElement";
+    }
+    onContextMenu(contextMenu, stop) {
+    }
+}
+Components.ContextMenuElement.Namespace=`${moduleName}.Components`;
+Components.ContextMenuElement.Tag=`rk-context-menu-element`;
+_.Components.ContextMenuElement=Components.ContextMenuElement;
+if(!window.customElements.get('rk-context-menu-element')){window.customElements.define('rk-context-menu-element', Components.ContextMenuElement);Aventus.WebComponentInstance.registerDefinition(Components.ContextMenuElement);}
+
 Lib.ShortcutManager=class ShortcutManager {
     static memory = {};
     static isInit = false;
@@ -2373,9 +2686,88 @@ Lib.ShortcutManager=class ShortcutManager {
         Lib.ShortcutManager.isInit = false;
     }
 }
-Lib.ShortcutManager.Namespace=`${moduleName}.Lib`;
+Lib.ShortcutManager.Namespace=`Core.Lib`;
 
 _.Lib.ShortcutManager=Lib.ShortcutManager;
+System.ApplicationShortcut=class ApplicationShortcut {
+    application;
+    cmds = [];
+    is_cmd = false;
+    constructor(application) {
+        this.application = application;
+        this.startCmd = this.startCmd.bind(this);
+        this.stopCmd = this.stopCmd.bind(this);
+        this.printState = this.printState.bind(this);
+    }
+    init() {
+        this.cmds = this.defineCmds();
+    }
+    /**
+     *  Defines the keyboard shortcuts for the application.
+     */
+    defaultShortcut() {
+        return [
+            [[Lib.SpecialTouch.Control, Lib.SpecialTouch.ArrowLeft], this.application.moveApplicationToLeft],
+            [[Lib.SpecialTouch.Control, Lib.SpecialTouch.ArrowRight], this.application.moveApplicationToRight],
+            [[Lib.SpecialTouch.Control, 'k'], this.startCmd],
+        ];
+    }
+    manageShortcut() {
+        let shortcuts = this.defaultShortcut();
+        let customShortcut = this.application.defineShortcut();
+        for (let shortcut of customShortcut) {
+            shortcuts.push(shortcut);
+        }
+        if (this.application.is_desktop_active) {
+            for (let shortcut of shortcuts) {
+                Lib.ShortcutManager.subscribe(shortcut[0], shortcut[1]);
+            }
+        }
+        else {
+            for (let shortcut of shortcuts) {
+                Lib.ShortcutManager.unsubscribe(shortcut[0], shortcut[1]);
+            }
+        }
+    }
+    defineCmds() {
+        return [
+            [['s'], this.runCmd(this.printState)],
+        ];
+    }
+    startCmd() {
+        for (let cmd of this.cmds) {
+            Lib.ShortcutManager.subscribe(cmd[0], cmd[1]);
+        }
+        this.is_cmd = true;
+        setTimeout(() => {
+            this.stopCmd();
+        }, 2000);
+    }
+    stopCmd() {
+        if (!this.is_cmd)
+            return;
+        this.is_cmd = false;
+        for (let cmd of this.cmds) {
+            Lib.ShortcutManager.unsubscribe(cmd[0], cmd[1]);
+        }
+    }
+    runCmd(fct) {
+        return () => {
+            try {
+                fct();
+            }
+            catch {
+            }
+            this.stopCmd();
+        };
+    }
+    printState() {
+        console.log(this.application.navigator.getState());
+    }
+}
+System.ApplicationShortcut.Namespace=`Core.System`;
+
+_.System.ApplicationShortcut=System.ApplicationShortcut;
 State.MoveApplication=class MoveApplication extends Aventus.State {
     static state = "/application/move";
     providers = [];
@@ -2450,7 +2842,7 @@ State.MoveApplication=class MoveApplication extends Aventus.State {
         }
     }
 }
-State.MoveApplication.Namespace=`${moduleName}.State`;
+State.MoveApplication.Namespace=`Core.State`;
 
 _.State.MoveApplication=State.MoveApplication;
 Data.DekstopConfiguration=class DekstopConfiguration extends AventusSharp.Data.Storable {
@@ -2464,7 +2856,7 @@ Data.DekstopConfiguration=class DekstopConfiguration extends AventusSharp.Data.S
     SizeDesktop = 65;
     BackgroundColor = undefined;
 }
-Data.DekstopConfiguration.Namespace=`${moduleName}.Data`;
+Data.DekstopConfiguration.Namespace=`Core.Data`;
 Data.DekstopConfiguration.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Background":""+moduleName+".Data.DataTypes.ImageFile","BackgroundSize":"BackgroundSize","SyncDesktop":"boolean","SizeMobile":"number","SizeTablet":"number","SizeDesktop":"number","BackgroundColor":"string"};
 Aventus.Converter.register(Data.DekstopConfiguration.Fullname, Data.DekstopConfiguration);
 
@@ -2476,7 +2868,7 @@ Data.DesktopAppIcon=class DesktopAppIcon extends AventusSharp.Data.Storable {
     IconTag;
     Location;
 }
-Data.DesktopAppIcon.Namespace=`${moduleName}.Data`;
+Data.DesktopAppIcon.Namespace=`Core.Data`;
 Data.DesktopAppIcon.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Position":"number","DesktopId":"number","IconTag":"string","Location":"DesktopLocation"};
 Aventus.Converter.register(Data.DesktopAppIcon.Fullname, Data.DesktopAppIcon);
 
@@ -2495,7 +2887,7 @@ Websocket.Routes.DesktopRouter_SetDesktopIcon=class DesktopRouter_SetDesktopIcon
         return true;
     }
 }
-Websocket.Routes.DesktopRouter_SetDesktopIcon.Namespace=`${moduleName}.Websocket.Routes`;
+Websocket.Routes.DesktopRouter_SetDesktopIcon.Namespace=`Core.Websocket.Routes`;
 
 _.Websocket.Routes.DesktopRouter_SetDesktopIcon=Websocket.Routes.DesktopRouter_SetDesktopIcon;
 Data.Desktop=class Desktop extends AventusSharp.Data.Storable {
@@ -2507,7 +2899,7 @@ Data.Desktop=class Desktop extends AventusSharp.Data.Storable {
     Icons = [];
     Applications = [];
 }
-Data.Desktop.Namespace=`${moduleName}.Data`;
+Data.Desktop.Namespace=`Core.Data`;
 Data.Desktop.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Name":"string","Token":"string","UserId":"number","Configuration":"DekstopConfiguration","Icons":"DesktopAppIcon","Applications":""+moduleName+".Data.ApplicationOpen"};
 Aventus.Converter.register(Data.Desktop.Fullname, Data.Desktop);
 
@@ -2520,7 +2912,7 @@ Routes.DesktopRouter=class DesktopRouter extends AventusSharp.Routes.StorableRou
         return "Desktop";
     }
 }
-Routes.DesktopRouter.Namespace=`${moduleName}.Routes`;
+Routes.DesktopRouter.Namespace=`Core.Routes`;
 
 _.Routes.DesktopRouter=Routes.DesktopRouter;
 Components.PageCase = class PageCase extends Aventus.WebComponent {
@@ -2864,6 +3256,10 @@ if(!window.customElements.get('rk-page-case')){window.customElements.define('rk-
 Routes.ApplicationRouter=class ApplicationRouter extends Aventus.HttpRoute {
     constructor(router) {
         super(router ?? new Routes.CoreRouter());
+        this.GetAll = this.GetAll.bind(this);
+        this.ConfigureAppData = this.ConfigureAppData.bind(this);
+        this.InstallDevApp = this.InstallDevApp.bind(this);
+        this.UninstallDevApp = this.UninstallDevApp.bind(this);
     }
     async GetAll() {
         const request = new Aventus.HttpRequest(`${this.getPrefix()}/application`, Aventus.HttpMethod.GET);
@@ -2884,7 +3280,7 @@ Routes.ApplicationRouter=class ApplicationRouter extends Aventus.HttpRoute {
         return await request.queryVoid(this.router);
     }
 }
-Routes.ApplicationRouter.Namespace=`${moduleName}.Routes`;
+Routes.ApplicationRouter.Namespace=`Core.Routes`;
 
 _.Routes.ApplicationRouter=Routes.ApplicationRouter;
 RAM.ApplicationRAM=class ApplicationRAM extends Aventus.Ram {
@@ -2954,7 +3350,7 @@ RAM.ApplicationRAM=class ApplicationRAM extends Aventus.Ram {
         return null;
     }
 }
-RAM.ApplicationRAM.Namespace=`${moduleName}.RAM`;
+RAM.ApplicationRAM.Namespace=`Core.RAM`;
 
 _.RAM.ApplicationRAM=RAM.ApplicationRAM;
 System.AppList = class AppList extends Aventus.WebComponent {
@@ -2964,7 +3360,7 @@ System.AppList = class AppList extends Aventus.WebComponent {
     set 'show'(val) { this.setBoolAttr('show', val) }    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("show", ((target) => {
     target.onShowChange();
 })); }
-    static __style = `:host{--internal-app-list-case-border-radius: var(--app-list-case-border-radius, var(--app-icon-border-radius, 10px));--internal-app-list-case-border: var(--app-list-case-border, none);--internal-app-list-case-background-color: var(--app-list-case-background-color, transparent);--internal-app-list-case-border-selected: var(--app-list-case-border-selected, 2px solid red);--internal-app-list-case-background-color-selected: var(--app-list-case-background-color-selected, transparent)}:host{align-items:center;background-color:var(--lighter-active);display:flex;flex-direction:column;inset:0;position:absolute;top:100%;transition:top .5s var(--bezier-curve);z-index:5}:host .search{align-items:center;display:flex;height:100px;justify-content:center;width:100%}:host .search input{background-color:var(--form-element-background);border:none;border-radius:100px;box-shadow:var(--elevation-3);font-size:var(--form-element-font-size);line-height:var(--form-element-font-size);max-width:400px;outline:none;padding:10px 20px;width:calc(100% - 20px)}:host .app-list{--page-case-background: var(--internal-app-list-case-background-color);--page-case-background-active: var(--internal-app-list-case-background-color-selected);--page-case-border-active: var(--internal-app-list-case-border-selected);--page-case-border-radius: var(--internal-app-list-case-border-radius);flex-grow:1;max-width:1000px;width:100%}:host([show]){top:0}:host([no_transition]){transition:none}`;
+    static __style = `:host{--internal-app-list-case-border-radius: var(--app-list-case-border-radius, var(--app-icon-border-radius, 10px));--internal-app-list-case-border: var(--app-list-case-border, none);--internal-app-list-case-background-color: var(--app-list-case-background-color, transparent);--internal-app-list-case-border-selected: var(--app-list-case-border-selected, 2px solid red);--internal-app-list-case-background-color-selected: var(--app-list-case-background-color-selected, transparent)}:host{align-items:center;background-color:var(--lighter-active);display:flex;flex-direction:column;inset:0;position:absolute;top:100%;transition:top .5s var(--bezier-curve);z-index:5}:host .search{align-items:center;display:flex;height:100px;justify-content:center;width:100%}:host .search input{background-color:var(--form-element-background);border:none;border-radius:var(--border-radius-round);box-shadow:var(--elevation-3);font-size:var(--form-element-font-size);line-height:var(--form-element-font-size);max-width:400px;outline:none;padding:10px 20px;width:calc(100% - 20px)}:host .app-list{--page-case-background: var(--internal-app-list-case-background-color);--page-case-background-active: var(--internal-app-list-case-background-color-selected);--page-case-border-active: var(--internal-app-list-case-border-selected);--page-case-border-radius: var(--internal-app-list-case-border-radius);flex-grow:1;max-width:1000px;width:100%}:host([show]){top:0}:host([no_transition]){transition:none}`;
     constructor() { super(); this.closeAppList=this.closeAppList.bind(this) }
     __getStatic() {
         return AppList;
@@ -3157,7 +3553,7 @@ Components.TouchRecord=class TouchRecord {
         return undefined;
     }
 }
-Components.TouchRecord.Namespace=`${moduleName}.Components`;
+Components.TouchRecord.Namespace=`Core.Components`;
 
 _.Components.TouchRecord=Components.TouchRecord;
 Components.Scrollable = class Scrollable extends Aventus.WebComponent {
@@ -3243,7 +3639,7 @@ Components.Scrollable = class Scrollable extends Aventus.WebComponent {
     __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("zoom", ((target) => {
     target.changeZoom();
 })); }
-    static __style = `:host{--_scrollbar-container-color: var(--scrollbar-container-color, transparent);--_scrollbar-color: var(--scrollbar-color, #757575);--_scrollbar-active-color: var(--scrollbar-active-color, #858585);--_scrollbar-max-height: var(--scrollbar-max-height, 100%);--_scroller-width: var(--scroller-width, 6px);--_scroller-top: var(--scroller-top, 3px);--_scroller-bottom: var(--scroller-bottom, 3px);--_scroller-right: var(--scroller-right, 3px);--_scroller-left: var(--scroller-left, 3px);--_scrollbar-content-padding: var(--scrollbar-content-padding, 0);--_scrollbar-container-display: var(--scrollbar-container-display, inline-block)}:host{display:block;height:100%;min-height:inherit;min-width:inherit;overflow:hidden;position:relative;-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;width:100%}:host .scroll-main-container{display:block;height:100%;max-height:var(--_scrollbar-max-height);min-height:inherit;min-width:inherit;position:relative;width:100%}:host .scroll-main-container .content-zoom{display:block;height:100%;max-height:var(--_scrollbar-max-height);min-height:inherit;min-width:inherit;position:relative;transform-origin:0 0;width:100%;z-index:4}:host .scroll-main-container .content-zoom .content-hidder{display:block;height:100%;max-height:var(--_scrollbar-max-height);min-height:inherit;min-width:inherit;overflow:hidden;position:relative;width:100%}:host .scroll-main-container .content-zoom .content-hidder .content-wrapper{display:var(--_scrollbar-container-display);height:100%;min-height:inherit;min-width:inherit;padding:var(--_scrollbar-content-padding);position:relative;width:100%}:host .scroll-main-container .scroller-wrapper .container-scroller{display:none;overflow:hidden;position:absolute;transition:transform .2s linear;z-index:5}:host .scroll-main-container .scroller-wrapper .container-scroller .shadow-scroller{background-color:var(--_scrollbar-container-color);border-radius:5px}:host .scroll-main-container .scroller-wrapper .container-scroller .shadow-scroller .scroller{background-color:var(--_scrollbar-color);border-radius:5px;cursor:pointer;position:absolute;-webkit-tap-highlight-color:rgba(0,0,0,0);touch-action:none;z-index:5}:host .scroll-main-container .scroller-wrapper .container-scroller .scroller.active{background-color:var(--_scrollbar-active-color)}:host .scroll-main-container .scroller-wrapper .container-scroller.vertical{height:calc(100% - var(--_scroller-bottom)*2 - var(--_scroller-width));padding-left:var(--_scroller-left);right:var(--_scroller-right);top:var(--_scroller-bottom);transform:0;width:calc(var(--_scroller-width) + var(--_scroller-left))}:host .scroll-main-container .scroller-wrapper .container-scroller.vertical.hide{transform:translateX(calc(var(--_scroller-width) + var(--_scroller-left)))}:host .scroll-main-container .scroller-wrapper .container-scroller.vertical .shadow-scroller{height:100%}:host .scroll-main-container .scroller-wrapper .container-scroller.vertical .shadow-scroller .scroller{width:calc(100% - var(--_scroller-left))}:host .scroll-main-container .scroller-wrapper .container-scroller.horizontal{bottom:var(--_scroller-bottom);height:calc(var(--_scroller-width) + var(--_scroller-top));left:var(--_scroller-right);padding-top:var(--_scroller-top);transform:0;width:calc(100% - var(--_scroller-right)*2 - var(--_scroller-width))}:host .scroll-main-container .scroller-wrapper .container-scroller.horizontal.hide{transform:translateY(calc(var(--_scroller-width) + var(--_scroller-top)))}:host .scroll-main-container .scroller-wrapper .container-scroller.horizontal .shadow-scroller{height:100%}:host .scroll-main-container .scroller-wrapper .container-scroller.horizontal .shadow-scroller .scroller{height:calc(100% - var(--_scroller-top))}:host([y_scroll]) .scroll-main-container .content-zoom .content-hidder .content-wrapper{height:auto}:host([x_scroll]) .scroll-main-container .content-zoom .content-hidder .content-wrapper{width:auto}:host([y_scroll_visible]) .scroll-main-container .scroller-wrapper .container-scroller.vertical{display:block}:host([x_scroll_visible]) .scroll-main-container .scroller-wrapper .container-scroller.horizontal{display:block}:host([no_user_select]) .content-wrapper *{user-select:none}:host([no_user_select]) ::slotted{user-select:none}`;
+    static __style = `:host{--_scrollbar-container-color: var(--scrollbar-container-color, transparent);--_scrollbar-color: var(--scrollbar-color, #757575);--_scrollbar-active-color: var(--scrollbar-active-color, #858585);--_scrollbar-max-height: var(--scrollbar-max-height, 100%);--_scroller-width: var(--scroller-width, 6px);--_scroller-top: var(--scroller-top, 3px);--_scroller-bottom: var(--scroller-bottom, 3px);--_scroller-right: var(--scroller-right, 3px);--_scroller-left: var(--scroller-left, 3px);--_scrollbar-content-padding: var(--scrollbar-content-padding, 0);--_scrollbar-container-display: var(--scrollbar-container-display, inline-block)}:host{display:block;height:100%;min-height:inherit;min-width:inherit;overflow:hidden;position:relative;-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;-o-user-drag:none;width:100%}:host .scroll-main-container{display:block;height:100%;max-height:var(--_scrollbar-max-height);min-height:inherit;min-width:inherit;position:relative;width:100%}:host .scroll-main-container .content-zoom{display:block;height:100%;max-height:var(--_scrollbar-max-height);min-height:inherit;min-width:inherit;position:relative;transform-origin:0 0;width:100%;z-index:4}:host .scroll-main-container .content-zoom .content-hidder{display:block;height:100%;max-height:var(--_scrollbar-max-height);min-height:inherit;min-width:inherit;overflow:hidden;position:relative;width:100%}:host .scroll-main-container .content-zoom .content-hidder .content-wrapper{display:var(--_scrollbar-container-display);height:100%;min-height:inherit;min-width:inherit;padding:var(--_scrollbar-content-padding);position:relative;width:100%}:host .scroll-main-container .scroller-wrapper .container-scroller{display:none;overflow:hidden;position:absolute;transition:transform .2s linear;z-index:5}:host .scroll-main-container .scroller-wrapper .container-scroller .shadow-scroller{background-color:var(--_scrollbar-container-color);border-radius:var(--border-radius-sm)}:host .scroll-main-container .scroller-wrapper .container-scroller .shadow-scroller .scroller{background-color:var(--_scrollbar-color);border-radius:var(--border-radius-sm);cursor:pointer;position:absolute;-webkit-tap-highlight-color:rgba(0,0,0,0);touch-action:none;z-index:5}:host .scroll-main-container .scroller-wrapper .container-scroller .scroller.active{background-color:var(--_scrollbar-active-color)}:host .scroll-main-container .scroller-wrapper .container-scroller.vertical{height:calc(100% - var(--_scroller-bottom)*2 - var(--_scroller-width));padding-left:var(--_scroller-left);right:var(--_scroller-right);top:var(--_scroller-bottom);transform:0;width:calc(var(--_scroller-width) + var(--_scroller-left))}:host .scroll-main-container .scroller-wrapper .container-scroller.vertical.hide{transform:translateX(calc(var(--_scroller-width) + var(--_scroller-left)))}:host .scroll-main-container .scroller-wrapper .container-scroller.vertical .shadow-scroller{height:100%}:host .scroll-main-container .scroller-wrapper .container-scroller.vertical .shadow-scroller .scroller{width:calc(100% - var(--_scroller-left))}:host .scroll-main-container .scroller-wrapper .container-scroller.horizontal{bottom:var(--_scroller-bottom);height:calc(var(--_scroller-width) + var(--_scroller-top));left:var(--_scroller-right);padding-top:var(--_scroller-top);transform:0;width:calc(100% - var(--_scroller-right)*2 - var(--_scroller-width))}:host .scroll-main-container .scroller-wrapper .container-scroller.horizontal.hide{transform:translateY(calc(var(--_scroller-width) + var(--_scroller-top)))}:host .scroll-main-container .scroller-wrapper .container-scroller.horizontal .shadow-scroller{height:100%}:host .scroll-main-container .scroller-wrapper .container-scroller.horizontal .shadow-scroller .scroller{height:calc(100% - var(--_scroller-top))}:host([y_scroll]) .scroll-main-container .content-zoom .content-hidder .content-wrapper{height:auto}:host([x_scroll]) .scroll-main-container .content-zoom .content-hidder .content-wrapper{width:auto}:host([y_scroll_visible]) .scroll-main-container .scroller-wrapper .container-scroller.vertical{display:block}:host([x_scroll_visible]) .scroll-main-container .scroller-wrapper .container-scroller.horizontal{display:block}:host([no_user_select]) .content-wrapper *{user-select:none}:host([no_user_select]) ::slotted{user-select:none}`;
     constructor() {            super();            this.renderAnimation = this.createAnimation();            this.onWheel = this.onWheel.bind(this);            this.onTouchStart = this.onTouchStart.bind(this);            this.onTouchMove = this.onTouchMove.bind(this);            this.onTouchEnd = this.onTouchEnd.bind(this);            this.touchRecord = new Components.TouchRecord();        }
     __getStatic() {
         return Scrollable;
@@ -3624,6 +4020,7 @@ Components.Scrollable = class Scrollable extends Aventus.WebComponent {
             // scale the container for zoom
             this.contentZoom.style.width = this.mainContainer.offsetWidth / this.zoom + 'px';
             this.contentZoom.style.height = this.mainContainer.offsetHeight / this.zoom + 'px';
+            this.contentZoom.style.maxHeight = this.mainContainer.offsetHeight / this.zoom + 'px';
             this.display.y = currentOffsetHeight;
             this.display.x = currentOffsetWidth;
         }
@@ -3758,6 +4155,110 @@ Components.Scrollable.Tag=`rk-scrollable`;
 _.Components.Scrollable=Components.Scrollable;
 if(!window.customElements.get('rk-scrollable')){window.customElements.define('rk-scrollable', Components.Scrollable);Aventus.WebComponentInstance.registerDefinition(Components.Scrollable);}
 
+Permissions.Tree.PermissionTree=class PermissionTree {
+    static get Fullname() { return "Core.Permissions.Tree.PermissionTree, Core"; }
+    AppName;
+    IconTagName;
+    PermissionId;
+    Permissions = [];
+}
+Permissions.Tree.PermissionTree.Namespace=`Core.Permissions.Tree`;
+Permissions.Tree.PermissionTree.$schema={"AppName":"string","IconTagName":"string","PermissionId":"number","Permissions":"PermissionTreeItem"};
+Aventus.Converter.register(Permissions.Tree.PermissionTree.Fullname, Permissions.Tree.PermissionTree);
+
+_.Permissions.Tree.PermissionTree=Permissions.Tree.PermissionTree;
+Data.PermissionGroup=class PermissionGroup extends AventusSharp.Data.Storable {
+    static get Fullname() { return "Core.Data.PermissionGroup, Core"; }
+    Data;
+    Permission;
+    GroupId;
+}
+Data.PermissionGroup.Namespace=`Core.Data`;
+Data.PermissionGroup.$schema={...(AventusSharp.Data.Storable?.$schema ?? {}), "Permission":""+moduleName+".Data.Permission","GroupId":"number"};
+Aventus.Converter.register(Data.PermissionGroup.Fullname, Data.PermissionGroup);
+
+_.Data.PermissionGroup=Data.PermissionGroup;
+Routes.PermissionGroupRouter=class PermissionGroupRouter extends Aventus.HttpRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+        this.GetAllByGroup = this.GetAllByGroup.bind(this);
+        this.EditPermission = this.EditPermission.bind(this);
+    }
+    async GetAllByGroup(body) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/permissiongroup/bygroup`, Aventus.HttpMethod.POST);
+        request.setBody(body);
+        return await request.queryJSON(this.router);
+    }
+    async EditPermission(body) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/permissiongroup/editpermission`, Aventus.HttpMethod.POST);
+        request.setBody(body);
+        return await request.queryJSON(this.router);
+    }
+}
+Routes.PermissionGroupRouter.Namespace=`Core.Routes`;
+
+_.Routes.PermissionGroupRouter=Routes.PermissionGroupRouter;
+Permissions.PermissionForUser=class PermissionForUser {
+    static get Fullname() { return "Core.Logic.PermissionForUser, Core"; }
+    permissionGroups = [];
+    permissionUsers = [];
+}
+Permissions.PermissionForUser.Namespace=`Core.Permissions`;
+Permissions.PermissionForUser.$schema={"permissionGroups":""+moduleName+".Data.PermissionGroup","permissionUsers":""+moduleName+".Data.PermissionUser"};
+Aventus.Converter.register(Permissions.PermissionForUser.Fullname, Permissions.PermissionForUser);
+
+_.Permissions.PermissionForUser=Permissions.PermissionForUser;
+Routes.PermissionRouter=class PermissionRouter extends Aventus.HttpRoute {
+    constructor(router) {
+        super(router ?? new Routes.CoreRouter());
+        this.Can = this.Can.bind(this);
+        this.GetPermissionsTree = this.GetPermissionsTree.bind(this);
+        this.GetPermissionsForUser = this.GetPermissionsForUser.bind(this);
+    }
+    async Can(body) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/can`, Aventus.HttpMethod.POST);
+        request.setBody(body);
+        return await request.queryJSON(this.router);
+    }
+    async GetPermissionsTree() {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/getpermissionstree`, Aventus.HttpMethod.GET);
+        return await request.queryJSON(this.router);
+    }
+    async GetPermissionsForUser(idUser) {
+        const request = new Aventus.HttpRequest(`${this.getPrefix()}/permissions/GetPermissionsForUser/${idUser}`, Aventus.HttpMethod.GET);
+        return await request.queryJSON(this.router);
+    }
+}
+Routes.PermissionRouter.Namespace=`Core.Routes`;
+
+_.Routes.PermissionRouter=Routes.PermissionRouter;
+Permissions.Permission=class Permission {
+    static saved = {};
+    static async can(query) {
+        if (!query.additionalInfo) {
+            query.additionalInfo = "";
+        }
+        let key = query.$type + "$" + query.value + "$" + query.additionalInfo;
+        if (Object.keys(this.saved).includes(key)) {
+            return this.saved[key];
+        }
+        let response = await new Routes.PermissionRouter().Can({ permissionQuery: query });
+        if (response.success && response.result !== undefined) {
+            this.saved[key] = response.result;
+            return this.saved[key];
+        }
+        else {
+            console.log(response.errors);
+        }
+        return false;
+    }
+    static clear() {
+        this.saved = {};
+    }
+}
+Permissions.Permission.Namespace=`Core.Permissions`;
+
+_.Permissions.Permission=Permissions.Permission;
 RAM.UserRAM=class UserRAM extends AventusSharp.RAM.RamHttp {
     connectedUserId;
     /**
@@ -3816,16 +4317,20 @@ RAM.UserRAM=class UserRAM extends AventusSharp.RAM.RamHttp {
         };
     }
 }
-RAM.UserRAM.Namespace=`${moduleName}.RAM`;
+RAM.UserRAM.Namespace=`Core.RAM`;
 
 _.RAM.UserRAM=RAM.UserRAM;
 Lib.SessionManager=class SessionManager {
     static async logout() {
         try {
             await new Routes.MainRouter().Logout();
+            Permissions.Permission.clear();
         }
         catch { }
         window.location.reload();
+    }
+    static getUserId() {
+        return userIdConnected;
     }
     static async getUser() {
         let result = await RAM.UserRAM.getInstance().getConnected();
@@ -3837,7 +4342,7 @@ Lib.SessionManager=class SessionManager {
         return result.result;
     }
 }
-Lib.SessionManager.Namespace=`${moduleName}.Lib`;
+Lib.SessionManager.Namespace=`Core.Lib`;
 
 _.Lib.SessionManager=Lib.SessionManager;
 System.HomePanel = class HomePanel extends System.Panel {
@@ -3850,7 +4355,7 @@ System.HomePanel = class HomePanel extends System.Panel {
     __registerWatchesActions() {
     this.__addWatchesActions("currentUser");    super.__registerWatchesActions();
 }
-    static __style = `:host{display:flex;flex-direction:column;left:-9px;position:absolute;width:500px}:host .content{flex-grow:1;max-height:calc(100% - 57px)}:host .content rk-row{height:100%}:host .content rk-row rk-col{height:100%}:host .content rk-row rk-col .title{font-weight:700;height:30px;padding:5px}:host .content rk-row rk-col .scrollable{--scroller-right: 0;height:calc(100% - 30px);width:100%}:host .content rk-row rk-col .recent{width:100%}:host .content rk-row rk-col .recent .recent-container *{background-color:var(--primary-color);border-radius:5px;margin:10px;overflow:hidden}:host .content rk-row rk-col .favoris{width:100%}:host .content rk-row rk-col .favoris .favoris-container .grid{display:flex;flex-wrap:wrap;gap:10px;padding:10px}:host .content rk-row rk-col .favoris .favoris-container .grid *{aspect-ratio:1/1;flex-shrink:0;height:auto;width:calc(33.3333333333% - 6.6666666667px)}:host .footer{align-items:center;border-top:1px solid var(--lighter-active);display:flex;gap:10px;height:57px;justify-content:space-between;width:100%}:host .footer .person{align-items:center;display:flex;padding:8px 10px;margin:10px 10px;border-radius:5px;transition:background-color .2s var(--bezier-curve)}:host .footer .person .icon{height:30px;width:30px}:host .footer .person .name{margin-left:10px}:host .footer .person:hover{background-color:var(--lighter)}:host .footer rk-button{--button-padding: 0px 8px;--button-icon-stroke-color: var(--text-color-red);--button-icon-fill-color: transparent;--button-background-color: var(--red);--button-background-color-hover: transparent;aspect-ratio:1;border:none;box-shadow:var(--elevation-2);min-width:auto;margin:10px 10px}`;
+    static __style = `:host{display:flex;flex-direction:column;left:-9px;position:absolute;width:500px;box-shadow:var(--elevation-3)}:host .content{flex-grow:1;max-height:calc(100% - 57px)}:host .content rk-row{height:100%}:host .content rk-row rk-col{height:100%}:host .content rk-row rk-col .title{font-weight:700;height:30px;padding:5px}:host .content rk-row rk-col .scrollable{--scroller-right: 0;height:calc(100% - 30px);width:100%}:host .content rk-row rk-col .recent{width:100%}:host .content rk-row rk-col .recent .recent-container *{background-color:var(--primary-color);border-radius:var(--border-radius-sm);margin:10px;overflow:hidden}:host .content rk-row rk-col .favoris{width:100%}:host .content rk-row rk-col .favoris .favoris-container .grid{display:flex;flex-wrap:wrap;gap:10px;padding:10px}:host .content rk-row rk-col .favoris .favoris-container .grid *{aspect-ratio:1/1;flex-shrink:0;height:auto;width:calc(33.3333333333% - 6.6666666667px)}:host .footer{align-items:center;border-top:1px solid var(--lighter-active);display:flex;gap:10px;height:57px;justify-content:space-between;width:100%}:host .footer .person{align-items:center;border-radius:var(--border-radius-sm);display:flex;margin:10px 10px;padding:8px 10px;transition:background-color .2s var(--bezier-curve)}:host .footer .person .icon{height:30px;width:30px}:host .footer .person .name{margin-left:10px}:host .footer .person:hover{background-color:var(--lighter)}:host .footer .actions{align-items:center;display:flex}:host .footer .actions rk-pwa-button{color:var(--text-color-success);background-color:var(--success);height:36px;width:36px}:host .footer .actions rk-button{--button-padding: 0px 8px;--button-icon-stroke-color: var(--text-color-red);--button-icon-fill-color: transparent;--button-background-color: var(--red);--button-background-color-hover: transparent;aspect-ratio:1;border:none;box-shadow:var(--elevation-2);margin:10px 10px;min-width:auto}`;
     __getStatic() {
         return HomePanel;
     }
@@ -3861,7 +4366,7 @@ System.HomePanel = class HomePanel extends System.Panel {
     }
     __getHtml() {super.__getHtml();
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<div class="content">    <rk-row>        <rk-col size="6">            <div class="recent">                <div class="title">                    Récents                </div>                <rk-scrollable class="scrollable recent-container" floating_scroll _id="homepanel_0">                </rk-scrollable>            </div>        </rk-col>        <rk-col size="6">            <div class="favoris">                <div class="title">                    Mes favoris                </div>                <rk-scrollable class="scrollable favoris-container" floating_scroll>                    <div class="grid" _id="homepanel_1"></div>                </rk-scrollable>            </div>        </rk-col>    </rk-row></div><div class="footer">    <div class="person touch" _id="homepanel_2">        <rk-user-profil-picture class="icon" _id="homepanel_3"></rk-user-profil-picture>        <div class="name" _id="homepanel_4"></div>    </div>    <rk-button icon="/img/icons/power-off.svg" _id="homepanel_5"></rk-button></div>` }
+        blocks: { 'default':`<div class="content">    <rk-row>        <rk-col size="6">            <div class="recent">                <div class="title">                    Récents                </div>                <rk-scrollable class="scrollable recent-container" floating_scroll _id="homepanel_0">                </rk-scrollable>            </div>        </rk-col>        <rk-col size="6">            <div class="favoris">                <div class="title">                    Mes favoris                </div>                <rk-scrollable class="scrollable favoris-container" floating_scroll>                    <div class="grid" _id="homepanel_1"></div>                </rk-scrollable>            </div>        </rk-col>    </rk-row></div><div class="footer">    <div class="person touch" _id="homepanel_2">        <rk-user-profil-picture class="icon" _id="homepanel_3"></rk-user-profil-picture>        <div class="name" _id="homepanel_4"></div>    </div>    <div class="actions">        <rk-pwa-button>            <rk-tooltip position="top" delay="1000" use_absolute color="green">Installer l'application</rk-tooltip>        </rk-pwa-button>        <rk-button icon="/img/icons/power-off.svg" _id="homepanel_5"></rk-button>    </div></div>` }
     });
 }
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
@@ -3906,7 +4411,7 @@ System.HomePanel = class HomePanel extends System.Panel {
     openProfil() {
         let desktop = this.findParentByType(System.Desktop);
         if (desktop) {
-            desktop.openUrl("Settings", "/", "/user");
+            desktop.openUrl("Settings", "/", "/profil");
             this.btn.active = false;
         }
     }
@@ -3963,7 +4468,7 @@ if(!window.customElements.get('rk-home-panel')){window.customElements.define('rk
 
 System.HomeBtn = class HomeBtn extends Aventus.WebComponent {
     get 'active'() { return this.getBoolAttr('active') }
-    set 'active'(val) { this.setBoolAttr('active', val) }    static __style = `:host{position:relative}:host .icon{border-radius:5px;cursor:pointer;margin:0 3px;max-height:calc(100% - 16px);max-width:34px;padding:7px;transition:background-color .2s var(--bezier-curve)}:host rk-home-panel{bottom:calc(100% + 5px);height:0;overflow:hidden;transition:bottom var(--bezier-curve) .5s,height var(--bezier-curve) .5s}:host([active]) .icon{background-color:var(--text-color)}:host([active]) .icon rk-img{--img-fill-color: var(--primary-color-opacity)}:host([active]) rk-home-panel{bottom:calc(100% + 10px);height:400px}@media screen and (min-width: 1225px){:host(:not([active])) .icon:hover{background-color:var(--lighter-active)}}`;
+    set 'active'(val) { this.setBoolAttr('active', val) }    static __style = `:host{position:relative}:host .icon{border-radius:var(--border-radius-sm);cursor:pointer;margin:0 3px;max-height:calc(100% - 16px);max-width:34px;padding:7px;transition:background-color .2s var(--bezier-curve)}:host rk-home-panel{bottom:calc(100% + 5px);height:0;overflow:hidden;transition:bottom var(--bezier-curve) .5s,height var(--bezier-curve) .5s}:host([active]) .icon{background-color:var(--text-color)}:host([active]) .icon rk-img{--img-fill-color: var(--primary-color-opacity)}:host([active]) rk-home-panel{bottom:calc(100% + 10px);height:400px}@media screen and (min-width: 1225px){:host(:not([active])) .icon:hover{background-color:var(--lighter-active)}}`;
     __getStatic() {
         return HomeBtn;
     }
@@ -4025,7 +4530,7 @@ Websocket.Routes.DesktopRouter_RegisterOpenApp=class DesktopRouter_RegisterOpenA
         return true;
     }
 }
-Websocket.Routes.DesktopRouter_RegisterOpenApp.Namespace=`${moduleName}.Websocket.Routes`;
+Websocket.Routes.DesktopRouter_RegisterOpenApp.Namespace=`Core.Websocket.Routes`;
 
 _.Websocket.Routes.DesktopRouter_RegisterOpenApp=Websocket.Routes.DesktopRouter_RegisterOpenApp;
 Websocket.Routes.DesktopRouter=class DesktopRouter extends AventusSharp.WebSocket.Route {
@@ -4075,7 +4580,7 @@ Websocket.Routes.DesktopRouter=class DesktopRouter extends AventusSharp.WebSocke
         return await this.endpoint.sendMessageAndWait(info);
     }
 }
-Websocket.Routes.DesktopRouter.Namespace=`${moduleName}.Websocket.Routes`;
+Websocket.Routes.DesktopRouter.Namespace=`Core.Websocket.Routes`;
 
 _.Websocket.Routes.DesktopRouter=Websocket.Routes.DesktopRouter;
 System.BottomBar = class BottomBar extends Aventus.WebComponent {
@@ -4090,7 +4595,7 @@ System.BottomBar = class BottomBar extends Aventus.WebComponent {
     is_desktop_active = false;
     timeoutOverHome = 0;
     emptyIcon;
-    static __style = `:host{align-items:center;background-color:var(--primary-color-opacity);border-radius:10px;bottom:10px;box-shadow:var(--elevation-3);color:var(--text-color);display:flex;font-size:var(--font-size);height:50px;left:100px;outline:none;padding:0 10px;position:absolute;transition:opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s,transform 1s var(--bezier-curve);width:calc(100% - 200px);z-index:100}:host .section{align-items:center;display:flex;height:100%}:host .section .icon{--img-stroke-color: transparent;--img-fill-color: var(--text-color);border-radius:5px;cursor:pointer;margin:0 3px;max-height:calc(100% - 16px);max-width:34px;padding:7px;transition:background-color .2s var(--bezier-curve)}:host .section rk-app-icon{margin:0 5px}:host .separator{background-color:var(--text-color);display:inline-block;height:50%;margin:0 13px;width:1px}:host .applications{flex-grow:1;gap:10px;position:relative}:host .applications .empty-icon{background-color:var(--darker-active);border-radius:5px;height:30px;width:30px}:host .nb-notifications{align-items:center;background-color:var(--text-color);border-radius:50%;color:var(--primary-color-opacity);display:flex;font-size:14px;font-weight:bold;height:25px;justify-content:center;letter-spacing:-1px;padding-right:1px;width:25px}@media screen and (min-width: 1225px){:host .section .icon:hover{background-color:var(--lighter-active)}}@media screen and (max-width: 1224px){:host{border-radius:0;border-bottom-left-radius:0;border-bottom-right-radius:0;bottom:0px;left:0px;padding:0 10px;width:100%}}@media screen and (max-width: 768px){:host{height:70px}:host .basic-action{display:none}:host .addons>*{display:none}:host .separator{display:none}:host .applications .empty-icon{height:50px;width:50px}}`;
+    static __style = `:host{align-items:center;background-color:var(--primary-color-opacity);border-radius:var(--border-radius);bottom:10px;box-shadow:var(--elevation-3);color:var(--text-color);display:flex;font-size:var(--font-size);height:50px;left:100px;outline:none;padding:0 10px;position:absolute;transition:opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s,transform 1s var(--bezier-curve);width:calc(100% - 200px);z-index:100}:host .section{align-items:center;display:flex;height:100%}:host .section .icon{--img-stroke-color: transparent;--img-fill-color: var(--text-color);border-radius:var(--border-radius-sm);cursor:pointer;margin:0 3px;max-height:calc(100% - 16px);max-width:34px;padding:7px;transition:background-color .2s var(--bezier-curve)}:host .section rk-app-icon{margin:0 5px}:host .separator{background-color:var(--text-color);display:inline-block;height:50%;margin:0 13px;width:1px}:host .applications{flex-grow:1;gap:10px;position:relative}:host .applications .empty-icon{background-color:var(--darker-active);border-radius:var(--border-radius-sm);height:30px;width:30px}:host .nb-notifications{align-items:center;background-color:var(--text-color);border-radius:var(--border-radius-round);color:var(--primary-color-opacity);display:flex;font-size:14px;font-weight:bold;height:25px;justify-content:center;letter-spacing:-1px;padding-right:1px;width:25px}@media screen and (min-width: 1225px){:host .section .icon:hover{background-color:var(--lighter-active)}}@media screen and (max-width: 1224px){:host{border-radius:0;border-bottom-left-radius:0;border-bottom-right-radius:0;bottom:0px;left:0px;padding:0 10px;width:100%}}@media screen and (max-width: 768px){:host{height:70px}:host .basic-action{display:none}:host .addons>*{display:none}:host .separator{display:none}:host .applications .empty-icon{height:50px;width:50px}}`;
     constructor() { super(); this.setAppPositionTemp=this.setAppPositionTemp.bind(this)this.clearAppPositionTemp=this.clearAppPositionTemp.bind(this)this.setAppPosition=this.setAppPosition.bind(this)this.removeAppPosition=this.removeAppPosition.bind(this) }
     __getStatic() {
         return BottomBar;
@@ -4102,7 +4607,7 @@ System.BottomBar = class BottomBar extends Aventus.WebComponent {
     }
     __getHtml() {
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<div class="section basic-action">    <rk-home-btn></rk-home-btn>    <rk-img mode="contains" src="/img/icons/application-panel.svg" class="touch icon" _id="bottombar_0"></rk-img>    <rk-img mode="contains" src="/img/icons/search.svg" class="touch icon"></rk-img>    <rk-img mode="contains" src="/img/icons/layout-fluid.svg" class="touch icon" _id="bottombar_1"></rk-img></div><div class="separator"></div><div class="section applications" _id="bottombar_2"></div><div class="separator"></div><div class="section addons">    <rk-pwa-button></rk-pwa-button>    <rk-add-on-time></rk-add-on-time></div>` }
+        blocks: { 'default':`<div class="section basic-action">    <rk-home-btn></rk-home-btn>    <rk-img mode="contains" src="/img/icons/application-panel.svg" class="touch icon" _id="bottombar_0"></rk-img>    <rk-img mode="contains" src="/img/icons/search.svg" class="touch icon"></rk-img>    <rk-img mode="contains" src="/img/icons/layout-fluid.svg" class="touch icon" _id="bottombar_1"></rk-img></div><div class="separator"></div><div class="section applications" _id="bottombar_2"></div><div class="separator"></div><div class="section addons">    <rk-add-on-time></rk-add-on-time></div>` }
     });
 }
     __createStates() { super.__createStates(); let that = this;  this.__createStatesList(State.MoveApplication.state, State.DesktopStateManager);this.__addActiveState(State.MoveApplication.state, State.DesktopStateManager, (state, slugs) => { that.__inactiveDefaultState(State.DesktopStateManager); that.onMoveApplication(state, slugs);})this.__addInactiveState(State.MoveApplication.state, State.DesktopStateManager, (state, nextState, slugs) => { that.onStopMovingApplication(state, nextState, slugs);that.__activeDefaultState(nextState, State.DesktopStateManager);}) }
@@ -4824,31 +5329,155 @@ Components.Resize.Tag=`rk-resize`;
 _.Components.Resize=Components.Resize;
 if(!window.customElements.get('rk-resize')){window.customElements.define('rk-resize', Components.Resize);Aventus.WebComponentInstance.registerDefinition(Components.Resize);}
 
-System.FrameNoScroll = class FrameNoScroll extends Aventus.WebComponent {
-    static get observedAttributes() {return ["visible"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
-    get 'visible'() { return this.getBoolProp('visible') }
-    set 'visible'(val) { this.setBoolAttr('visible', val) }    state;
-    application;
-    resetNavElement;
-    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("visible", ((target) => {
-    if (target.visible) {
-        target.onShow();
-    }
-    else {
-        target.onHide();
-    }
-})); }
-    static __style = `:host{animation-delay:var(--local-frame-animation-delay, 0ms);animation-duration:200ms;animation-name:fadeIn;animation-timing-function:var(--bezier-curve);animation-fill-mode:forwards;display:none;height:100%;opacity:0;visibility:hidden;width:100%}:host([visible]){display:block}@keyframes fadeIn{0%{opacity:0;visibility:hidden}100%{opacity:1;visibility:visible}}`;
-    constructor() {
-            super();
-            this.addFadeIn();
-if (this.constructor == FrameNoScroll) { throw "can't instanciate an abstract class"; } }
+Components.Notification = class Notification extends Aventus.WebComponent {
+    static get observedAttributes() {return ["icon", "subject"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'position'() { return this.getStringAttr('position') }
+    set 'position'(val) { this.setStringAttr('position', val) }get 'color'() { return this.getStringAttr('color') }
+    set 'color'(val) { this.setStringAttr('color', val) }get 'delay'() { return this.getNumberAttr('delay') }
+    set 'delay'(val) { this.setNumberAttr('delay', val) }get 'is_active'() { return this.getBoolAttr('is_active') }
+    set 'is_active'(val) { this.setBoolAttr('is_active', val) }    get 'icon'() { return this.getStringProp('icon') }
+    set 'icon'(val) { this.setStringAttr('icon', val) }get 'subject'() { return this.getStringProp('subject') }
+    set 'subject'(val) { this.setStringAttr('subject', val) }    showAsked = false;
+    onHide = () => { };
+    timeout = 0;
+    static __style = `:host{--internal-notification-box-shadow: var(--notification-box-shadow);--internal-notification-logo-fill-color: var(--notification-logo-fill-color, var(--text-color));--internal-notification-logo-stroke-color: var(--notification-logo-stroke-color, transparent);--local-notification-transition-delay: 0.4s;--_notification-margin-bottom: var(--notification-margin-bottom, 20px);--_notification-margin-top: var(--notification-margin-top, 20px);--_notification-margin-right: var(--notification-margin-right, 10px);--_notification-margin-left: var(--notification-margin-left, 10px)}:host{background-color:var(--secondary-color);border-radius:var(--border-radius);box-shadow:var(--internal-notification-box-shadow);color:var(--text-color);display:flex;max-width:calc(100% - 20px);min-height:40px;padding:10px 20px;position:absolute;z-index:600;align-items:center}:host .logo{--img-fill-color: var(--internal-notification-logo-fill-color);--img-stroke-color: var(--internal-notification-logo-stroke-color);flex-shrink:0;order:1;width:30px;font-size:24px;margin-right:5px}:host .logo[src=""]{display:none}:host .content{cursor:pointer;display:flex;flex-direction:column;order:2}:host .content .title{font-size:20px;font-weight:bold;margin-bottom:5px}:host .content .title:empty{display:none}:host .content .text{flex-grow:1;overflow:hidden}:host .content .text:empty{display:none}:host .close{cursor:pointer;flex-grow:0;height:30px;position:absolute;width:30px}:host(:empty) .content .title{margin-bottom:0}:host(:empty) .content .text{display:none}:host([position="bottom left"]){bottom:var(--_notification-margin-bottom);left:0px;opacity:0;transform:translateX(-100%);transition:left var(--local-notification-transition-delay) var(--bezier-curve),bottom var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve)}:host([position="bottom left"]) .logo{order:2;margin-right:0;margin-left:5px}:host([position="bottom left"]) .content{order:1}:host([position="bottom left"]) .close{left:5px;top:5px}:host([position="bottom left"][is_active]){left:var(--_notification-margin-left);opacity:1;transform:translateX(0)}:host([position="top left"]){top:var(--_notification-margin-top);left:0px;opacity:0;transform:translateX(-100%);transition:left var(--local-notification-transition-delay) var(--bezier-curve),top var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve)}:host([position="top left"]) .logo{order:2;margin-right:0;margin-left:5px}:host([position="top left"]) .content{order:1}:host([position="top left"]) .close{left:5px;top:5px}:host([position="top left"][is_active]){left:var(--_notification-margin-left);opacity:1;transform:translateX(0)}:host([position="bottom right"]){bottom:var(--_notification-margin-bottom);opacity:0;right:0px;transform:translateX(100%);transition:right var(--local-notification-transition-delay) var(--bezier-curve),bottom var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve)}:host([position="bottom right"]) .close{right:5px;top:5px}:host([position="bottom right"][is_active]){opacity:1;right:var(--_notification-margin-right);transform:translateX(0)}:host([position="top right"]){opacity:0;right:0px;top:var(--_notification-margin-top);transform:translateX(100%);transition:right var(--local-notification-transition-delay) var(--bezier-curve),top var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve)}:host([position="top right"]) .close{right:5px;top:5px}:host([position="top right"][is_active]){opacity:1;right:var(--_notification-margin-right);transform:translateX(0)}:host([position=top]){left:10%;opacity:0;transform:translateY(-100%);transition:top var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve);width:80%}:host([position=top]) .close{right:5px;top:5px}:host([position=top]:not([is_active])){top:0px !important}:host([position=top][is_active]){opacity:1;top:var(--_notification-margin-top);transform:translateY(0)}:host([position=bottom]){left:10%;transform:translateY(100%);transition:bottom var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve);width:80%}:host([position=bottom]) .close{right:5px;top:5px}:host([position=bottom]:not([is_active])){bottom:0px !important}:host([position=bottom][is_active]){bottom:var(--_notification-margin-bottom);opacity:1;transform:translateY(0)}:host([color=primary]){background-color:var(--primary);color:var(--text-color-primary)}:host([color=secondary]){background-color:var(--secondary);color:var(--text-color-secondary)}:host([color=green]){background-color:var(--green);color:var(--text-color-green)}:host([color=success]){background-color:var(--success);color:var(--text-color-success)}:host([color=red]){background-color:var(--red);color:var(--text-color-red)}:host([color=error]){background-color:var(--error);color:var(--text-color-error)}:host([color=orange]){background-color:var(--orange);color:var(--text-color-orange)}:host([color=warning]){background-color:var(--warning);color:var(--text-color-warning)}:host([color=blue]){background-color:var(--blue);color:var(--text-color-blue)}:host([color=information]){background-color:var(--information);color:var(--text-color-information)}`;
     __getStatic() {
-        return FrameNoScroll;
+        return Notification;
     }
     __getStyle() {
         let arrStyle = super.__getStyle();
-        arrStyle.push(FrameNoScroll.__style);
+        arrStyle.push(Notification.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<rk-img class="logo" _id="notification_0"></rk-img><div class="content" _id="notification_1">    <div class="title" _id="notification_2"></div>    <div class="text"><slot></slot></div></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "content": {
+    "notification_0°src": {
+      "fct": (c) => `${c.print(c.comp.__539853f1187f37c9fe641c673a21b24cmethod0())}`,
+      "once": true
+    },
+    "notification_2°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__539853f1187f37c9fe641c673a21b24cmethod1())}`,
+      "once": true
+    }
+  },
+  "pressEvents": [
+    {
+      "id": "notification_0",
+      "onPress": (e, pressInstance, c) => { c.comp.clicked(e, pressInstance); }
+    },
+    {
+      "id": "notification_1",
+      "onPress": (e, pressInstance, c) => { c.comp.clicked(e, pressInstance); }
+    }
+  ]
+}); }
+    getClassName() {
+        return "Notification";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('position')){ this['position'] = 'bottom right'; }if(!this.hasAttribute('color')){ this['color'] = undefined; }if(!this.hasAttribute('delay')){ this['delay'] = 2000; }if(!this.hasAttribute('is_active')) { this.attributeChangedCallback('is_active', false, false); }if(!this.hasAttribute('icon')){ this['icon'] = undefined; }if(!this.hasAttribute('subject')){ this['subject'] = ""; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('position');this.__upgradeProperty('color');this.__upgradeProperty('delay');this.__upgradeProperty('is_active');this.__upgradeProperty('icon');this.__upgradeProperty('subject'); }
+    __listBoolProps() { return ["is_active"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    show(onHide) {
+        this.onHide = onHide;
+        if (this.isReady) {
+            this.is_active = true;
+            this.startDelay();
+        }
+        else {
+            this.showAsked = true;
+        }
+    }
+    startDelay() {
+        if (this.delay > 0) {
+            this.timeout = setTimeout(() => {
+                this.close();
+            }, this.delay);
+        }
+    }
+    async clicked() {
+        if (this.onHide) {
+            this.is_active = false;
+            this.onHide(true);
+            await Aventus.sleep(420);
+            this.remove();
+        }
+    }
+    async close() {
+        if (this.onHide) {
+            this.is_active = false;
+            this.onHide(false);
+            await Aventus.sleep(420);
+            this.remove();
+        }
+    }
+    postCreation() {
+        if (this.showAsked) {
+            this.is_active = true;
+            this.startDelay();
+        }
+    }
+    __539853f1187f37c9fe641c673a21b24cmethod0() {
+        return this.icon;
+    }
+    __539853f1187f37c9fe641c673a21b24cmethod1() {
+        return this.subject;
+    }
+    static create(options) {
+        let el = new Components.Notification();
+        if (options.position)
+            el.position = options.position;
+        if (options.color)
+            el.color = options.color;
+        if (options.title)
+            el.subject = options.title;
+        if (options.body)
+            el.innerHTML = options.body;
+        if (options.delay)
+            el.delay = options.delay;
+        if (options.icon)
+            el.icon = options.icon;
+        return el;
+    }
+}
+Components.Notification.Namespace=`${moduleName}.Components`;
+Components.Notification.Tag=`rk-notification`;
+_.Components.Notification=Components.Notification;
+if(!window.customElements.get('rk-notification')){window.customElements.define('rk-notification', Components.Notification);Aventus.WebComponentInstance.registerDefinition(Components.Notification);}
+
+Components.NotificationManager = class NotificationManager extends Aventus.WebComponent {
+    get 'gap'() { return this.getNumberAttr('gap') }
+    set 'gap'(val) { this.setNumberAttr('gap', val) }    activeNotifications = {
+        top: [],
+        'top left': [],
+        'bottom left': [],
+        bottom: [],
+        'bottom right': [],
+        'top right': [],
+    };
+    waitingNotifications = {
+        top: [],
+        'top left': [],
+        'bottom left': [],
+        bottom: [],
+        'bottom right': [],
+        'top right': [],
+    };
+    get containerHeight() {
+        return this.offsetHeight;
+    }
+    static __style = `:host{inset:0;overflow:hidden;pointer-events:none;position:absolute}:host ::slotted(*){pointer-events:auto}`;
+    __getStatic() {
+        return NotificationManager;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(NotificationManager.__style);
         return arrStyle;
     }
     __getHtml() {
@@ -4858,72 +5487,335 @@ if (this.constructor == FrameNoScroll) { throw "can't instanciate an abstract cl
     });
 }
     getClassName() {
-        return "FrameNoScroll";
+        return "NotificationManager";
     }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('visible')) { this.attributeChangedCallback('visible', false, false); } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('visible'); }
-    __listBoolProps() { return ["visible"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
-    addFadeIn() {
-        this.style.setProperty("--local-frame-animation-delay", "200ms");
-        this.addEventListener("animationend", (e) => {
-            if (e.animationName == "fadeIn") {
-                this.style.removeProperty("--local-frame-animation-delay");
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('gap')){ this['gap'] = 10; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__correctGetter('containerHeight');this.__upgradeProperty('gap'); }
+    async notify(notification) {
+        let realNotification;
+        if (notification instanceof Components.Notification) {
+            realNotification = notification;
+        }
+        else {
+            realNotification = Components.Notification.create(notification);
+        }
+        this.appendChild(realNotification);
+        if (realNotification.position == "bottom") {
+            return this._notifyBottom(realNotification, true);
+        }
+        else if (realNotification.position == "bottom left") {
+            return this._notifyBottomLeft(realNotification, true);
+        }
+        else if (realNotification.position == "top left") {
+            return this._notifyTopLeft(realNotification, true);
+        }
+        else if (realNotification.position == "bottom right") {
+            return this._notifyBottomRight(realNotification, true);
+        }
+        else if (realNotification.position == "top right") {
+            return this._notifyTopRight(realNotification, true);
+        }
+        else if (realNotification.position == "top") {
+            return this._notifyTop(realNotification, true);
+        }
+        return false;
+    }
+    _notifyBottomRight(notification, firstTime, from = 0) {
+        return new Promise((resolve) => {
+            let height = notification.offsetHeight;
+            let position = "bottom right";
+            const _remove = (result) => {
+                let index = this.activeNotifications[position].indexOf(notification);
+                if (index > -1) {
+                    this.activeNotifications[position].splice(index, 1);
+                }
+                if (this.waitingNotifications[position].length > 0) {
+                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
+                    this._notifyBottomRight(nextNotif, false, index);
+                }
+                else {
+                    let bodyHeight = this.containerHeight;
+                    for (let i = 0; i < index; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
+                        notif.style.bottom = bottom - height - this.gap + 'px';
+                    }
+                }
+                resolve(result);
+            };
+            let length = this.activeNotifications[position].length;
+            if (length == 0) {
+                this.activeNotifications[position].push(notification);
+                notification.show(_remove);
+            }
+            else {
+                let bodyHeight = this.containerHeight;
+                let totHeight = 0;
+                for (let notif of this.activeNotifications[position]) {
+                    totHeight += notif.offsetHeight + this.gap;
+                }
+                if (totHeight + height < bodyHeight / 2) {
+                    for (let i = from; i < this.activeNotifications[position].length; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
+                        notif.style.bottom = bottom + height + this.gap + 'px';
+                    }
+                    this.activeNotifications[position].push(notification);
+                    notification.show(_remove);
+                }
+                else if (firstTime) {
+                    this.waitingNotifications[position].push(notification);
+                }
             }
         });
     }
-    async show(state) {
-        this.state = state;
-        this.visible = true;
+    _notifyTopRight(notification, firstTime, from = 0) {
+        return new Promise((resolve) => {
+            let height = notification.offsetHeight;
+            let position = "top right";
+            const _remove = (result) => {
+                let index = this.activeNotifications[position].indexOf(notification);
+                if (index > -1) {
+                    this.activeNotifications[position].splice(index, 1);
+                }
+                if (this.waitingNotifications[position].length > 0) {
+                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
+                    this._notifyTopRight(nextNotif, false, index);
+                }
+                else {
+                    for (let i = 0; i < index; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let top = (notif.offsetTop - height - this.gap);
+                        notif.style.top = top + 'px';
+                    }
+                }
+                resolve(result);
+            };
+            let length = this.activeNotifications[position].length;
+            if (length == 0) {
+                this.activeNotifications[position].push(notification);
+                notification.show(_remove);
+            }
+            else {
+                let bodyHeight = this.containerHeight;
+                let totHeight = 0;
+                for (let notif of this.activeNotifications[position]) {
+                    totHeight += notif.offsetHeight + this.gap;
+                }
+                if (totHeight + height < bodyHeight / 2) {
+                    for (let i = from; i < this.activeNotifications[position].length; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let top = (notif.offsetTop + notif.offsetHeight);
+                        notif.style.top = top + this.gap + 'px';
+                    }
+                    this.activeNotifications[position].push(notification);
+                    notification.show(_remove);
+                }
+                else if (firstTime) {
+                    this.waitingNotifications[position].push(notification);
+                }
+            }
+        });
     }
-    async hide() {
-        this.visible = false;
+    _notifyBottomLeft(notification, firstTime, from = 0) {
+        return new Promise((resolve) => {
+            let height = notification.offsetHeight;
+            let position = "bottom left";
+            const _remove = (result) => {
+                let index = this.activeNotifications[position].indexOf(notification);
+                if (index > -1) {
+                    this.activeNotifications[position].splice(index, 1);
+                }
+                if (this.waitingNotifications[position].length > 0) {
+                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
+                    this._notifyBottomLeft(nextNotif, false, index);
+                }
+                else {
+                    let bodyHeight = this.containerHeight;
+                    for (let i = 0; i < index; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
+                        notif.style.bottom = bottom - height - this.gap + 'px';
+                    }
+                }
+                resolve(result);
+            };
+            let length = this.activeNotifications[position].length;
+            if (length == 0) {
+                this.activeNotifications[position].push(notification);
+                notification.show(_remove);
+            }
+            else {
+                let bodyHeight = this.containerHeight;
+                let totHeight = 0;
+                for (let notif of this.activeNotifications[position]) {
+                    totHeight += notif.offsetHeight + this.gap;
+                }
+                if (totHeight + height < bodyHeight / 2) {
+                    for (let i = from; i < this.activeNotifications[position].length; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
+                        notif.style.bottom = bottom + height + this.gap + 'px';
+                    }
+                    this.activeNotifications[position].push(notification);
+                    notification.show(_remove);
+                }
+                else if (firstTime) {
+                    this.waitingNotifications[position].push(notification);
+                }
+            }
+        });
     }
-    async askChange(newState) {
-        return true;
+    _notifyTopLeft(notification, firstTime, from = 0) {
+        return new Promise((resolve) => {
+            let height = notification.offsetHeight;
+            let position = "top left";
+            const _remove = (result) => {
+                let index = this.activeNotifications[position].indexOf(notification);
+                if (index > -1) {
+                    this.activeNotifications[position].splice(index, 1);
+                }
+                if (this.waitingNotifications[position].length > 0) {
+                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
+                    this._notifyTopRight(nextNotif, false, index);
+                }
+                else {
+                    for (let i = 0; i < index; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let top = (notif.offsetTop - height - this.gap);
+                        notif.style.top = top + 'px';
+                    }
+                }
+                resolve(result);
+            };
+            let length = this.activeNotifications[position].length;
+            if (length == 0) {
+                this.activeNotifications[position].push(notification);
+                notification.show(_remove);
+            }
+            else {
+                let bodyHeight = this.containerHeight;
+                let totHeight = 0;
+                for (let notif of this.activeNotifications[position]) {
+                    totHeight += notif.offsetHeight + this.gap;
+                }
+                if (totHeight + height < bodyHeight / 2) {
+                    for (let i = from; i < this.activeNotifications[position].length; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let top = (notif.offsetTop + notif.offsetHeight);
+                        notif.style.top = top + this.gap + 'px';
+                    }
+                    this.activeNotifications[position].push(notification);
+                    notification.show(_remove);
+                }
+                else if (firstTime) {
+                    this.waitingNotifications[position].push(notification);
+                }
+            }
+        });
     }
-    async execute(prom) {
-        return this.application.execute(prom);
+    _notifyTop(notification, firstTime, from = 0) {
+        return new Promise((resolve) => {
+            let height = notification.offsetHeight;
+            let position = "top";
+            const _remove = (result) => {
+                let index = this.activeNotifications[position].indexOf(notification);
+                if (index > -1) {
+                    this.activeNotifications[position].splice(index, 1);
+                }
+                if (this.waitingNotifications[position].length > 0) {
+                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
+                    this._notifyTop(nextNotif, false, index);
+                }
+                else {
+                    for (let i = 0; i < index; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let top = notif.offsetTop;
+                        notif.style.top = top - height - this.gap + 'px';
+                    }
+                }
+                resolve(result);
+            };
+            let length = this.activeNotifications[position].length;
+            if (length == 0) {
+                this.activeNotifications[position].push(notification);
+                notification.show(_remove);
+            }
+            else {
+                let bodyHeight = this.containerHeight;
+                let totHeight = 0;
+                for (let notif of this.activeNotifications[position]) {
+                    totHeight += notif.offsetHeight + this.gap;
+                }
+                if (totHeight + height < bodyHeight / 3) {
+                    for (let i = from; i < this.activeNotifications[position].length; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let top = notif.offsetTop;
+                        notif.style.top = top + height + this.gap + 'px';
+                    }
+                    this.activeNotifications[position].push(notification);
+                    notification.show(_remove);
+                }
+                else if (firstTime) {
+                    this.waitingNotifications[position].push(notification);
+                }
+            }
+        });
     }
-    async executeWithLoading(prom) {
-        return this.application.executeWithLoading(prom);
+    _notifyBottom(notification, firstTime, from = 0) {
+        return new Promise((resolve) => {
+            let height = notification.offsetHeight;
+            let position = "bottom";
+            const _remove = (result) => {
+                let index = this.activeNotifications[position].indexOf(notification);
+                if (index > -1) {
+                    this.activeNotifications[position].splice(index, 1);
+                }
+                if (this.waitingNotifications[position].length > 0) {
+                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
+                    this._notifyBottom(nextNotif, false, index);
+                }
+                else {
+                    let bodyHeight = this.containerHeight;
+                    for (let i = 0; i < index; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
+                        notif.style.bottom = bottom - height - this.gap + 'px';
+                    }
+                }
+                resolve(result);
+            };
+            let length = this.activeNotifications[position].length;
+            if (length == 0) {
+                this.activeNotifications[position].push(notification);
+                notification.show(_remove);
+            }
+            else {
+                let bodyHeight = this.containerHeight;
+                let totHeight = 0;
+                for (let notif of this.activeNotifications[position]) {
+                    totHeight += notif.offsetHeight + this.gap;
+                }
+                if (totHeight + height < bodyHeight / 3) {
+                    for (let i = from; i < this.activeNotifications[position].length; i++) {
+                        let notif = this.activeNotifications[position][i];
+                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
+                        notif.style.bottom = bottom + height + this.gap + 'px';
+                    }
+                    this.activeNotifications[position].push(notification);
+                    notification.show(_remove);
+                }
+                else if (firstTime) {
+                    this.waitingNotifications[position].push(notification);
+                }
+            }
+        });
     }
 }
-System.FrameNoScroll.Namespace=`${moduleName}.System`;
-_.System.FrameNoScroll=System.FrameNoScroll;
-
-System.Frame = class Frame extends System.FrameNoScroll {
-    static __style = `:host .main-scroll{--scrollbar-content-padding: 0 15px}:host .main-scroll>*{--scrollbar-content-padding: 0}`;
-    constructor() { super(); if (this.constructor == Frame) { throw "can't instanciate an abstract class"; } }
-    __getStatic() {
-        return Frame;
-    }
-    __getStyle() {
-        let arrStyle = super.__getStyle();
-        arrStyle.push(Frame.__style);
-        return arrStyle;
-    }
-    __getHtml() {super.__getHtml();
-    this.__getStatic().__template.setHTML({
-        slots: { 'before-scroll':`<slot name="before-scroll"></slot>`,'default':`<slot></slot>`,'after-scroll':`<slot name="after-scroll"></slot>` }, 
-        blocks: { 'default':`<slot name="before-scroll"></slot><rk-scrollable floating_scroll class="main-scroll" _id="frame_0">    <slot></slot></rk-scrollable><slot name="after-scroll"></slot>` }
-    });
-}
-    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
-  "elements": [
-    {
-      "name": "mainScroll",
-      "ids": [
-        "frame_0"
-      ]
-    }
-  ]
-}); }
-    getClassName() {
-        return "Frame";
-    }
-}
-System.Frame.Namespace=`${moduleName}.System`;
-_.System.Frame=System.Frame;
+Components.NotificationManager.Namespace=`${moduleName}.Components`;
+Components.NotificationManager.Tag=`rk-notification-manager`;
+_.Components.NotificationManager=Components.NotificationManager;
+if(!window.customElements.get('rk-notification-manager')){window.customElements.define('rk-notification-manager', Components.NotificationManager);Aventus.WebComponentInstance.registerDefinition(Components.NotificationManager);}
 
 State.ApplicationState=class ApplicationState extends Aventus.State {
     /**
@@ -4959,10 +5851,14 @@ State.ApplicationState=class ApplicationState extends Aventus.State {
     setManager(manager) {
         this.__manager = manager;
     }
+    delaySaveState = 0;
     saveState() {
         if (!this.canSync())
             return;
-        this.__manager.save();
+        clearTimeout(this.delaySaveState);
+        this.delaySaveState = setTimeout(() => {
+            this.__manager.save();
+        }, 500);
     }
     async activate() {
         return super.activate(this.__manager);
@@ -5003,8 +5899,8 @@ State.ApplicationState=class ApplicationState extends Aventus.State {
         });
     }
 }
-State.ApplicationState.Namespace=`${moduleName}.State`;
-State.ApplicationState.$schema={...(Aventus.State?.$schema ?? {}), "$type":"string","__manager":""+moduleName+".Lib.ApplicationStateManager","application":""+moduleName+".System.Application","__canSaveState":"boolean"};
+State.ApplicationState.Namespace=`Core.State`;
+State.ApplicationState.$schema={...(Aventus.State?.$schema ?? {}), "$type":"string","__manager":""+moduleName+".Lib.ApplicationStateManager","application":""+moduleName+".System.Application","__canSaveState":"boolean","delaySaveState":"number"};
 Aventus.Converter.register(State.ApplicationState.Fullname, State.ApplicationState);
 
 _.State.ApplicationState=State.ApplicationState;
@@ -5022,11 +5918,14 @@ State.ApplicationStorableState=class ApplicationStorableState extends State.Appl
         try {
             for (let key in value) {
                 this.__item[key] = value[key];
+                this.refreshItem(key);
             }
         }
         catch (e) {
             console.log(e);
         }
+    }
+    refreshItem(key) {
     }
     constructor(item) {
         super();
@@ -5042,7 +5941,7 @@ State.ApplicationStorableState=class ApplicationStorableState extends State.Appl
         addField("item");
     }
 }
-State.ApplicationStorableState.Namespace=`${moduleName}.State`;
+State.ApplicationStorableState.Namespace=`Core.State`;
 State.ApplicationStorableState.$schema={...(State.ApplicationState?.$schema ?? {}), "__item":"T","item":"T"};
 Aventus.Converter.register(State.ApplicationStorableState.Fullname, State.ApplicationStorableState);
 
@@ -5063,34 +5962,10 @@ State.ApplicationEmptyState=class ApplicationEmptyState extends State.Applicatio
         return this.localName;
     }
 }
-State.ApplicationEmptyState.Namespace=`${moduleName}.State`;
+State.ApplicationEmptyState.Namespace=`Core.State`;
 State.ApplicationEmptyState.$schema={...(State.ApplicationState?.$schema ?? {}), "localName":"string","name":"string"};
 Aventus.Converter.register(State.ApplicationEmptyState.Fullname, State.ApplicationEmptyState);
 
-Lib.ApplicationStateManager=class ApplicationStateManager extends Aventus.StateManager {
-    application;
-    constructor(application) {
-        super();
-        this.application = application;
-    }
-    save() {
-        return this.application.saveApplicationHistory();
-    }
-    assignDefaultState(stateName) {
-        let el = new State.ApplicationEmptyState(stateName);
-        el.setManager(this);
-        return el;
-    }
-    setState(state) {
-        if (state instanceof State.ApplicationState) {
-            state.setManager(this);
-        }
-        return super.setState(state);
-    }
-}
-Lib.ApplicationStateManager.Namespace=`${moduleName}.Lib`;
-
-_.Lib.ApplicationStateManager=Lib.ApplicationStateManager;
 System.ApplicationHistoryConvert=class ApplicationHistoryConvert extends Aventus.ConverterTransform {
     manager;
     constructor(manager) {
@@ -5109,9 +5984,231 @@ System.ApplicationHistoryConvert=class ApplicationHistoryConvert extends Aventus
         }
     }
 }
-System.ApplicationHistoryConvert.Namespace=`${moduleName}.System`;
+System.ApplicationHistoryConvert.Namespace=`Core.System`;
 
 _.System.ApplicationHistoryConvert=System.ApplicationHistoryConvert;
+System.FrameNoScroll = class FrameNoScroll extends Aventus.WebComponent {
+    static get observedAttributes() {return ["visible"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'visible'() { return this.getBoolProp('visible') }
+    set 'visible'(val) { this.setBoolAttr('visible', val) }    state;
+    application;
+    resetNavElement;
+    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("visible", ((target) => {
+    if (target.visible) {
+        target.onShow();
+    }
+    else {
+        target.onHide();
+    }
+})); }
+    static __style = `:host{display:none;height:100%;width:100%}:host .opacity-wrapper{animation-delay:var(--local-frame-animation-delay, 0ms);animation-duration:200ms;animation-fill-mode:forwards;animation-name:fadeIn;animation-timing-function:var(--bezier-curve);display:none;height:100%;visibility:hidden;width:100%}:host([visible]){display:block}:host([visible]) .opacity-wrapper{display:block}@keyframes fadeIn{0%{opacity:0;visibility:hidden}100%{opacity:1;visibility:visible}}`;
+    constructor() {
+            super();
+            this.addFadeIn();
+if (this.constructor == FrameNoScroll) { throw "can't instanciate an abstract class"; } }
+    __getStatic() {
+        return FrameNoScroll;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(FrameNoScroll.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<div class="opacity-wrapper">    <slot></slot></div>` }
+    });
+}
+    getClassName() {
+        return "FrameNoScroll";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('visible')) { this.attributeChangedCallback('visible', false, false); } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('visible'); }
+    __listBoolProps() { return ["visible"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    addFadeIn() {
+        this.style.setProperty("--local-frame-animation-delay", "200ms");
+        this.addEventListener("animationend", (e) => {
+            if (e.animationName == "fadeIn") {
+                this.style.removeProperty("--local-frame-animation-delay");
+            }
+        });
+    }
+    async testPermissions() {
+        let proms = [];
+        let queries = [];
+        let test = (query) => {
+            queries.push(query);
+        };
+        this.definePermissions(test);
+        if (queries.length == 0) {
+            return true;
+        }
+        for (let query of queries) {
+            proms.push(can(query));
+        }
+        const perms = await Promise.all(proms);
+        for (let perm of perms) {
+            if (!perm) {
+                return false;
+            }
+        }
+        return true;
+    }
+    definePermissions(can) {
+    }
+    async can(state) {
+        return true;
+    }
+    async show(state) {
+        this.state = state;
+        this.visible = true;
+    }
+    async hide() {
+        this.visible = false;
+    }
+    async askChange(newState) {
+        return true;
+    }
+    async execute(prom) {
+        return this.application.execute(prom);
+    }
+    async executeWithLoading(prom) {
+        return this.application.executeWithLoading(prom);
+    }
+}
+System.FrameNoScroll.Namespace=`${moduleName}.System`;
+_.System.FrameNoScroll=System.FrameNoScroll;
+
+System.FrameStateNoScroll = class FrameStateNoScroll extends System.FrameNoScroll {
+    state;
+    static __style = ``;
+    constructor() { super(); if (this.constructor == FrameStateNoScroll) { throw "can't instanciate an abstract class"; } }
+    __getStatic() {
+        return FrameStateNoScroll;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(FrameStateNoScroll.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "FrameStateNoScroll";
+    }
+    async can(state) {
+        if (state instanceof this.getState()) {
+            return true;
+        }
+        return this.onStateMissmatch();
+    }
+}
+System.FrameStateNoScroll.Namespace=`${moduleName}.System`;
+_.System.FrameStateNoScroll=System.FrameStateNoScroll;
+
+System.Frame = class Frame extends System.FrameNoScroll {
+    static __style = `:host .main-scroll{--scrollbar-content-padding: 0 15px}:host .main-scroll>*{--scrollbar-content-padding: 0}`;
+    constructor() { super(); if (this.constructor == Frame) { throw "can't instanciate an abstract class"; } }
+    __getStatic() {
+        return Frame;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(Frame.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        slots: { 'before-scroll':`<slot name="before-scroll"></slot>`,'default':`<slot></slot>`,'after-scroll':`<slot name="after-scroll"></slot>` }, 
+        blocks: { 'default':`<slot name="before-scroll"></slot><rk-scrollable floating_scroll class="main-scroll" _id="frame_0">    <slot></slot></rk-scrollable><slot name="after-scroll"></slot>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "mainScroll",
+      "ids": [
+        "frame_0"
+      ]
+    }
+  ]
+}); }
+    getClassName() {
+        return "Frame";
+    }
+}
+System.Frame.Namespace=`${moduleName}.System`;
+_.System.Frame=System.Frame;
+
+System.FrameState = class FrameState extends System.Frame {
+    state;
+    static __style = ``;
+    constructor() { super(); if (this.constructor == FrameState) { throw "can't instanciate an abstract class"; } }
+    __getStatic() {
+        return FrameState;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(FrameState.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "FrameState";
+    }
+    async can(state) {
+        if (state instanceof this.getState()) {
+            return true;
+        }
+        return this.onStateMissmatch();
+    }
+}
+System.FrameState.Namespace=`${moduleName}.System`;
+_.System.FrameState=System.FrameState;
+
+System.FrameNotAllowed = class FrameNotAllowed extends System.Frame {
+    static __style = ``;
+    __getStatic() {
+        return FrameNotAllowed;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(FrameNotAllowed.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        blocks: { 'default':`<p>Pas autorisé</p>` }
+    });
+}
+    getClassName() {
+        return "FrameNotAllowed";
+    }
+    pageTitle() {
+        return "Accès non autorisé";
+    }
+    definePermissions(test) {
+    }
+    onShow() {
+    }
+    onHide() {
+    }
+}
+System.FrameNotAllowed.Namespace=`${moduleName}.System`;
+System.FrameNotAllowed.Tag=`rk-frame-not-allowed`;
+_.System.FrameNotAllowed=System.FrameNotAllowed;
+if(!window.customElements.get('rk-frame-not-allowed')){window.customElements.define('rk-frame-not-allowed', System.FrameNotAllowed);Aventus.WebComponentInstance.registerDefinition(System.FrameNotAllowed);}
+
 System.ApplicationHistory=class ApplicationHistory {
     static Fullname = "Core.System.ApplicationHistory";
     $type = System.ApplicationHistory.Fullname;
@@ -5196,7 +6293,7 @@ System.ApplicationHistory=class ApplicationHistory {
         return new System.ApplicationHistory();
     }
 }
-System.ApplicationHistory.Namespace=`${moduleName}.System`;
+System.ApplicationHistory.Namespace=`Core.System`;
 System.ApplicationHistory.$schema={"$type":"string","memory":"History","currentPosition":"number","nextAvailable":"boolean","previousAvailable":"boolean"};
 Aventus.Converter.register(System.ApplicationHistory.Fullname, System.ApplicationHistory);
 
@@ -5369,7 +6466,7 @@ Lib.ApplicationManager=class ApplicationManager {
         return appInfo.DesktopId + ":" + appInfo.Info?.applicationName + "$" + appInfo.Info?.number;
     }
 }
-Lib.ApplicationManager.Namespace=`${moduleName}.Lib`;
+Lib.ApplicationManager.Namespace=`Core.Lib`;
 
 _.Lib.ApplicationManager=Lib.ApplicationManager;
 System.ApplicationSizeStorage=class ApplicationSizeStorage {
@@ -5409,7 +6506,7 @@ System.ApplicationSizeStorage=class ApplicationSizeStorage {
         return desktopId + ":" + appName + "$" + appNumber;
     }
 }
-System.ApplicationSizeStorage.Namespace=`${moduleName}.System`;
+System.ApplicationSizeStorage.Namespace=`Core.System`;
 
 System.ApplicationSize=class ApplicationSize {
     application;
@@ -5499,7 +6596,7 @@ System.ApplicationSize=class ApplicationSize {
         };
     }
 }
-System.ApplicationSize.Namespace=`${moduleName}.System`;
+System.ApplicationSize.Namespace=`Core.System`;
 
 _.System.ApplicationSize=System.ApplicationSize;
 System.Frame404 = class Frame404 extends System.Frame {
@@ -5523,6 +6620,8 @@ System.Frame404 = class Frame404 extends System.Frame {
     pageTitle() {
         return "Page not found";
     }
+    definePermissions(can) {
+    }
     onShow() {
     }
     onHide() {
@@ -5533,7 +6632,7 @@ System.Frame404.Tag=`rk-frame-404`;
 _.System.Frame404=System.Frame404;
 if(!window.customElements.get('rk-frame-404')){window.customElements.define('rk-frame-404', System.Frame404);Aventus.WebComponentInstance.registerDefinition(System.Frame404);}
 
-Components.Popup = class Popup extends Aventus.WebComponent {
+Components.GenericPopup = class GenericPopup extends Aventus.WebComponent {
     get 'no_red_btn'() { return this.getBoolAttr('no_red_btn') }
     set 'no_red_btn'(val) { this.setBoolAttr('no_red_btn', val) }get 'behind'() { return this.getBoolAttr('behind') }
     set 'behind'(val) { this.setBoolAttr('behind', val) }get 'close_on_click'() { return this.getBoolAttr('close_on_click') }
@@ -5545,25 +6644,29 @@ Components.Popup = class Popup extends Aventus.WebComponent {
 					}    cb;
     pressManagerClose;
     pressManagerPopup;
+    application;
     __registerWatchesActions() {
     this.__addWatchesActions("info", ((target, action, path, value) => {
     target.onOptionsChanged();
 }));    super.__registerWatchesActions();
 }
-    static __style = `:host{--_popup-background-color: var(--popup-background-color, var(--application-background-color, var(--primary-color-opacity)));--_popup-border-radius: var(--popup-border-radius, var(--application-border-radius, 10px));--_popup-header-background-color: var(--popup-header-background-color, var(--application-header-background-color, var(--darker-active)));--_popup-content-padding: var(--popup-content-padding, 15px)}:host{align-items:center;animation-duration:.5s;animation-fill-mode:forwards;animation-name:fadeIn;animation-timing-function:var(--bezier-curve);background-color:rgba(48,48,48,.1);border-radius:var(--application-border-radius);display:flex;inset:0;justify-content:center;position:absolute;z-index:650}:host .popup{background-color:var(--_popup-background-color);border-radius:var(--_popup-border-radius);box-shadow:var(--elevation-5);container-name:application;container-type:inline-size;display:flex;flex-direction:column;max-height:calc(100% - 50px);max-width:calc(100% - 50px)}:host .popup .header{align-items:center;border-top-left-radius:var(--_popup-border-radius);border-top-right-radius:var(--_popup-border-radius);display:flex;flex-shrink:0;height:30px;overflow:hidden;position:relative;width:100%;z-index:3}:host .popup .header .background{background-color:var(--_popup-header-background-color);inset:0;position:absolute;z-index:1}:host .popup .header .title{flex-grow:1;margin-left:15px;margin-right:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:2}:host .popup .header .application-actions{align-items:center;display:flex;gap:5px;justify-content:end;margin-right:15px;z-index:2}:host .popup .header .application-actions .btn{border-radius:10px;height:15px;width:15px}:host .popup .content{--scrollbar-max-height: calc(var(--app-height) - 50px - 30px - var(--_popup-content-padding) - var(--_popup-content-padding));border-bottom-left-radius:var(--_application-border-radius);border-bottom-right-radius:var(--_application-border-radius);height:calc(100% - 30px);max-height:calc(var(--app-height) - 50px - 30px);min-width:auto;min-height:auto;overflow:hidden;padding:var(--_popup-content-padding);width:100%;z-index:1}:host .popup.shake{animation-duration:.3s;animation-iteration-count:1;animation-name:shake;animation-timing-function:var(--bezier-curve)}:host(.fade-out){animation-duration:.5s;animation-fill-mode:forwards;animation-name:fadeOut;animation-timing-function:var(--bezier-curve)}:host([no_red_btn]) .popup .header .application-actions .btn{display:none}:host([behind]){z-index:550}@media screen and (min-width: 1225px){:host .popup .header .application-actions .btn:hover{box-shadow:0 0 4px var(--darker-active) inset}}@keyframes fadeIn{0%{opacity:0;visibility:hidden}100%{opacity:1;visibility:visible}}@keyframes fadeOut{0%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}@keyframes shake{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}`;
-    constructor() {            super();            this.info = this.defaultOptions();if (this.constructor == Popup) { throw "can't instanciate an abstract class"; } }
+    static __style = `:host{--_popup-background-color: var(--popup-background-color, var(--application-background-color, var(--primary-color-opacity)));--_popup-border-radius: var(--popup-border-radius, var(--application-border-radius, 10px));--_popup-header-background-color: var(--popup-header-background-color, var(--application-header-background-color, var(--darker-active)));--_popup-content-padding: var(--popup-content-padding, 15px)}:host{align-items:center;animation-duration:.5s;animation-fill-mode:forwards;animation-name:fadeIn;animation-timing-function:var(--bezier-curve);background-color:rgba(48,48,48,.1);border-radius:var(--application-border-radius);display:flex;inset:0;justify-content:center;position:absolute;z-index:650}:host .popup{background-color:var(--_popup-background-color);border-radius:var(--_popup-border-radius);box-shadow:var(--elevation-5);container-name:application;container-type:normal;display:flex;flex-direction:column;max-height:calc(100% - 50px);max-width:calc(100% - 50px);width:fit-content}:host .popup .header{align-items:center;border-top-left-radius:var(--_popup-border-radius);border-top-right-radius:var(--_popup-border-radius);display:flex;flex-shrink:0;height:30px;overflow:hidden;position:relative;width:100%;z-index:3}:host .popup .header .background{background-color:var(--_popup-header-background-color);inset:0;position:absolute;z-index:1}:host .popup .header .title{flex-grow:1;margin-left:15px;margin-right:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:2}:host .popup .header .application-actions{align-items:center;display:flex;gap:5px;justify-content:end;margin-right:15px;z-index:2}:host .popup .header .application-actions .btn{border-radius:var(--border-radius);height:15px;width:15px}:host .popup .content{border-bottom-left-radius:var(--_application-border-radius);border-bottom-right-radius:var(--_application-border-radius);height:calc(100% - 30px);max-height:calc(var(--app-height) - 50px - 30px);min-width:auto;min-height:auto;overflow:hidden;padding:var(--_popup-content-padding);width:100%;z-index:1;width:fit-content}:host .popup.shake{animation-duration:.3s;animation-iteration-count:1;animation-name:shake;animation-timing-function:var(--bezier-curve)}:host(.fade-out){animation-duration:.5s;animation-fill-mode:forwards;animation-name:fadeOut;animation-timing-function:var(--bezier-curve)}:host([no_red_btn]) .popup .header .application-actions .btn{display:none}:host([behind]){z-index:550}@media screen and (min-width: 1225px){:host .popup .header .application-actions .btn:hover{box-shadow:0 0 4px var(--darker-active) inset}}@keyframes fadeIn{0%{opacity:0;visibility:hidden}100%{opacity:1;visibility:visible}}@keyframes fadeOut{0%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}@keyframes shake{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}`;
+    constructor() {
+            super();
+            this.info = this.defaultOptions();
+if (this.constructor == GenericPopup) { throw "can't instanciate an abstract class"; } }
     __getStatic() {
-        return Popup;
+        return GenericPopup;
     }
     __getStyle() {
         let arrStyle = super.__getStyle();
-        arrStyle.push(Popup.__style);
+        arrStyle.push(GenericPopup.__style);
         return arrStyle;
     }
     __getHtml() {
     this.__getStatic().__template.setHTML({
         slots: { 'default':`<slot></slot>` }, 
-        blocks: { 'default':`<div class="popup" _id="popup_0">    <div class="header">        <div class="background"></div>        <div class="title" _id="popup_1"></div>        <div class="application-actions">            <div class="btn red touch" _id="popup_2"></div>        </div>    </div>    <rk-scrollable class="content">        <slot></slot>    </rk-scrollable></div>` }
+        blocks: { 'default':`<div class="popup" _id="genericpopup_0">    <div class="header">        <div class="background"></div>        <div class="title" _id="genericpopup_1"></div>        <div class="application-actions">            <div class="btn red touch" _id="genericpopup_2"></div>        </div>    </div>    <div class="content">        <slot></slot>    </div></div>` }
     });
 }
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
@@ -5571,30 +6674,33 @@ Components.Popup = class Popup extends Aventus.WebComponent {
     {
       "name": "popupEl",
       "ids": [
-        "popup_0"
+        "genericpopup_0"
       ]
     }
   ],
   "content": {
-    "popup_1°@HTML": {
-      "fct": (c) => `${c.print(c.comp.__c6b222033048639bf6ac58d471520fbamethod0())}`,
+    "genericpopup_1°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__cc26f54f9c039edaaa84e25490791589method0())}`,
       "once": true
     }
   },
   "pressEvents": [
     {
-      "id": "popup_2",
+      "id": "genericpopup_2",
       "onPress": (e, pressInstance, c) => { c.comp.cancel(e, pressInstance); }
     }
   ]
 }); }
     getClassName() {
-        return "Popup";
+        return "GenericPopup";
     }
     __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('no_red_btn')) { this.attributeChangedCallback('no_red_btn', false, false); }if(!this.hasAttribute('behind')) { this.attributeChangedCallback('behind', false, false); }if(!this.hasAttribute('close_on_click')) { this.attributeChangedCallback('close_on_click', false, false); } }
     __defaultValuesWatch(w) { super.__defaultValuesWatch(w); w["info"] = undefined; }
     __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('no_red_btn');this.__upgradeProperty('behind');this.__upgradeProperty('close_on_click');this.__correctGetter('info'); }
     __listBoolProps() { return ["no_red_btn","behind","close_on_click"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    onContextMenu(contextMenu, stop) {
+        stop();
+    }
     mergeInfo(info) {
         this.info = { ...this.info, ...info };
     }
@@ -5659,6 +6765,55 @@ Components.Popup = class Popup extends Aventus.WebComponent {
         this.addPress();
         this.onOptionsChanged();
     }
+    __cc26f54f9c039edaaa84e25490791589method0() {
+        return this.info.title;
+    }
+}
+Components.GenericPopup.Namespace=`${moduleName}.Components`;
+_.Components.GenericPopup=Components.GenericPopup;
+
+Components.Popup = class Popup extends Components.GenericPopup {
+    static __style = `:host .popup .content{--scrollbar-max-height: calc(var(--app-height) - 50px - 30px - var(--_popup-content-padding) - var(--_popup-content-padding));width:100%}`;
+    constructor() { super(); if (this.constructor == Popup) { throw "can't instanciate an abstract class"; } }
+    __getStatic() {
+        return Popup;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(Popup.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<div class="popup" _id="popup_0">    <div class="header">        <div class="background"></div>        <div class="title" _id="popup_1"></div>        <div class="application-actions">            <div class="btn red touch" _id="popup_2"></div>        </div>    </div>    <rk-scrollable class="content">        <slot></slot>    </rk-scrollable></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "popupEl",
+      "ids": [
+        "popup_0"
+      ]
+    }
+  ],
+  "content": {
+    "popup_1°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__c6b222033048639bf6ac58d471520fbamethod0())}`,
+      "once": true
+    }
+  },
+  "pressEvents": [
+    {
+      "id": "popup_2",
+      "onPress": (e, pressInstance, c) => { c.comp.cancel(e, pressInstance); }
+    }
+  ]
+}); }
+    getClassName() {
+        return "Popup";
+    }
     __c6b222033048639bf6ac58d471520fbamethod0() {
         return this.info.title;
     }
@@ -5666,7 +6821,7 @@ Components.Popup = class Popup extends Aventus.WebComponent {
 Components.Popup.Namespace=`${moduleName}.Components`;
 _.Components.Popup=Components.Popup;
 
-Components.Confirm = class Confirm extends Components.Popup {
+Components.Confirm = class Confirm extends Components.GenericPopup {
     static __style = `:host .popup .body{align-items:center;display:flex;justify-content:center;line-height:1.5;padding:20px;padding-top:15px;text-align:center}:host .popup .action{align-items:center;display:flex;gap:20px;justify-content:center}`;
     __getStatic() {
         return Confirm;
@@ -5678,7 +6833,7 @@ Components.Confirm = class Confirm extends Components.Popup {
     }
     __getHtml() {super.__getHtml();
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<rk-scrollable class="body" _id="confirm_0"></rk-scrollable><div class="action">    <rk-button color="red" _id="confirm_1"></rk-button>    <rk-button color="green" _id="confirm_2"></rk-button></div>` }
+        blocks: { 'default':`<rk-scrollable class="body" _id="confirm_0"></rk-scrollable><div class="action">    <rk-button color="red" _id="confirm_1"></rk-button>    <rk-button color="success" _id="confirm_2"></rk-button></div>` }
     });
 }
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
@@ -5739,8 +6894,8 @@ Components.Confirm.Tag=`rk-confirm`;
 _.Components.Confirm=Components.Confirm;
 if(!window.customElements.get('rk-confirm')){window.customElements.define('rk-confirm', Components.Confirm);Aventus.WebComponentInstance.registerDefinition(Components.Confirm);}
 
-Components.Alert = class Alert extends Components.Popup {
-    static __style = `:host .popup .body{align-items:center;display:flex;justify-content:center;line-height:1.5;padding:20px;padding-top:15px;text-align:center}:host .popup .action{align-items:center;display:flex;gap:20px;justify-content:center}`;
+Components.Alert = class Alert extends Components.GenericPopup {
+    static __style = `:host .popup .content .body{--scrollbar-max-height: calc(var(--app-height) - 50px - 30px - 36px - var(--_popup-content-padding) - var(--_popup-content-padding));align-items:center;display:flex;justify-content:center;line-height:1.5;max-height:calc(var(--app-height) - 50px - 30px - 36px - var(--_popup-content-padding) - var(--_popup-content-padding));padding:20px;padding-top:15px;text-align:center}:host .popup .content .action{align-items:center;display:flex;gap:20px;height:36px;justify-content:center}`;
     __getStatic() {
         return Alert;
     }
@@ -5824,9 +6979,11 @@ System.Application = class Application extends Aventus.WebComponent {
     mustRemoveApplicationHistory = true;
     oneStateActive = false;
     page404;
+    page405;
     sizeManager;
     isAnimating = false;
     afterTransitionCb = [];
+    shortcutManager;
     get navigator() {
         if (!this.router) {
             this.router = new Lib.ApplicationStateManager(this);
@@ -5835,7 +6992,7 @@ System.Application = class Application extends Aventus.WebComponent {
     }
     __registerWatchesActions() {
     this.__addWatchesActions("is_desktop_active", ((target) => {
-    target.manageShortcut();
+    target.shortcutManager.manageShortcut();
 }));    super.__registerWatchesActions();
 }
     __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("full", ((target) => {
@@ -5843,8 +7000,8 @@ System.Application = class Application extends Aventus.WebComponent {
 }));this.__addPropertyActions("is_hidden", ((target) => {
     target.onIsHiddenChange();
 })); }
-    static __style = `:host{--_application-box-shadow: var(--application-box-shadow);--_application-header-background-color: var(--application-header-background-color, var(--darker-active));--_application-background-color: var(--application-background-color, var(--primary-color-opacity));--_application-border-radius: var(--application-border-radius, 10px)}:host{background-color:var(--_application-background-color);border-radius:var(--_application-border-radius);box-shadow:var(--_application-box-shadow);container-name:application;container-type:inline-size;height:var(--app-height);outline:none;position:absolute;width:var(--app-width);z-index:50}:host .header{align-items:center;border-top-left-radius:var(--_application-border-radius);border-top-right-radius:var(--_application-border-radius);cursor:grab;display:flex;flex-shrink:0;height:30px;overflow:hidden;position:relative;width:100%;z-index:3}:host .header .background{background-color:var(--_application-header-background-color);inset:0;position:absolute;z-index:1}:host .header .navigation-actions{align-items:center;display:flex;flex-grow:0;height:100%;margin-left:15px;margin-right:15px;z-index:2}:host .header .navigation-actions .action{align-items:center;border-radius:2px;display:flex;height:calc(100% - 6px);justify-content:center;padding:0px;padding:1px 5px;transition:background-color var(--bezier-curve) .2s;width:22px}:host .header .navigation-actions .action rk-img{height:100%;width:100%;pointer-events:none}:host .header .navigation-actions .action.disable rk-img{--img-fill-color: var(--text-disable)}:host .header .title{flex-grow:1;margin-right:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:2}:host .header .application-actions{align-items:center;display:flex;gap:5px;justify-content:end;margin-right:15px;z-index:2}:host .header .application-actions .btn{border-radius:10px;height:15px;width:15px}:host .content{border-bottom-left-radius:var(--_application-border-radius);border-bottom-right-radius:var(--_application-border-radius);height:calc(100% - 35px);margin:5px;margin-top:0;overflow:hidden;width:calc(100% - 10px);z-index:1}:host .loading{border-radius:var(--_application-border-radius);display:none;z-index:600}:host rk-resize{--resize-z-index: 4}:host(:not([moving])){transition:height .5s var(--bezier-curve),width .5s var(--bezier-curve),top .5s var(--bezier-curve),left .5s var(--bezier-curve),border-radius .5s var(--bezier-curve),opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s}:host(:not([moving])) .header{transition:border-radius .5s var(--bezier-curve)}:host([moving]) .header{cursor:grabbing}:host([full]){border-radius:0;height:100% !important;left:0 !important;top:0 !important;width:100% !important;z-index:500}:host([full]) .header{border-top-left-radius:0;border-top-right-radius:0;cursor:default}:host([full]) .content{border-bottom-left-radius:0;border-bottom-right-radius:0}:host([is_hidden]){height:0 !important;left:calc(50% - 100px) !important;overflow:hidden;top:calc(100% - 50px) !important;width:200px !important}:host([loading]) .loading{display:flex}@media screen and (min-width: 1225px){:host .header .navigation-actions .action:not(.disable):hover{background-color:var(--lighter)}:host .header .application-actions .btn:hover{box-shadow:0 0 4px var(--darker-active) inset}}@media screen and (max-width: 1224px){:host .header{height:40px}:host .header .application-actions{gap:10px}:host .header .application-actions .btn{height:20px;width:20px}:host .content{height:calc(100% - 45px)}}@media screen and (max-width: 768px){:host{border-radius:0;height:100% !important;left:0 !important;top:0 !important;width:100% !important;z-index:502}:host .header{border-top-left-radius:0;border-top-right-radius:0;height:40px}:host .header .application-actions{gap:10px}:host .header .application-actions .btn{height:20px;width:20px}:host .header .application-actions .orange{display:none}:host .content{border-bottom-left-radius:0;border-bottom-right-radius:0;height:calc(100% - 45px)}:host rk-resize{display:none}:host([is_hidden]){left:0 !important;width:100% !important}}`;
-    constructor() {            super();            this.history = new System.ApplicationHistory();            this.sizeManager = new System.ApplicationSize(this);            this.canChangeState = this.canChangeState.bind(this);            this.navigator.canChangeState(this.canChangeState);if (this.constructor == Application) { throw "can't instanciate an abstract class"; } this.validError404=this.validError404.bind(this)this.saveApplicationHistory=this.saveApplicationHistory.bind(this)this.onResizeStart=this.onResizeStart.bind(this)this.onResizeStop=this.onResizeStop.bind(this)this.moveApplicationToLeft=this.moveApplicationToLeft.bind(this)this.moveApplicationToRight=this.moveApplicationToRight.bind(this) }
+    static __style = `:host{--_application-box-shadow: var(--application-box-shadow);--_application-header-background-color: var(--application-header-background-color, var(--darker-active));--_application-background-color: var(--application-background-color, var(--primary-color-opacity));--_application-border-radius: var(--application-border-radius, 10px)}:host{backdrop-filter:blur(2px);background-color:var(--_application-background-color);border-radius:var(--_application-border-radius);box-shadow:var(--_application-box-shadow);container-name:application;container-type:inline-size;height:var(--app-height);outline:none;position:absolute;width:var(--app-width);z-index:50}:host .header{align-items:center;border-top-left-radius:var(--_application-border-radius);border-top-right-radius:var(--_application-border-radius);cursor:grab;display:flex;flex-shrink:0;height:30px;overflow:hidden;position:relative;width:100%;z-index:3}:host .header .background{background-color:var(--_application-header-background-color);inset:0;position:absolute;z-index:1}:host .header .navigation-actions{align-items:center;display:flex;flex-grow:0;height:100%;margin-left:15px;margin-right:15px;z-index:2}:host .header .navigation-actions .action{align-items:center;border-radius:2px;display:flex;height:calc(100% - 6px);justify-content:center;padding:0px;padding:1px 5px;transition:background-color var(--bezier-curve) .2s;width:22px}:host .header .navigation-actions .action rk-img{height:100%;pointer-events:none;width:100%}:host .header .navigation-actions .action.disable rk-img{--img-fill-color: var(--text-disable)}:host .header .title{flex-grow:1;margin-right:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;z-index:2}:host .header .application-actions{align-items:center;display:flex;gap:5px;justify-content:end;margin-right:15px;z-index:2}:host .header .application-actions .btn{border-radius:var(--border-radius-round);height:15px;width:15px}:host .content{border-bottom-left-radius:var(--_application-border-radius);border-bottom-right-radius:var(--_application-border-radius);height:calc(100% - 35px);margin:5px;margin-top:0;overflow:hidden;width:calc(100% - 10px);z-index:1}:host .loading{border-radius:var(--_application-border-radius);display:none;z-index:600}:host rk-resize{--resize-z-index: 4}:host rk-notification-manager{top:35px}:host(:not([moving])){transition:height .5s var(--bezier-curve),width .5s var(--bezier-curve),top .5s var(--bezier-curve),left .5s var(--bezier-curve),border-radius .5s var(--bezier-curve),opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s}:host(:not([moving])) .header{transition:border-radius .5s var(--bezier-curve)}:host([moving]) .header{cursor:grabbing}:host([full]){border-radius:0;height:100% !important;left:0 !important;top:0 !important;width:100% !important;z-index:500}:host([full]) .header{border-top-left-radius:0;border-top-right-radius:0;cursor:default}:host([full]) .content{border-bottom-left-radius:0;border-bottom-right-radius:0}:host([is_hidden]){height:0 !important;left:calc(50% - 100px) !important;overflow:hidden;top:calc(100% - 50px) !important;width:200px !important}:host([loading]) .loading{display:flex}@media screen and (min-width: 1225px){:host .header .navigation-actions .action:not(.disable):hover{background-color:var(--lighter)}:host .header .application-actions .btn:hover{box-shadow:0 0 4px var(--darker-active) inset}}@media screen and (max-width: 1224px){:host .header{height:40px}:host .header .application-actions{gap:10px}:host .header .application-actions .btn{height:20px;width:20px}:host .content{height:calc(100% - 45px)}:host rk-notification-manager{top:45px}}@media screen and (max-width: 768px){:host{border-radius:0;height:100% !important;left:0 !important;top:0 !important;width:100% !important;z-index:502}:host .header{border-top-left-radius:0;border-top-right-radius:0;height:40px}:host .header .application-actions{gap:10px}:host .header .application-actions .btn{height:20px;width:20px}:host .header .application-actions .orange{display:none}:host .content{border-bottom-left-radius:0;border-bottom-right-radius:0;height:calc(100% - 45px)}:host rk-resize{display:none}:host rk-notification-manager{top:45px}:host([is_hidden]){left:0 !important;width:100% !important}}`;
+    constructor() {            super();            this.history = new System.ApplicationHistory();            this.sizeManager = new System.ApplicationSize(this);            this.canChangeState = this.canChangeState.bind(this);            this.navigator.canChangeState(this.canChangeState);            this.shortcutManager = new System.ApplicationShortcut(this);            this.shortcutManager.init();if (this.constructor == Application) { throw "can't instanciate an abstract class"; } this.onContextMenuContent=this.onContextMenuContent.bind(this)this.onContextMenuHeader=this.onContextMenuHeader.bind(this)this.validError404=this.validError404.bind(this)this.showErrorNotAllowed=this.showErrorNotAllowed.bind(this)this.saveApplicationHistory=this.saveApplicationHistory.bind(this)this.onResizeStart=this.onResizeStart.bind(this)this.onResizeStop=this.onResizeStop.bind(this)this.moveApplicationToLeft=this.moveApplicationToLeft.bind(this)this.moveApplicationToRight=this.moveApplicationToRight.bind(this)this.popup=this.popup.bind(this)this.alert=this.alert.bind(this)this.confirm=this.confirm.bind(this)this.notify=this.notify.bind(this)this.parseErrors=this.parseErrors.bind(this)this.execute=this.execute.bind(this)this.executeWithLoading=this.executeWithLoading.bind(this)this.showLoading=this.showLoading.bind(this) }
     __getStatic() {
         return Application;
     }
@@ -5855,8 +7012,7 @@ System.Application = class Application extends Aventus.WebComponent {
     }
     __getHtml() {
     this.__getStatic().__template.setHTML({
-        slots: { 'default':`<slot></slot>` }, 
-        blocks: { 'default':`<div class="header" _id="application_0">    <div class="background"></div>    <div class="navigation-actions">        <div class="previous action touch disable" _id="application_1">            <rk-img src="/img/icons/angle-left.svg"></rk-img>        </div>        <div class="next action touch disable" _id="application_2">            <rk-img src="/img/icons/angle-right.svg"></rk-img>        </div>    </div>    <div class="title" _id="application_3"></div>    <div class="application-actions">        <div class="btn green touch" _id="application_4"></div>        <div class="btn orange touch" _id="application_5"></div>        <div class="btn red touch" _id="application_6"></div>    </div></div><div class="content" _id="application_7"></div><rk-resize min_width="200" min_height="200" _id="application_8"></rk-resize><rk-loading class="loading"></rk-loading><slot></slot>` }
+        blocks: { 'default':`<rk-context-menu-element class="header" _id="application_0">    <div class="background"></div>    <div class="navigation-actions">        <div class="previous action touch disable" _id="application_1">            <rk-img src="/img/icons/angle-left.svg"></rk-img>        </div>        <div class="next action touch disable" _id="application_2">            <rk-img src="/img/icons/angle-right.svg"></rk-img>        </div>    </div>    <div class="title" _id="application_3"></div>    <div class="application-actions">        <div class="btn green touch" _id="application_4"></div>        <div class="btn orange touch" _id="application_5"></div>        <div class="btn red touch" _id="application_6"></div>    </div></rk-context-menu-element><rk-context-menu-element class="content" _id="application_7"></rk-context-menu-element><rk-resize min_width="200" min_height="200" _id="application_8"></rk-resize><rk-loading class="loading"></rk-loading><rk-notification-manager _id="application_9"></rk-notification-manager>` }
     });
 }
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
@@ -5889,6 +7045,12 @@ System.Application = class Application extends Aventus.WebComponent {
       "name": "resizeEl",
       "ids": [
         "application_8"
+      ]
+    },
+    {
+      "name": "notificationManager",
+      "ids": [
+        "application_9"
       ]
     }
   ],
@@ -5928,8 +7090,23 @@ System.Application = class Application extends Aventus.WebComponent {
     __defaultValuesWatch(w) { super.__defaultValuesWatch(w); w["is_desktop_active"] = false; }
     __upgradeAttributes() { super.__upgradeAttributes(); this.__correctGetter('navigator');this.__upgradeProperty('moving');this.__upgradeProperty('loading');this.__upgradeProperty('app_title');this.__upgradeProperty('full');this.__upgradeProperty('is_hidden');this.__correctGetter('is_desktop_active'); }
     __listBoolProps() { return ["moving","loading","full","is_hidden"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
-    onContextMenu(contextMenu, stop) {
+    onContextMenuContent(contextMenu, stop) {
         stop();
+    }
+    onContextMenuHeader(contextMenu, stop) {
+        contextMenu.addItem({
+            text: "Recentrer la fenetre",
+            icon: "/img/icons/window-restore.svg",
+            priority: 2,
+            action: () => {
+                this.resetSize();
+            }
+        });
+        stop();
+    }
+    bindContextMenu() {
+        this.header.onContextMenu = this.onContextMenuHeader;
+        this.contentEl.onContextMenu = this.onContextMenuContent;
     }
     async navigate(to) {
         let hasChanged = await this.navigator.setState(to);
@@ -5966,23 +7143,7 @@ System.Application = class Application extends Aventus.WebComponent {
         }
     }
     defineShortcut() {
-        return [
-            [[Lib.SpecialTouch.Control, Lib.SpecialTouch.ArrowLeft], this.moveApplicationToLeft],
-            [[Lib.SpecialTouch.Control, Lib.SpecialTouch.ArrowRight], this.moveApplicationToRight]
-        ];
-    }
-    manageShortcut() {
-        let shortcuts = this.defineShortcut();
-        if (this.is_desktop_active) {
-            for (let shortcut of shortcuts) {
-                Lib.ShortcutManager.subscribe(shortcut[0], shortcut[1]);
-            }
-        }
-        else {
-            for (let shortcut of shortcuts) {
-                Lib.ShortcutManager.unsubscribe(shortcut[0], shortcut[1]);
-            }
-        }
+        return [];
     }
     shouldDestroyFrame(frame) {
         return false;
@@ -6005,6 +7166,19 @@ System.Application = class Application extends Aventus.WebComponent {
                             element.application = this;
                             element.resetNavElement = () => element = undefined;
                             this.contentEl?.appendChild(element);
+                        }
+                        let isAllowed = await element.testPermissions();
+                        if (!isAllowed) {
+                            this.showErrorNotAllowed();
+                            return;
+                        }
+                        const canResult = await element.can(currentState);
+                        if (canResult !== true) {
+                            if (canResult === false) {
+                                return;
+                            }
+                            this.navigate(canResult);
+                            return;
                         }
                         if (this.oldFrame && this.oldFrame != element) {
                             await this.oldFrame.hide();
@@ -6046,13 +7220,32 @@ System.Application = class Application extends Aventus.WebComponent {
             if (this.oldFrame && this.oldFrame != this.page404) {
                 await this.oldFrame.hide();
             }
-            await this.page404.show(undefined);
+            let state = this.navigator.getState();
+            await this.page404.show(state);
             this.oldFrame = this.page404;
             this.activePath = '';
         }
     }
     error404(state) {
         return System.Frame404;
+    }
+    async showErrorNotAllowed() {
+        let frameError = this.errorNotAllowed(this.navigator.getState());
+        if (!this.page405) {
+            this.page405 = new frameError();
+            this.page405.application = this;
+            this.contentEl.appendChild(this.page405);
+        }
+        if (this.oldFrame && this.oldFrame != this.page405) {
+            await this.oldFrame.hide();
+        }
+        let state = this.navigator.getState();
+        await this.page405.show(state);
+        this.oldFrame = this.page405;
+        this.activePath = '';
+    }
+    errorNotAllowed(state) {
+        return System.FrameNotAllowed;
     }
     onNewPage(oldUrl, oldFrame, newUrl, newFrame) { }
     getSlugs() {
@@ -6283,10 +7476,24 @@ System.Application = class Application extends Aventus.WebComponent {
                 this.moving = false;
                 if (hasMove)
                     this.saveSize();
-            }
+            },
         });
         this.header.addEventListener("dblclick", () => {
             this.toggleFull();
+        });
+        let allowDbl = false;
+        this.header.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            if (allowDbl) {
+                this.toggleFull();
+                allowDbl = false;
+            }
+            else {
+                allowDbl = true;
+                setTimeout(() => {
+                    allowDbl = false;
+                }, 150);
+            }
         });
     }
     addResize() {
@@ -6335,6 +7542,7 @@ System.Application = class Application extends Aventus.WebComponent {
     }
     popup(p) {
         return new Promise((resolve) => {
+            p.application = this;
             p.init((response) => {
                 resolve(response);
             });
@@ -6350,6 +7558,9 @@ System.Application = class Application extends Aventus.WebComponent {
         const c = new Components.Confirm();
         c.mergeInfo(info);
         return await this.popup(c);
+    }
+    notify(notification) {
+        return this.notificationManager.notify(notification);
     }
     async parseErrors(result) {
         if (result.errors.length > 0) {
@@ -6372,32 +7583,46 @@ System.Application = class Application extends Aventus.WebComponent {
     }
     async executeWithLoading(prom) {
         const queryResult = await this.showLoading(prom);
+        if (!queryResult)
+            return undefined;
         return await this.parseErrors(queryResult);
     }
     async showLoading(fct) {
-        const minDelay = 2000;
-        let start;
-        let timeout = setTimeout(() => {
-            start = new Date();
-            this.loading = true;
-        }, 200);
-        let result;
-        if (fct instanceof Promise) {
-            result = await fct;
-        }
-        else {
-            result = await fct();
-        }
-        clearTimeout(timeout);
-        if (start) {
-            let now = new Date();
-            let diffMs = now.getTime() - start.getTime();
-            if (diffMs < minDelay) {
-                await Aventus.sleep(minDelay - diffMs);
+        let timeout = 0;
+        try {
+            const minDelay = 2000;
+            let start;
+            timeout = setTimeout(() => {
+                start = new Date();
+                this.loading = true;
+            }, 200);
+            let result;
+            if (fct instanceof Promise) {
+                result = await fct;
             }
+            else {
+                result = await fct();
+            }
+            clearTimeout(timeout);
+            if (start) {
+                let now = new Date();
+                let diffMs = now.getTime() - start.getTime();
+                if (diffMs < minDelay) {
+                    await Aventus.sleep(minDelay - diffMs);
+                }
+            }
+            this.loading = false;
+            return result;
         }
-        this.loading = false;
-        return result;
+        catch (e) {
+            clearTimeout(timeout);
+            this.loading = false;
+            this.alert({
+                title: "Erreur",
+                description: e
+            });
+        }
+        return null;
     }
     addFocus() {
         this.setAttribute("tabindex", "-1");
@@ -6412,23 +7637,17 @@ System.Application = class Application extends Aventus.WebComponent {
     removeDesktopActive() {
         System.DesktopActivableLogic.remove(this);
     }
-    rightClick() {
-        this.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-        });
-    }
     init(options) {
         this.options = options;
         this.setSizeInfo(this.sizeManager.load());
     }
     postCreation() {
         this.register();
-        this.rightClick();
         this.addResize();
         this.addFocus();
         this.addMoveDragAndDrop();
         this.watchTransition();
+        this.bindContextMenu();
     }
     postDestruction() {
         super.postDestruction();
@@ -6529,6 +7748,14 @@ Components.Link.Tag=`rk-link`;
 _.Components.Link=Components.Link;
 if(!window.customElements.get('rk-link')){window.customElements.define('rk-link', Components.Link);Aventus.WebComponentInstance.registerDefinition(Components.Link);}
 
+Permissions.ApplicationPermissionQuery=class ApplicationPermissionQuery extends Permissions.PermissionQuery {
+    static get Fullname() { return "Core.Permissions.ApplicationPermissionQuery, Core"; }
+}
+Permissions.ApplicationPermissionQuery.Namespace=`Core.Permissions`;
+Permissions.ApplicationPermissionQuery.$schema={...(Permissions.PermissionQuery?.$schema ?? {}), };
+Aventus.Converter.register(Permissions.ApplicationPermissionQuery.Fullname, Permissions.ApplicationPermissionQuery);
+
+_.Permissions.ApplicationPermissionQuery=Permissions.ApplicationPermissionQuery;
 Lib.AppIconManager=class AppIconManager {
     static loaded = [];
     static dico = {};
@@ -6584,338 +7811,9 @@ Lib.AppIconManager=class AppIconManager {
         });
     }
 }
-Lib.AppIconManager.Namespace=`${moduleName}.Lib`;
+Lib.AppIconManager.Namespace=`Core.Lib`;
 
 _.Lib.AppIconManager=Lib.AppIconManager;
-System.Notification = class Notification extends Aventus.WebComponent {
-    static get observedAttributes() {return ["icon", "subject"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
-    get 'position'() { return this.getStringAttr('position') }
-    set 'position'(val) { this.setStringAttr('position', val) }get 'is_active'() { return this.getBoolAttr('is_active') }
-    set 'is_active'(val) { this.setBoolAttr('is_active', val) }    get 'icon'() { return this.getStringProp('icon') }
-    set 'icon'(val) { this.setStringAttr('icon', val) }get 'subject'() { return this.getStringProp('subject') }
-    set 'subject'(val) { this.setStringAttr('subject', val) }    showAsked = false;
-    onHide = () => { };
-    static __style = `:host{--internal-notification-box-shadow: var(--notification-box-shadow);--internal-notification-logo-fill-color: var(--notification-logo-fill-color, var(--text-color));--internal-notification-logo-stroke-color: var(--notification-logo-stroke-color, transparent);--local-notification-transition-delay: 0.4s}:host{background-color:var(--secondary-color);border-radius:10px;box-shadow:var(--internal-notification-box-shadow);color:var(--text-color);display:flex;max-width:calc(100% - 20px);min-height:40px;padding:10px;position:absolute;width:400px;z-index:600}:host .logo{--img-fill-color: var(--internal-notification-logo-fill-color);--img-stroke-color: var(--internal-notification-logo-stroke-color);flex-shrink:0;order:1;width:30px}:host .logo[src=""]{display:none}:host .content{display:flex;flex-direction:column;order:2}:host .content .title{font-size:20px;font-weight:bold;margin-bottom:5px}:host .content .title:empty{display:none}:host .content .text{flex-grow:1;overflow:hidden}:host .content .text:empty{display:none}:host .close{cursor:pointer;flex-grow:0;height:30px;position:absolute;width:30px}:host([position=left]){bottom:80px;left:0px;opacity:0;transform:translateX(-100%);transition:left var(--local-notification-transition-delay) var(--bezier-curve),bottom var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve)}:host([position=left]) .logo{order:2}:host([position=left]) .content{margin-left:30px;margin-right:0px;order:1}:host([position=left]) .close{left:5px;top:5px}:host([position=left][is_active]){left:10px;opacity:1;transform:translateX(0)}:host([position=right]){bottom:80px;opacity:0;right:0px;transform:translateX(100%);transition:right var(--local-notification-transition-delay) var(--bezier-curve),bottom var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve)}:host([position=right]) .content{margin-left:10px;margin-right:30px}:host([position=right]) .close{right:5px;top:5px}:host([position=right][is_active]){opacity:1;right:10px;transform:translateX(0)}:host([position=top]){left:10%;opacity:0;transform:translateY(-100%);transition:top var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve);width:80%}:host([position=top]) .content{margin-left:10px;margin-right:30px}:host([position=top]) .close{right:5px;top:5px}:host([position=top]:not([is_active])){top:0px !important}:host([position=top][is_active]){opacity:1;top:10px;transform:translateY(0)}:host([position=bottom]){left:10%;transform:translateY(100%);transition:bottom var(--local-notification-transition-delay) var(--bezier-curve),transform var(--local-notification-transition-delay) var(--bezier-curve),opacity var(--local-notification-transition-delay) var(--bezier-curve);width:80%}:host([position=bottom]) .content{margin-left:10px;margin-right:30px}:host([position=bottom]) .close{right:5px;top:5px}:host([position=bottom]:not([is_active])){bottom:0px !important}:host([position=bottom][is_active]){bottom:80px;opacity:1;transform:translateY(0)}`;
-    __getStatic() {
-        return Notification;
-    }
-    __getStyle() {
-        let arrStyle = super.__getStyle();
-        arrStyle.push(Notification.__style);
-        return arrStyle;
-    }
-    __getHtml() {
-    this.__getStatic().__template.setHTML({
-        slots: { 'default':`<slot></slot>` }, 
-        blocks: { 'default':`<rk-img class="logo" _id="notification_0"></rk-img><div class="content" _id="notification_1">    <div class="title" _id="notification_2"></div>    <div class="text"><slot></slot></div></div><rk-img class="close" src="/img/icons/close.svg" _id="notification_3"></rk-img>` }
-    });
-}
-    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
-  "content": {
-    "notification_0°src": {
-      "fct": (c) => `${c.print(c.comp.__a84b39ff3d24d67167f2e8388c48a763method0())}`,
-      "once": true
-    },
-    "notification_2°@HTML": {
-      "fct": (c) => `${c.print(c.comp.__a84b39ff3d24d67167f2e8388c48a763method1())}`,
-      "once": true
-    }
-  },
-  "pressEvents": [
-    {
-      "id": "notification_0",
-      "onPress": (e, pressInstance, c) => { c.comp.clicked(e, pressInstance); }
-    },
-    {
-      "id": "notification_1",
-      "onPress": (e, pressInstance, c) => { c.comp.clicked(e, pressInstance); }
-    },
-    {
-      "id": "notification_3",
-      "onPress": (e, pressInstance, c) => { c.comp.close(e, pressInstance); }
-    }
-  ]
-}); }
-    getClassName() {
-        return "Notification";
-    }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('position')){ this['position'] = 'right'; }if(!this.hasAttribute('is_active')) { this.attributeChangedCallback('is_active', false, false); }if(!this.hasAttribute('icon')){ this['icon'] = undefined; }if(!this.hasAttribute('subject')){ this['subject'] = ""; } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('position');this.__upgradeProperty('is_active');this.__upgradeProperty('icon');this.__upgradeProperty('subject'); }
-    __listBoolProps() { return ["is_active"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
-    show(onHide) {
-        this.onHide = onHide;
-        if (this.isReady) {
-            this.is_active = true;
-        }
-        else {
-            this.showAsked = true;
-        }
-    }
-    async clicked() {
-        if (this.onHide) {
-            this.is_active = false;
-            this.onHide(true);
-            await Aventus.sleep(420);
-            this.remove();
-        }
-    }
-    async close() {
-        if (this.onHide) {
-            this.is_active = false;
-            this.onHide(false);
-            await Aventus.sleep(420);
-            this.remove();
-        }
-    }
-    postCreation() {
-        if (this.showAsked) {
-            this.is_active = true;
-        }
-    }
-    __a84b39ff3d24d67167f2e8388c48a763method0() {
-        return this.icon;
-    }
-    __a84b39ff3d24d67167f2e8388c48a763method1() {
-        return this.subject;
-    }
-}
-System.Notification.Namespace=`${moduleName}.System`;
-System.Notification.Tag=`rk-notification`;
-_.System.Notification=System.Notification;
-if(!window.customElements.get('rk-notification')){window.customElements.define('rk-notification', System.Notification);Aventus.WebComponentInstance.registerDefinition(System.Notification);}
-
-System.NotificationManager=class NotificationManager {
-    activeNotifications = {
-        top: [],
-        left: [],
-        bottom: [],
-        right: [],
-    };
-    waitingNotifications = {
-        top: [],
-        left: [],
-        bottom: [],
-        right: [],
-    };
-    os;
-    constructor(os) {
-        this.os = os;
-    }
-    async notify(notification) {
-        this.os.shadowRoot.appendChild(notification);
-        if (notification.position == "bottom") {
-            return this._notifyBottom(notification, true);
-        }
-        else if (notification.position == "left") {
-            return this._notifyLeft(notification, true);
-        }
-        else if (notification.position == "right") {
-            return this._notifyRight(notification, true);
-        }
-        else if (notification.position == "top") {
-            return this._notifyTop(notification, true);
-        }
-        return false;
-    }
-    _notifyRight(notification, firstTime, from = 0) {
-        return new Promise((resolve) => {
-            let height = notification.offsetHeight;
-            let position = "right";
-            const _remove = (result) => {
-                let index = this.activeNotifications[position].indexOf(notification);
-                if (index > -1) {
-                    this.activeNotifications[position].splice(index, 1);
-                }
-                if (this.waitingNotifications[position].length > 0) {
-                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
-                    this._notifyRight(nextNotif, false, index);
-                }
-                else {
-                    let bodyHeight = document.body.offsetHeight;
-                    for (let i = 0; i < index; i++) {
-                        let notif = this.activeNotifications[position][i];
-                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
-                        notif.style.bottom = bottom - height - 20 + 'px';
-                    }
-                }
-                resolve(result);
-            };
-            let length = this.activeNotifications[position].length;
-            if (length == 0) {
-                this.activeNotifications[position].push(notification);
-                notification.show(_remove);
-            }
-            else {
-                let bodyHeight = document.body.offsetHeight;
-                let totHeight = 0;
-                for (let notif of this.activeNotifications[position]) {
-                    totHeight += notif.offsetHeight + 20;
-                }
-                if (totHeight + height < bodyHeight / 2) {
-                    for (let i = from; i < this.activeNotifications[position].length; i++) {
-                        let notif = this.activeNotifications[position][i];
-                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
-                        notif.style.bottom = bottom + height + 20 + 'px';
-                    }
-                    this.activeNotifications[position].push(notification);
-                    notification.show(_remove);
-                }
-                else if (firstTime) {
-                    this.waitingNotifications[position].push(notification);
-                }
-            }
-        });
-    }
-    _notifyLeft(notification, firstTime, from = 0) {
-        return new Promise((resolve) => {
-            let height = notification.offsetHeight;
-            let position = "left";
-            const _remove = (result) => {
-                let index = this.activeNotifications[position].indexOf(notification);
-                if (index > -1) {
-                    this.activeNotifications[position].splice(index, 1);
-                }
-                if (this.waitingNotifications[position].length > 0) {
-                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
-                    this._notifyLeft(nextNotif, false, index);
-                }
-                else {
-                    let bodyHeight = document.body.offsetHeight;
-                    for (let i = 0; i < index; i++) {
-                        let notif = this.activeNotifications[position][i];
-                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
-                        notif.style.bottom = bottom - height - 20 + 'px';
-                    }
-                }
-                resolve(result);
-            };
-            let length = this.activeNotifications[position].length;
-            if (length == 0) {
-                this.activeNotifications[position].push(notification);
-                notification.show(_remove);
-            }
-            else {
-                let bodyHeight = document.body.offsetHeight;
-                let totHeight = 0;
-                for (let notif of this.activeNotifications[position]) {
-                    totHeight += notif.offsetHeight + 20;
-                }
-                if (totHeight + height < bodyHeight / 2) {
-                    for (let i = from; i < this.activeNotifications[position].length; i++) {
-                        let notif = this.activeNotifications[position][i];
-                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
-                        notif.style.bottom = bottom + height + 20 + 'px';
-                    }
-                    this.activeNotifications[position].push(notification);
-                    notification.show(_remove);
-                }
-                else if (firstTime) {
-                    this.waitingNotifications[position].push(notification);
-                }
-            }
-        });
-    }
-    _notifyTop(notification, firstTime, from = 0) {
-        return new Promise((resolve) => {
-            let height = notification.offsetHeight;
-            let position = "top";
-            const _remove = (result) => {
-                let index = this.activeNotifications[position].indexOf(notification);
-                if (index > -1) {
-                    this.activeNotifications[position].splice(index, 1);
-                }
-                if (this.waitingNotifications[position].length > 0) {
-                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
-                    this._notifyTop(nextNotif, false, index);
-                }
-                else {
-                    for (let i = 0; i < index; i++) {
-                        let notif = this.activeNotifications[position][i];
-                        let top = notif.offsetTop;
-                        notif.style.top = top - height - 20 + 'px';
-                    }
-                }
-                resolve(result);
-            };
-            let length = this.activeNotifications[position].length;
-            if (length == 0) {
-                this.activeNotifications[position].push(notification);
-                notification.show(_remove);
-            }
-            else {
-                let bodyHeight = document.body.offsetHeight;
-                let totHeight = 0;
-                for (let notif of this.activeNotifications[position]) {
-                    totHeight += notif.offsetHeight + 20;
-                }
-                if (totHeight + height < bodyHeight / 3) {
-                    for (let i = from; i < this.activeNotifications[position].length; i++) {
-                        let notif = this.activeNotifications[position][i];
-                        let top = notif.offsetTop;
-                        notif.style.top = top + height + 20 + 'px';
-                    }
-                    this.activeNotifications[position].push(notification);
-                    notification.show(_remove);
-                }
-                else if (firstTime) {
-                    this.waitingNotifications[position].push(notification);
-                }
-            }
-        });
-    }
-    _notifyBottom(notification, firstTime, from = 0) {
-        return new Promise((resolve) => {
-            let height = notification.offsetHeight;
-            let position = "bottom";
-            const _remove = (result) => {
-                let index = this.activeNotifications[position].indexOf(notification);
-                if (index > -1) {
-                    this.activeNotifications[position].splice(index, 1);
-                }
-                if (this.waitingNotifications[position].length > 0) {
-                    let nextNotif = this.waitingNotifications[position].splice(0, 1)[0];
-                    this._notifyBottom(nextNotif, false, index);
-                }
-                else {
-                    let bodyHeight = document.body.offsetHeight;
-                    for (let i = 0; i < index; i++) {
-                        let notif = this.activeNotifications[position][i];
-                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
-                        notif.style.bottom = bottom - height - 20 + 'px';
-                    }
-                }
-                resolve(result);
-            };
-            let length = this.activeNotifications[position].length;
-            if (length == 0) {
-                this.activeNotifications[position].push(notification);
-                notification.show(_remove);
-            }
-            else {
-                let bodyHeight = document.body.offsetHeight;
-                let totHeight = 0;
-                for (let notif of this.activeNotifications[position]) {
-                    totHeight += notif.offsetHeight + 20;
-                }
-                if (totHeight + height < bodyHeight / 3) {
-                    for (let i = from; i < this.activeNotifications[position].length; i++) {
-                        let notif = this.activeNotifications[position][i];
-                        let bottom = bodyHeight - (notif.offsetTop + notif.offsetHeight);
-                        notif.style.bottom = bottom + height + 20 + 'px';
-                    }
-                    this.activeNotifications[position].push(notification);
-                    notification.show(_remove);
-                }
-                else if (firstTime) {
-                    this.waitingNotifications[position].push(notification);
-                }
-            }
-        });
-    }
-}
-System.NotificationManager.Namespace=`${moduleName}.System`;
-
-_.System.NotificationManager=System.NotificationManager;
 Lib.Platform=class Platform {
     static onScreenChange = new Aventus.Callback();
     static init() {
@@ -6957,7 +7855,7 @@ Lib.Platform=class Platform {
         return element.offsetWidth + " / " + element.offsetHeight;
     }
 }
-Lib.Platform.Namespace=`${moduleName}.Lib`;
+Lib.Platform.Namespace=`Core.Lib`;
 
 _.Lib.Platform=Lib.Platform;
 RAM.DesktopRAM=class DesktopRAM extends AventusSharp.RAM.RamHttp {
@@ -6992,7 +7890,7 @@ RAM.DesktopRAM=class DesktopRAM extends AventusSharp.RAM.RamHttp {
         item.Applications = savedApps;
     }
 }
-RAM.DesktopRAM.Namespace=`${moduleName}.RAM`;
+RAM.DesktopRAM.Namespace=`Core.RAM`;
 
 _.RAM.DesktopRAM=RAM.DesktopRAM;
 System.Desktop = class Desktop extends Aventus.WebComponent {
@@ -7010,7 +7908,7 @@ System.Desktop = class Desktop extends Aventus.WebComponent {
     activableOrder = [];
     oldActiveCase;
     pressManagerStopMoveApp;
-    static __style = `:host{--_desktop-background-color: var(--desktop-background-color, var(--primary-color))}:host{background-color:var(--_desktop-background-color);background-position:center;background-repeat:no-repeat;background-size:cover;flex-shrink:0;height:100%;overflow:hidden;position:relative;width:100%}:host .icons{--page-case-border-radius: 5px;--page-case-border-active: 1px solid var(--darker-active);--page-case-background-active: var(--lighter-active);height:calc(100% - 70px);transition:opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s;width:100%;z-index:2}:host .app-container{transition:opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s}:host([show_application_list])>*{opacity:0 !important;visibility:hidden !important}:host([background_size=Cover]){background-size:cover}:host([background_size=Contain]){background-size:contain}:host([background_size=Stretch]){background-size:100% 100%}`;
+    static __style = `:host{--_desktop-background-color: var(--desktop-background-color, var(--primary-color))}:host{background-color:var(--_desktop-background-color);background-position:center;background-repeat:no-repeat;background-size:cover;flex-shrink:0;height:100%;overflow:hidden;position:relative;width:100%}:host .icons{--page-case-border-radius: var(--border-radius-sm);--page-case-border-active: 1px solid var(--darker-active);--page-case-background-active: var(--lighter-active);height:calc(100% - 70px);transition:opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s;width:100%;z-index:2}:host .app-container{transition:opacity var(--bezier-curve) .5s,visibility var(--bezier-curve) .5s}:host([show_application_list])>*{opacity:0 !important;visibility:hidden !important}:host([background_size=Cover]){background-size:cover}:host([background_size=Contain]){background-size:contain}:host([background_size=Stretch]){background-size:100% 100%}`;
     constructor() {            super();this.setAppPositionTemp=this.setAppPositionTemp.bind(this)this.clearAppPositionTemp=this.clearAppPositionTemp.bind(this)this.setAppPosition=this.setAppPosition.bind(this)this.removeAppPosition=this.removeAppPosition.bind(this) }
     __getStatic() {
         return Desktop;
@@ -7078,6 +7976,7 @@ System.Desktop = class Desktop extends Aventus.WebComponent {
         });
     }
     async loadApp(application) {
+        await Addon.loadForApp(application);
         await Aventus.ResourceLoader.loadInHead({
             type: "js",
             url: "/apps/" + application + "/index.js"
@@ -7088,6 +7987,13 @@ System.Desktop = class Desktop extends Aventus.WebComponent {
         });
     }
     async openUrl(application, componentUrl = "/", url = "/") {
+        if (!(await can(new Permissions.ApplicationPermissionQuery(Permissions.ApplicationPermission.AllowAccess, application)))) {
+            let notif = new Components.Notification();
+            notif.subject = "Erreur";
+            notif.innerHTML = "Vous n'êtes pas autorisé à ouvrir l'application " + application;
+            System.Os.instance.notify(notif);
+            return;
+        }
         System.Os.instance.show_application_list = false;
         await this.loadApp(application);
         let tagName = await Lib.AppIconManager.getTagName(application, componentUrl);
@@ -7113,7 +8019,7 @@ System.Desktop = class Desktop extends Aventus.WebComponent {
             this.manageAppBottomBar(comp.$type);
         }
         else {
-            let notif = new System.Notification();
+            let notif = new Components.Notification();
             notif.subject = "Erreur";
             notif.innerHTML = "Impossible de trouver l'application " + application + " sur " + componentUrl;
             System.Os.instance.notify(notif);
@@ -7157,6 +8063,13 @@ System.Desktop = class Desktop extends Aventus.WebComponent {
             return;
         }
         let appName = applicationName?.split(".")[0];
+        if (!(await can(new Permissions.ApplicationPermissionQuery(Permissions.ApplicationPermission.AllowAccess, appName)))) {
+            let notif = new Components.Notification();
+            notif.subject = "Erreur";
+            notif.innerHTML = "Vous n'êtes pas autorisé à ouvrir l'application " + appName;
+            System.Os.instance.notify(notif);
+            return;
+        }
         await this.loadApp(appName);
         let comp = Aventus.WebComponentInstance.create(applicationName);
         if (comp) {
@@ -7428,7 +8341,6 @@ System.Os = class Os extends Aventus.WebComponent {
 					set 'desktops'(val) {
 						this.__watch["desktops"] = val;
 					}    static instance;
-    notificationManager;
     activeDesktopEl;
     get activeDesktop() {
         return this.activeDesktopEl;
@@ -7448,8 +8360,8 @@ System.Os = class Os extends Aventus.WebComponent {
 }));this.__addPropertyActions("active_desktop", ((target) => {
     target.onActiveDesktop();
 })); }
-    static __style = `:host{--_active-desktop: var(_active-desktop, 0)}:host{height:100%;position:relative;width:100%;z-index:1}:host .desktop-container{display:flex;height:100%;position:relative;width:100%;z-index:1}:host .desktop-container .desktop-case{flex-shrink:0;height:100%;position:relative;width:100%}:host .desktop-container .desktop-case .delete-desktop{--img-stroke-color: var(--red);background-color:var(--lighter-active);border-radius:50px;cursor:pointer;display:none;height:40px;position:absolute;right:5px;top:5px;width:40px;z-index:5556}:host .desktop-container .desktop-case .desktop-hider{display:none;inset:0;position:absolute;z-index:5555}:host .desktop-container .desktop-case:first-child{margin-left:calc(var(--_active-desktop)*-100%)}:host .add-desktop{--img-stroke-color: white;bottom:30px;display:none;height:50px;min-width:auto;position:absolute;right:10px;z-index:6}:host rk-loading{opacity:0;visibility:hidden}:host(:not([ready])) *{opacity:0;visibility:hidden}:host(:not([loading])) rk-loading{transition:opacity 1s var(--bezier-curve),visibility 1s var(--bezier-curve)}:host([loading]) rk-loading{opacity:1;visibility:visible}:host([desktop_list]) .desktop-container{flex-wrap:wrap;height:auto;justify-content:center}:host([desktop_list]) .desktop-container .desktop-case{--nb: 3;aspect-ratio:var(--ration);box-shadow:var(--elevation-10);height:max-content;margin:15px !important;overflow:hidden;width:calc(100%/var(--nb) - 30px)}:host([desktop_list]) .desktop-container .desktop-case .desktop-hider,:host([desktop_list]) .desktop-container .desktop-case .delete-desktop{display:block}:host([desktop_list]) .desktop-container .desktop-case rk-desktop{height:calc(100%*var(--nb));margin-left:calc(-50%*(var(--nb) - 1));top:calc(-50%*(var(--nb) - 1));transform:scale(calc(1 / var(--nb)));width:calc(100%*var(--nb))}:host([desktop_list]) .desktop-container .desktop-case.active{border:solid 5px var(--blue);border-radius:5px}:host([desktop_list]) .add-desktop{display:block}`;
-    constructor() {            super();            System.Os.instance = this;            Lib.Platform.init();            this.notificationManager = new System.NotificationManager(this);            Lib.ApplicationManager.reloadData();this.desktopMoveLeft=this.desktopMoveLeft.bind(this)this.desktopMoveRight=this.desktopMoveRight.bind(this)this.desktopMoveValidate=this.desktopMoveValidate.bind(this) }
+    static __style = `:host{--_active-desktop: var(_active-desktop, 0)}:host{height:100%;position:relative;width:100%;z-index:1}:host .desktop-container{display:flex;height:100%;position:relative;width:100%;z-index:1}:host .desktop-container .desktop-case{flex-shrink:0;height:100%;position:relative;width:100%}:host .desktop-container .desktop-case .delete-desktop{--img-stroke-color: var(--red);background-color:var(--lighter-active);border-radius:var(--border-radius-round);cursor:pointer;display:none;height:40px;position:absolute;right:5px;top:5px;width:40px;z-index:5556}:host .desktop-container .desktop-case .desktop-hider{display:none;inset:0;position:absolute;z-index:5555}:host .desktop-container .desktop-case:first-child{margin-left:calc(var(--_active-desktop)*-100%)}:host .add-desktop{--img-stroke-color: white;bottom:30px;display:none;height:50px;min-width:auto;position:absolute;right:10px;z-index:6}:host rk-loading{opacity:0;visibility:hidden}:host .background{background-color:#08162e;background-image:url('data:image/svg+xml;utf8,<svg version="1.1" viewBox="0 0 65.98 57.373" xmlns="http://www.w3.org/2000/svg"><g fill="%23acf4d6"><path d="M 33.949 5.731 L 22.7 5.731 L 22.7 0.001 L 33.788 0.001 C 45.619 0.001 46.363 17.934 36.124 20.216 C 35.379 20.428 34.637 20.48 33.788 20.48 L 28.483 20.48 L 28.483 20.534 L 28.483 34.433 L 22.7 34.433 L 22.7 14.697 L 28.483 20.534 L 42.491 34.433 L 50.342 34.433 L 30.605 14.697 L 33.949 14.697 C 38.883 14.697 38.883 5.731 33.949 5.731 Z" style="" /></g><g fill="%23FFF"><path d="M 7.8 53.573 L 4.94 48.993 L 3.22 48.993 L 3.22 53.573 L 0 53.573 L 0 39.573 L 4.98 39.573 C 8.12 39.573 10.2 41.473 10.2 44.393 C 10.2 46.253 9.32 47.653 7.84 48.373 L 11.2 53.573 L 7.8 53.573 Z M 3.22 42.533 L 3.22 46.253 L 4.78 46.253 C 6.08 46.253 6.98 45.793 6.98 44.393 C 6.98 43.013 6.08 42.533 4.78 42.533 L 3.22 42.533 Z M 20.3 43.173 L 23.46 43.173 L 23.46 53.573 L 20.3 53.573 L 20.3 52.533 C 20.16 52.893 19.22 53.773 17.62 53.773 C 15.24 53.773 12.5 52.073 12.5 48.353 C 12.5 44.773 15.24 42.993 17.62 42.993 C 19.22 42.993 20.16 43.913 20.3 44.133 L 20.3 43.173 Z M 18.08 50.993 C 19.38 50.993 20.44 50.093 20.44 48.353 C 20.44 46.673 19.38 45.773 18.08 45.773 C 16.72 45.773 15.56 46.693 15.56 48.353 C 15.56 50.073 16.72 50.993 18.08 50.993 Z M 33.94 43.133 L 37.08 43.133 L 30.72 57.373 L 27.56 57.373 L 29.48 53.213 L 24.98 43.133 L 28.12 43.133 L 31.04 49.813 L 33.94 43.133 Z M 42.58 53.733 C 40.64 53.733 38.66 52.433 38.66 49.133 L 38.66 43.173 L 41.82 43.173 L 41.82 48.913 C 41.82 50.493 42.36 50.993 43.36 50.993 C 44.78 50.993 45.6 49.613 45.8 49.013 L 45.8 43.173 L 48.96 43.173 L 48.96 53.573 L 45.8 53.573 L 45.8 51.773 C 45.6 52.273 44.54 53.733 42.58 53.733 Z M 58.2 53.573 L 54.82 49.533 L 54.16 50.233 L 54.16 53.573 L 51 53.573 L 51 49.793 L 51 39.433 L 54.16 39.433 L 54.16 46.373 L 57.1 43.173 L 60.88 43.173 L 56.76 47.513 L 61.8 53.573 L 58.2 53.573 Z M 65.98 39.433 L 65.98 42.093 L 62.82 42.093 L 62.82 39.433 L 65.98 39.433 Z M 65.98 43.173 L 65.98 53.573 L 62.82 53.573 L 62.82 43.173 L 65.98 43.173 Z" /></g></svg>');background-position:center center;background-repeat:no-repeat;background-size:25% 25%;inset:-20px;position:absolute;z-index:0;filter:brightness(0.8)}:host rk-notification-manager{bottom:60px}:host(:not([ready])) *{opacity:0;visibility:hidden}:host(:not([loading])) rk-loading{transition:opacity 1s var(--bezier-curve),visibility 1s var(--bezier-curve)}:host([loading]) rk-loading{opacity:1;visibility:visible}:host([desktop_list]) .desktop-container{flex-wrap:wrap;height:auto;justify-content:center}:host([desktop_list]) .desktop-container .desktop-case{--nb: 3;aspect-ratio:var(--ration);box-shadow:var(--elevation-10);height:max-content;margin:15px !important;overflow:hidden;width:calc(100%/var(--nb) - 30px)}:host([desktop_list]) .desktop-container .desktop-case .desktop-hider,:host([desktop_list]) .desktop-container .desktop-case .delete-desktop{display:block}:host([desktop_list]) .desktop-container .desktop-case rk-desktop{height:calc(100%*var(--nb));margin-left:calc(-50%*(var(--nb) - 1));top:calc(-50%*(var(--nb) - 1));transform:scale(calc(1 / var(--nb)));width:calc(100%*var(--nb))}:host([desktop_list]) .desktop-container .desktop-case.active{border:solid 5px var(--blue);border-radius:var(--border-radius-sm)}:host([desktop_list]) .add-desktop{display:block}`;
+    constructor() {            super();            System.Os.instance = this;            Lib.Platform.init();            Lib.ApplicationManager.reloadData();this.desktopMoveLeft=this.desktopMoveLeft.bind(this)this.desktopMoveRight=this.desktopMoveRight.bind(this)this.desktopMoveValidate=this.desktopMoveValidate.bind(this)this.popup=this.popup.bind(this)this.alert=this.alert.bind(this)this.confirm=this.confirm.bind(this) }
     __getStatic() {
         return Os;
     }
@@ -7460,7 +8372,7 @@ System.Os = class Os extends Aventus.WebComponent {
     }
     __getHtml() {
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<rk-app-list _id="os_0"></rk-app-list><rk-loading text="Chargement du système" background></rk-loading><rk-scrollable y_scroll="false" disable _id="os_1">    <div class="desktop-container">        <template _id="os_2"></template>    </div></rk-scrollable><rk-button-icon class="add-desktop" icon="/img/icons/add.svg" color="blue"></rk-button-icon>` }
+        blocks: { 'default':`<div class="background"></div><rk-app-list _id="os_0"></rk-app-list><rk-loading text="Chargement du système" background></rk-loading><rk-scrollable y_scroll="false" disable _id="os_1">    <div class="desktop-container">        <template _id="os_2"></template>    </div></rk-scrollable><rk-button-icon class="add-desktop" icon="/img/icons/add.svg" color="blue"></rk-button-icon><rk-notification-manager _id="os_6"></rk-notification-manager>` }
     });
 }
     get desktopsEl () { var list = Array.from(this.shadowRoot.querySelectorAll('[_id="os_5"]')); return list; }    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
@@ -7475,6 +8387,12 @@ System.Os = class Os extends Aventus.WebComponent {
       "name": "desktopContainerScroll",
       "ids": [
         "os_1"
+      ]
+    },
+    {
+      "name": "notificationManager",
+      "ids": [
+        "os_6"
       ]
     }
   ]
@@ -7793,7 +8711,7 @@ Lib.Process=class Process {
         return undefined;
     }
 }
-Lib.Process.Namespace=`${moduleName}.Lib`;
+Lib.Process.Namespace=`Core.Lib`;
 
 _.Lib.Process=Lib.Process;
 System.AppIcon = class AppIcon extends Aventus.WebComponent {
@@ -7806,7 +8724,7 @@ System.AppIcon = class AppIcon extends Aventus.WebComponent {
     dragAndDrop;
     moveApplicationState;
     iconId = 0;
-    static __style = `:host{align-items:center;background-color:#0c2247;border-radius:5px;box-shadow:var(--elevation-5);cursor:pointer;display:flex;height:30px;justify-content:center;position:relative;transition:box-shadow var(--bezier-curve) .3s,transform var(--bezier-curve) .3s;width:30px;-webkit-tap-highlight-color:rgba(0,0,0,0)}:host::after{background-color:var(--text-color);border-radius:5px;bottom:-7px;content:"";height:4px;opacity:0;position:absolute;transition:visibility var(--bezier-curve) .3s,opacity var(--bezier-curve) .3s;visibility:hidden;width:4px}:host .remove{background-color:var(--primary-color);border-radius:10px;display:none;height:20px;position:absolute;right:-10px;top:-10px;width:20px}:host .remove rk-img{--img-stroke-color: var(--text-color);height:100%;padding:0;width:100%}:host([shaking]){animation:shake linear .4s infinite}:host([shaking][can_remove]) .remove{display:block}:host([is_open]){transform:translateY(-3px)}:host([is_open])::after{visibility:visible;opacity:1}@media screen and (min-width: 1225px){:host(:hover){box-shadow:var(--elevation-1)}}@media screen and (max-width: 768px){:host{height:50px;width:50px}}@keyframes shake{0%{transform:rotateZ(0) rotateX(-13deg)}25%{transform:rotateZ(2deg) rotateX(-13deg)}50%{transform:rotateZ(0) rotateX(-13deg)}75%{transform:rotateZ(-2deg) rotateX(-13deg)}100%{transform:rotateZ(0) rotateX(-13deg)}}`;
+    static __style = `:host{align-items:center;background-color:#0c2247;border-radius:var(--border-radius-sm);box-shadow:var(--elevation-5);cursor:pointer;display:flex;height:30px;justify-content:center;position:relative;transition:box-shadow var(--bezier-curve) .3s,transform var(--bezier-curve) .3s;width:30px;-webkit-tap-highlight-color:rgba(0,0,0,0)}:host::after{background-color:var(--text-color);border-radius:var(--border-radius-sm);bottom:-7px;content:"";height:4px;opacity:0;position:absolute;transition:visibility var(--bezier-curve) .3s,opacity var(--bezier-curve) .3s;visibility:hidden;width:4px}:host .remove{background-color:var(--primary-color);border-radius:var(--border-radius-round);display:none;height:20px;position:absolute;right:-10px;top:-10px;width:20px}:host .remove rk-img{--img-stroke-color: var(--text-color);height:100%;padding:0;width:100%}:host([shaking]){animation:shake linear .4s infinite}:host([shaking][can_remove]) .remove{display:block}:host([is_open]){transform:translateY(-3px)}:host([is_open])::after{visibility:visible;opacity:1}@media screen and (min-width: 1225px){:host(:hover){box-shadow:var(--elevation-1)}}@media screen and (max-width: 768px){:host{height:50px;width:50px}}@keyframes shake{0%{transform:rotateZ(0) rotateX(-13deg)}25%{transform:rotateZ(2deg) rotateX(-13deg)}50%{transform:rotateZ(0) rotateX(-13deg)}75%{transform:rotateZ(-2deg) rotateX(-13deg)}100%{transform:rotateZ(0) rotateX(-13deg)}}`;
     constructor() {            super();            this.classList.add("touch");if (this.constructor == AppIcon) { throw "can't instanciate an abstract class"; } }
     __getStatic() {
         return AppIcon;
@@ -7853,9 +8771,9 @@ System.AppIcon = class AppIcon extends Aventus.WebComponent {
                 }
             });
         }
-        contextMenu.addSeparator({
-            priority: 1
-        });
+    }
+    defineAddons() {
+        return [];
     }
     componentUrl() {
         return "/";
@@ -7984,11 +8902,38 @@ System.AppIcon = class AppIcon extends Aventus.WebComponent {
     }
     postCreation() {
         Lib.AppIconManager.register(this, this.componentUrl());
+        Addon.need(this, this.defineAddons());
         this.createPressManager();
     }
 }
 System.AppIcon.Namespace=`${moduleName}.System`;
 _.System.AppIcon=System.AppIcon;
+
+System.CoreAppIcon = class CoreAppIcon extends System.AppIcon {
+    static __style = `:host{background-color:#7a7a7a}:host rk-img{--img-stroke-color: transparent;--img-fill-color: #ffffff;flex-grow:1;max-height:100%;padding:15%}@media screen and (max-width: 768px){:host rk-img{padding:7px}}`;
+    __getStatic() {
+        return CoreAppIcon;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(CoreAppIcon.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        blocks: { 'default':`<rk-img src="/img/icons/core.svg"></rk-img>` }
+    });
+}
+    getClassName() {
+        return "CoreAppIcon";
+    }
+    postCreation() {
+    }
+}
+System.CoreAppIcon.Namespace=`${moduleName}.System`;
+System.CoreAppIcon.Tag=`rk-core-app-icon`;
+_.System.CoreAppIcon=System.CoreAppIcon;
+if(!window.customElements.get('rk-core-app-icon')){window.customElements.define('rk-core-app-icon', System.CoreAppIcon);Aventus.WebComponentInstance.registerDefinition(System.CoreAppIcon);}
 
 System.AppIconInline = class AppIconInline extends Aventus.WebComponent {
     static get observedAttributes() {return ["text"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
@@ -8063,7 +9008,7 @@ System.ApplicationSidnav = class ApplicationSidnav extends System.Application {
 					}    __registerWatchesActions() {
     this.__addWatchesActions("sidnavItems");    super.__registerWatchesActions();
 }
-    static __style = `:host{--_application-sidnav-sidenav-width: var(--application-sidnav-sidenav-width, 200px)}:host .header .navigation-actions .menu{align-items:center;border:1px solid var(--darker);border-radius:200px;display:none;height:24px;justify-content:center;transition:background-color var(--bezier-curve) .2s,border var(--bezier-curve) .2s;width:24px}:host .header .navigation-actions .menu mi-icon{font-size:18px}:host .content{display:flex;height:calc(100% - 30px);margin:0;position:relative;width:100%}:host .content .sidenav-hider{animation-duration:300ms;animation-fill-mode:forwards;animation-name:fadeIn;animation-timing-function:var(--bezier-curve);background-color:rgba(0,0,0,.2);display:none;inset:0;position:absolute;z-index:50}:host .content .sidenav{background-color:var(--secondary-color);box-shadow:var(--elevation-4);height:100%;transition:transform .3s var(--bezier-curve);width:var(--_application-sidnav-sidenav-width);z-index:50}:host .content .sidenav .sidenav-item{align-items:center;border-bottom:1px solid var(--lighter-active);cursor:pointer;display:flex;flex-wrap:nowrap;height:51px;padding:10px;transition:linear background-color .3s}:host .content .sidenav .sidenav-item rk-img{--img-fill-color: var(--text-color);flex-grow:0;flex-shrink:0;height:30px;width:30px}:host .content .sidenav .sidenav-item rk-img[src=""]{display:none}:host .content .sidenav .sidenav-item mi-icon{align-items:center;color:var(--text-color);display:flex;height:30px;justify-content:center;width:30px}:host .content .sidenav .sidenav-item span{color:var(--text-color);flex-grow:1;flex-shrink:0;margin-left:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:calc(100% - 45px)}:host .content .sidenav .sidenav-item rk-img[src=""]~span{margin-left:0}:host .content .sidenav .sidenav-item[active]{background-color:var(--lighter-active)}:host .content .container{flex-shrink:0;height:100%;transition:width .3s var(--bezier-curve),margin-left .3s var(--bezier-curve);width:calc(100% - var(--_application-sidnav-sidenav-width))}:host([open_sidenav]) .navigation-actions .menu{background-color:var(--darker) !important}:host([no_sidenav]) .header .navigation-actions .menu{display:none !important}:host([no_sidenav]) .content{display:flex;height:calc(100% - 30px);margin:0;position:relative;width:100%}:host([no_sidenav]) .content .sidenav{display:none}:host([no_sidenav]) .content .sidenav-hider{display:none !important}:host([no_sidenav]) .content .container{height:100%;width:100%}@media screen and (min-width: 1225px){:host .header .navigation-actions .menu:hover{background-color:var(--darker) !important;border:1px solid rgba(0,0,0,0)}:host .content .sidenav .sidenav-item:hover{background-color:var(--lighter-active)}}@media screen and (max-width: 1224px){:host .header .navigation-actions .menu{height:26px;width:26px}:host .header .navigation-actions .menu mi-icon{font-size:20px}:host .content{height:calc(100% - 40px)}}@container application (max-width: 300px){:host([hide_menu_size=xs]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=xs]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=xs]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=xs]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=xs]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 300px){:host([hide_menu_size=xs][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=xs][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@container application (max-width: 540px){:host([hide_menu_size=sm]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=sm]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=sm]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=sm]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=sm]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 540px){:host([hide_menu_size=sm][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=sm][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@container application (max-width: 720px){:host([hide_menu_size=md]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=md]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=md]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=md]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=md]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 720px){:host([hide_menu_size=md][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=md][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@container application (max-width: 960px){:host([hide_menu_size=lg]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=lg]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=lg]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=lg]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=lg]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 960px){:host([hide_menu_size=lg][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=lg][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@container application (max-width: 1140px){:host([hide_menu_size=xl]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=xl]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=xl]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=xl]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=xl]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 1140px){:host([hide_menu_size=xl][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=xl][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@keyframes fadeIn{0%{opacity:0;visibility:hidden}100%{visibility:100%;visibility:visible}}`;
+    static __style = `:host{--_application-sidnav-sidenav-width: var(--application-sidnav-sidenav-width, 200px)}:host .header .navigation-actions .menu{align-items:center;border:1px solid var(--darker);border-radius:var(--border-radius-round);display:none;height:24px;justify-content:center;transition:background-color var(--bezier-curve) .2s,border var(--bezier-curve) .2s;width:24px}:host .header .navigation-actions .menu mi-icon{font-size:18px}:host .content{display:flex;height:calc(100% - 30px);margin:0;position:relative;width:100%}:host .content .sidenav-hider{animation-duration:300ms;animation-fill-mode:forwards;animation-name:fadeIn;animation-timing-function:var(--bezier-curve);background-color:rgba(0,0,0,.2);display:none;inset:0;position:absolute;z-index:50}:host .content .sidenav{background-color:var(--secondary-color);box-shadow:var(--elevation-4);height:100%;transition:transform .3s var(--bezier-curve);width:var(--_application-sidnav-sidenav-width);z-index:50}:host .content .sidenav .sidenav-item{align-items:center;border-bottom:1px solid var(--lighter-active);cursor:pointer;display:flex;flex-wrap:nowrap;height:51px;padding:10px;transition:linear background-color .3s}:host .content .sidenav .sidenav-item rk-img{--img-fill-color: var(--text-color);flex-grow:0;flex-shrink:0;height:30px;width:30px}:host .content .sidenav .sidenav-item rk-img[src=""]{display:none}:host .content .sidenav .sidenav-item mi-icon{align-items:center;color:var(--text-color);display:flex;height:30px;justify-content:center;width:30px}:host .content .sidenav .sidenav-item span{color:var(--text-color);flex-grow:1;flex-shrink:0;margin-left:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:calc(100% - 45px)}:host .content .sidenav .sidenav-item rk-img[src=""]~span{margin-left:0}:host .content .sidenav .sidenav-item[active]{background-color:var(--lighter-active)}:host .content .container{flex-shrink:0;height:100%;transition:width .3s var(--bezier-curve),margin-left .3s var(--bezier-curve);width:calc(100% - var(--_application-sidnav-sidenav-width))}:host([open_sidenav]) .navigation-actions .menu{background-color:var(--darker) !important}:host([no_sidenav]) .header .navigation-actions .menu{display:none !important}:host([no_sidenav]) .content{display:flex;height:calc(100% - 30px);margin:0;position:relative;width:100%}:host([no_sidenav]) .content .sidenav{display:none}:host([no_sidenav]) .content .sidenav-hider{display:none !important}:host([no_sidenav]) .content .container{height:100%;width:100%}@media screen and (min-width: 1225px){:host .header .navigation-actions .menu:hover{background-color:var(--darker) !important;border:1px solid rgba(0,0,0,0)}:host .content .sidenav .sidenav-item:hover{background-color:var(--lighter-active)}}@media screen and (max-width: 1224px){:host .header .navigation-actions .menu{height:26px;width:26px}:host .header .navigation-actions .menu mi-icon{font-size:20px}:host .content{height:calc(100% - 40px)}}@container application (max-width: 300px){:host([hide_menu_size=xs]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=xs]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=xs]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=xs]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=xs]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 300px){:host([hide_menu_size=xs][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=xs][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@container application (max-width: 540px){:host([hide_menu_size=sm]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=sm]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=sm]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=sm]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=sm]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 540px){:host([hide_menu_size=sm][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=sm][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@container application (max-width: 720px){:host([hide_menu_size=md]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=md]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=md]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=md]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=md]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 720px){:host([hide_menu_size=md][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=md][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@container application (max-width: 960px){:host([hide_menu_size=lg]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=lg]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=lg]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=lg]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=lg]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 960px){:host([hide_menu_size=lg][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=lg][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@container application (max-width: 1140px){:host([hide_menu_size=xl]:not([no_sidenav])) .header .navigation-actions .menu{display:flex}:host([hide_menu_size=xl]:not([no_sidenav])) .header .navigation-actions .previous,:host([hide_menu_size=xl]:not([no_sidenav])) .header .navigation-actions .next{display:none}:host([hide_menu_size=xl]:not([no_sidenav])) .content .sidenav{transform:translateX(calc(-100% - 20px))}:host([hide_menu_size=xl]:not([no_sidenav])) .content .container{margin-left:calc(var(--_application-sidnav-sidenav-width)*-1);width:100%}}@container application (max-width: 1140px){:host([hide_menu_size=xl][open_sidenav]) .content .sidenav-hider{display:block}:host([hide_menu_size=xl][open_sidenav]) .content .sidenav{transform:translateX(0%)}}@keyframes fadeIn{0%{opacity:0;visibility:hidden}100%{visibility:100%;visibility:visible}}`;
     constructor() { super(); if (this.constructor == ApplicationSidnav) { throw "can't instanciate an abstract class"; } }
     __getStatic() {
         return ApplicationSidnav;
@@ -8259,129 +9204,12 @@ System.ApplicationSidnav = class ApplicationSidnav extends System.Application {
 System.ApplicationSidnav.Namespace=`${moduleName}.System`;
 _.System.ApplicationSidnav=System.ApplicationSidnav;
 
-Lib.PWA=class PWA {
-    static get isAvailable() {
-        if (window['deferredPrompt']) {
-            return true;
-        }
-        return false;
-    }
-    static get isAvailableIOS() {
-        return Lib.Platform.isiOS && !Lib.Platform.isStandalone;
-    }
-    static e;
-    static isInit = false;
-    static startInstall;
-    static onInit = new Aventus.Callback();
-    static onDownloading = new Aventus.Callback();
-    static onDownloaded = new Aventus.Callback();
-    static async init() {
-        if (this.isInit) {
-            return;
-        }
-        if (!this.e && Lib.PWA.isAvailable) {
-            this.e = window['deferredPrompt'];
-            let result = this.onInit.trigger([]);
-            this.isInit = true;
-        }
-        else if (Lib.PWA.isAvailableIOS) {
-            let result = this.onInit.trigger([]);
-            this.isInit = true;
-        }
-        if (this.isInit) {
-            window.addEventListener('appinstalled', async (evt) => {
-                let now = new Date();
-                let start = this.startInstall ?? new Date();
-                let diffMs = now.getTime() - start.getTime();
-                if (diffMs < 3000) {
-                    await Aventus.sleep(3000 - diffMs);
-                }
-                this.onDownloaded.trigger([]);
-            });
-        }
-    }
-    static addOnInit(cb) {
-        if (this.isInit) {
-            cb();
-        }
-        else {
-            this.onInit.add(cb);
-        }
-    }
-    static async download() {
-        if (this.isAvailable && this.e) {
-            this.e.prompt();
-            const choiceResult = await this.e.userChoice;
-            if (choiceResult.outcome === 'accepted') {
-                this.startInstall = new Date();
-                this.onDownloading.trigger([]);
-            }
-        }
-        else if (this.isAvailableIOS) {
-            let pwaios = new Components.PwaPromptIos();
-            document.body.appendChild(pwaios);
-        }
-    }
-}
-Lib.PWA.Namespace=`${moduleName}.Lib`;
-
-_.Lib.PWA=Lib.PWA;
-System.PwaButton = class PwaButton extends Aventus.WebComponent {
-    get 'visible'() { return this.getBoolAttr('visible') }
-    set 'visible'(val) { this.setBoolAttr('visible', val) }get 'downloading'() { return this.getBoolAttr('downloading') }
-    set 'downloading'(val) { this.setBoolAttr('downloading', val) }    static __style = `:host{align-items:center;background-color:var(--darker);border-radius:5px;box-shadow:var(--elevation-2);display:none;height:30px;justify-content:center;padding:5px;width:30px}:host .download{display:inline-block}:host .sync{display:none}:host .rotate{animation-name:rotate;animation-duration:1.5s;animation-iteration-count:infinite;animation-timing-function:linear;animation-direction:reverse}:host([visible]){display:flex !important}:host([downloading]) .download{display:none}:host([downloading]) .sync{display:inline-block}@keyframes rotate{0%{transform:rotate(0)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}`;
-    __getStatic() {
-        return PwaButton;
-    }
-    __getStyle() {
-        let arrStyle = super.__getStyle();
-        arrStyle.push(PwaButton.__style);
-        return arrStyle;
-    }
-    __getHtml() {
-    this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<mi-icon icon="download" class="download"></mi-icon><mi-icon icon="sync" class="sync rotate"></mi-icon>` }
-    });
-}
-    getClassName() {
-        return "PwaButton";
-    }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('visible')) { this.attributeChangedCallback('visible', false, false); }if(!this.hasAttribute('downloading')) { this.attributeChangedCallback('downloading', false, false); } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('visible');this.__upgradeProperty('downloading'); }
-    __listBoolProps() { return ["visible","downloading"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
-    async init() {
-        Lib.PWA.addOnInit(async () => {
-            this.visible = true;
-            new Aventus.PressManager({
-                element: this,
-                onPress: () => {
-                    Lib.PWA.download();
-                }
-            });
-        });
-        Lib.PWA.onDownloading.add(async () => {
-            this.downloading = true;
-        });
-        Lib.PWA.onDownloaded.add(async () => {
-            this.remove();
-        });
-    }
-    postCreation() {
-        this.classList.add("touch");
-        this.init();
-    }
-}
-System.PwaButton.Namespace=`${moduleName}.System`;
-System.PwaButton.Tag=`rk-pwa-button`;
-_.System.PwaButton=System.PwaButton;
-if(!window.customElements.get('rk-pwa-button')){window.customElements.define('rk-pwa-button', System.PwaButton);Aventus.WebComponentInstance.registerDefinition(System.PwaButton);}
-
 Components.CalendarDay = class CalendarDay extends Aventus.WebComponent {
     get 'other'() { return this.getBoolAttr('other') }
     set 'other'(val) { this.setBoolAttr('other', val) }get 'today'() { return this.getBoolAttr('today') }
     set 'today'(val) { this.setBoolAttr('today', val) }    calendar;
     date = new Date();
-    static __style = `:host{align-items:center;color:var(--_calendar-text-color-case);display:flex;height:30px;justify-content:center;width:30px;border-radius:5px;cursor:pointer;transition:color .2s var(--bezier-curve),background-color .2s var(--bezier-curve)}:host([other]){color:var(--_calendar-text-color-case-others)}:host([today]){color:var(--_calendar-text-color-case-today)}@media screen and (min-width: 1225px){:host(:hover){background-color:var(--_calendar-background-color-case-hover)}}`;
+    static __style = `:host{align-items:center;color:var(--_calendar-text-color-case);display:flex;height:30px;justify-content:center;width:30px;border-radius:var(--border-radius-sm);cursor:pointer;transition:color .2s var(--bezier-curve),background-color .2s var(--bezier-curve)}:host([other]){color:var(--_calendar-text-color-case-others)}:host([today]){color:var(--_calendar-text-color-case-today)}@media screen and (min-width: 1225px){:host(:hover){background-color:var(--_calendar-background-color-case-hover)}}`;
     constructor() { super(); if (this.constructor == CalendarDay) { throw "can't instanciate an abstract class"; } }
     __getStatic() {
         return CalendarDay;
@@ -8468,6 +9296,7 @@ Components.Calendar = class Calendar extends Aventus.WebComponent {
 					set 'yearGroupTxt'(val) {
 						this.__watch["yearGroupTxt"] = val;
 					}    onDateClicked = new Aventus.Callback();
+    onDateChanged = new Aventus.Callback();
     __registerWatchesActions() {
     this.__addWatchesActions("dateTemp", ((target) => {
     target.renderDatesTemp();
@@ -8483,7 +9312,7 @@ Components.Calendar = class Calendar extends Aventus.WebComponent {
         target.dateTemp = target.date;
     }
 })); }
-    static __style = `:host{--_calendar-background-color: var(--calendar-background-color, white);--_calendar-background-color-case-hover: var(--calendar-background-color-case-hover, var(--lighter));--_calendar-background-color-case-active: var(--calendar-background-color-case-active, var(--lighter));--_calendar-background-color-selector: var(--calendar-background-color-selector, white);--_calendar-text-color-case: var(--calendar-text-color-case, var(--text-color));--_calendar-text-color-case-others: var(--calendar-text-color-case-others, var(--secondary-color));--_calendar-text-color-case-header: var(--calendar-text-color-case-header, var(--text-color-light));--_calendar-text-color-case-today: var(--calendar-text-color-case-today, var(--orange))}:host{background-color:var(--_calendar-background-color);border-radius:10px;box-shadow:var(--elevation-3);display:flex;flex-direction:column;padding:15px;position:relative;width:fit-content}:host .hover{transition:background-color .2s var(--bezier-curve)}:host .header{align-items:center;display:flex;flex-direction:row;font-size:var(--font-size-md);justify-content:space-between;position:relative}:host .header .current-info{align-items:center;display:flex;flex-direction:row;flex-grow:1;justify-content:center}:host .header .current-info .month-year{align-items:center;border-radius:5px;display:flex;flex-direction:row;padding:5px 10px}:host .header .current-info .month-year .month{margin-right:5px}:host .header .chevron{align-items:center;border-radius:5px;display:flex;height:30px;justify-content:center;text-align:center;width:30px}:host .header .selectors{background-color:var(--_calendar-background-color-selector);border-radius:10px;box-shadow:var(--elevation-3);left:50%;opacity:0;padding:10px;pointer-events:none;position:absolute;top:calc(100% + 12px);transform:translateX(-50%);transition:opacity .2s var(--bezier-curve),visibility .2s var(--bezier-curve);visibility:hidden;z-index:5}:host .header .selectors::after{border-bottom:10px solid var(--_calendar-background-color-selector);border-left:10px solid rgba(0,0,0,0);border-right:10px solid rgba(0,0,0,0);content:"";left:50%;position:absolute;top:-8px;transform:translateX(-50%)}:host .header .selectors .month-select{display:none}:host .header .selectors .month-select .month-select-header{align-items:center;display:flex}:host .header .selectors .month-select .month-select-header .current-info .temp-year{border-radius:5px;display:flex;font-size:var(--font-size);padding:5px 10px}:host .header .selectors .month-select .month-select-body{display:flex;flex-wrap:wrap;font-size:calc(var(--font-size)*.9);margin-top:0px;width:200px}:host .header .selectors .month-select .month-select-body .month-el{align-items:center;border-radius:5px;display:flex;height:30px;justify-content:center;margin:3px 5px;width:calc((100% - 30px)/3)}:host .header .selectors .month-select .month-select-body .month-el.active{background-color:var(--_calendar-background-color-case-active)}:host .header .selectors .year-select{display:none}:host .header .selectors .year-select .year-select-header{align-items:center;display:flex}:host .header .selectors .year-select .year-select-header .current-info .temp-year-range{border-radius:5px;display:flex;font-size:var(--font-size);padding:5px 10px}:host .header .selectors .year-select .year-select-body{display:flex;flex-wrap:wrap;font-size:calc(var(--font-size)*.9);margin-top:0px;width:200px}:host .header .selectors .year-select .year-select-body .year-el{align-items:center;border-radius:5px;display:flex;height:30px;justify-content:center;margin:3px 5px;width:calc((100% - 30px)/3)}:host .header .selectors .year-select .year-select-body .year-el.active{background-color:var(--_calendar-background-color-case-active)}:host .body{display:flex;flex-direction:column;margin-top:10px}:host .body .days-header{color:var(--_calendar-text-color-case-header);display:flex;flex-direction:row;gap:10px}:host .body .days-header .day-header{align-items:center;display:flex;height:30px;justify-content:center;width:30px}:host .body .days-body{flex-direction:column}:host .body .days-body .days-row{display:flex;flex-direction:row;gap:10px;margin:5px 0}:host .hider{display:none;inset:0;position:absolute;z-index:1}:host([show_selector]) .hider{display:block}:host([show_selector]) .header .selectors{opacity:1;pointer-events:auto;visibility:visible}:host([selector=month]) .header .selectors .month-select{display:block}:host([selector=year]) .header .selectors .year-select{display:block}@media screen and (min-width: 1225px){:host .hover:hover{background-color:var(--_calendar-background-color-case-hover)}}`;
+    static __style = `:host{--_calendar-background-color: var(--calendar-background-color, white);--_calendar-background-color-case-hover: var(--calendar-background-color-case-hover, var(--lighter));--_calendar-background-color-case-active: var(--calendar-background-color-case-active, var(--lighter));--_calendar-background-color-selector: var(--calendar-background-color-selector, white);--_calendar-text-color-case: var(--calendar-text-color-case, var(--text-color));--_calendar-text-color-case-others: var(--calendar-text-color-case-others, var(--secondary-color));--_calendar-text-color-case-header: var(--calendar-text-color-case-header, var(--text-color-light));--_calendar-text-color-case-today: var(--calendar-text-color-case-today, var(--orange))}:host{background-color:var(--_calendar-background-color);border-radius:var(--border-radius);box-shadow:var(--elevation-3);display:flex;flex-direction:column;padding:15px;position:relative;width:fit-content}:host .hover{transition:background-color .2s var(--bezier-curve)}:host .header{align-items:center;display:flex;flex-direction:row;font-size:var(--font-size-md);justify-content:space-between;position:relative}:host .header .current-info{align-items:center;display:flex;flex-direction:row;flex-grow:1;justify-content:center}:host .header .current-info .month-year{align-items:center;border-radius:var(--border-radius-sm);display:flex;flex-direction:row;padding:5px 10px}:host .header .current-info .month-year .month{margin-right:5px}:host .header .chevron{align-items:center;border-radius:var(--border-radius-sm);display:flex;height:30px;justify-content:center;text-align:center;width:30px}:host .header .selectors{background-color:var(--_calendar-background-color-selector);border-radius:var(--border-radius);box-shadow:var(--elevation-3);left:50%;opacity:0;padding:10px;pointer-events:none;position:absolute;top:calc(100% + 12px);transform:translateX(-50%);transition:opacity .2s var(--bezier-curve),visibility .2s var(--bezier-curve);visibility:hidden;z-index:5}:host .header .selectors::after{border-bottom:10px solid var(--_calendar-background-color-selector);border-left:10px solid rgba(0,0,0,0);border-right:10px solid rgba(0,0,0,0);content:"";left:50%;position:absolute;top:-8px;transform:translateX(-50%)}:host .header .selectors .month-select{display:none}:host .header .selectors .month-select .month-select-header{align-items:center;display:flex}:host .header .selectors .month-select .month-select-header .current-info .temp-year{border-radius:var(--border-radius-sm);display:flex;font-size:var(--font-size);padding:5px 10px}:host .header .selectors .month-select .month-select-body{display:flex;flex-wrap:wrap;font-size:calc(var(--font-size)*.9);margin-top:0px;width:200px}:host .header .selectors .month-select .month-select-body .month-el{align-items:center;border-radius:var(--border-radius-sm);display:flex;height:30px;justify-content:center;margin:3px 5px;width:calc((100% - 30px)/3)}:host .header .selectors .month-select .month-select-body .month-el.active{background-color:var(--_calendar-background-color-case-active)}:host .header .selectors .year-select{display:none}:host .header .selectors .year-select .year-select-header{align-items:center;display:flex}:host .header .selectors .year-select .year-select-header .current-info .temp-year-range{border-radius:var(--border-radius-sm);display:flex;font-size:var(--font-size);padding:5px 10px}:host .header .selectors .year-select .year-select-body{display:flex;flex-wrap:wrap;font-size:calc(var(--font-size)*.9);margin-top:0px;width:200px}:host .header .selectors .year-select .year-select-body .year-el{align-items:center;border-radius:var(--border-radius-sm);display:flex;height:30px;justify-content:center;margin:3px 5px;width:calc((100% - 30px)/3)}:host .header .selectors .year-select .year-select-body .year-el.active{background-color:var(--_calendar-background-color-case-active)}:host .body{display:flex;flex-direction:column;margin-top:10px}:host .body .days-header{color:var(--_calendar-text-color-case-header);display:flex;flex-direction:row;gap:10px}:host .body .days-header .day-header{align-items:center;display:flex;height:30px;justify-content:center;width:30px}:host .body .days-body{flex-direction:column}:host .body .days-body .days-row{display:flex;flex-direction:row;gap:10px;margin:5px 0}:host .hider{display:none;inset:0;position:absolute;z-index:1}:host([show_selector]) .hider{display:block}:host([show_selector]) .header .selectors{opacity:1;pointer-events:auto;visibility:visible}:host([selector=month]) .header .selectors .month-select{display:block}:host([selector=year]) .header .selectors .year-select{display:block}@media screen and (min-width: 1225px){:host .hover:hover{background-color:var(--_calendar-background-color-case-hover)}}`;
     __getStatic() {
         return Calendar;
     }
@@ -8709,6 +9538,7 @@ Components.Calendar = class Calendar extends Aventus.WebComponent {
                 row.classList.add("days-row");
             }
         }
+        this.onDateChanged.trigger([this.date]);
     }
     renderDatesTemp() {
         let el = this.bodyMonthEl.querySelector(".active");
@@ -8857,6 +9687,1018 @@ Components.DatePickerCalendarDay.Tag=`rk-date-picker-calendar-day`;
 _.Components.DatePickerCalendarDay=Components.DatePickerCalendarDay;
 if(!window.customElements.get('rk-date-picker-calendar-day')){window.customElements.define('rk-date-picker-calendar-day', Components.DatePickerCalendarDay);Aventus.WebComponentInstance.registerDefinition(Components.DatePickerCalendarDay);}
 
+System.AddOnTime = class AddOnTime extends Aventus.WebComponent {
+    get 'active'() { return this.getBoolAttr('active') }
+    set 'active'(val) { this.setBoolAttr('active', val) }    days = [
+        'Dim.',
+        'Lun.',
+        'Mar.',
+        'Mer.',
+        'Jeu.',
+        'Ven.',
+        'Sam.'
+    ];
+    months = [
+        'Janvier',
+        'Février',
+        'Mars',
+        'Avril',
+        'Mai',
+        'Juin',
+        'Juillet',
+        'Août',
+        'Septembre',
+        'Octobre',
+        'Novembre',
+        'Décembre'
+    ];
+    static __style = `:host{position:relative}:host .display{align-items:center;border-radius:var(--border-radius-sm);cursor:pointer;display:flex;margin-right:10px;padding:10px;transition:background-color linear .2s}:host .display .date{font-size:var(--font-size-sm)}:host .display .hour{font-size:var(--font-size-sm);margin-left:5px}:host .calendar{--calendar-background-color: var(--primary-color-opacity);bottom:calc(100% + 10px);box-shadow:var(--elevation-3);height:0;overflow:hidden;padding:0px 15px;position:absolute;right:10px;pointer-events:none;transition:bottom var(--bezier-curve) .5s,height var(--bezier-curve) .5s,padding var(--bezier-curve) .5s}:host([active]) .display{background-color:var(--lighter-active)}:host([active]) .calendar{bottom:calc(100% + 10px);height:var(--time-calendar-height);padding:15px;pointer-events:all}@media screen and (min-width: 1225px){:host .display:hover{background-color:var(--lighter-active)}}`;
+    constructor() {
+            super();
+            this.classList.add("touch");
+this.calculateCalendarSize=this.calculateCalendarSize.bind(this) }
+    __getStatic() {
+        return AddOnTime;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(AddOnTime.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        blocks: { 'default':`<div class="display" _id="addontime_0">    <div class="date" _id="addontime_1"></div>    <div class="hour" _id="addontime_2"></div></div><rk-calendar class="calendar" _id="addontime_3"></rk-calendar>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "date",
+      "ids": [
+        "addontime_1"
+      ]
+    },
+    {
+      "name": "hour",
+      "ids": [
+        "addontime_2"
+      ]
+    },
+    {
+      "name": "calendarEl",
+      "ids": [
+        "addontime_3"
+      ]
+    }
+  ],
+  "pressEvents": [
+    {
+      "id": "addontime_0",
+      "onPress": (e, pressInstance, c) => { c.comp.toggleActive(e, pressInstance); }
+    }
+  ]
+}); }
+    getClassName() {
+        return "AddOnTime";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('active')) { this.attributeChangedCallback('active', false, false); } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('active'); }
+    __listBoolProps() { return ["active"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    firstLoading() {
+        let missingSec = 60 - new Date().getSeconds();
+        if (missingSec == 0) {
+            this.displayDate(true);
+            this.normalLoading();
+        }
+        else {
+            this.displayDate(true);
+            setTimeout(() => {
+                this.normalLoading();
+            }, missingSec * 1000);
+        }
+    }
+    displayDate(force = false) {
+        if (!this.hour || !this.date) {
+            return;
+        }
+        let date = new Date();
+        let minutes = date.getMinutes();
+        let hours = date.getHours();
+        this.hour.innerHTML = this.prettyNumber(hours) + ":" + this.prettyNumber(minutes);
+        if (force || (minutes == 0 && hours == 0)) {
+            let day = this.days[date.getDay()];
+            let month = this.months[date.getMonth()];
+            let nb = date.getDate();
+            let txt = day + ' ' + this.prettyNumber(nb) + ' ' + month;
+            this.date.innerHTML = txt;
+        }
+    }
+    prettyNumber(nb) {
+        if (nb < 10) {
+            return '0' + nb;
+        }
+        return nb + '';
+    }
+    normalLoading() {
+        setInterval(() => {
+            this.displayDate();
+        }, 1000 * 60);
+    }
+    calculateCalendarSize() {
+        if (!this.active) {
+            this.calendarEl.style.transition = 'none';
+            setTimeout(() => {
+                this.calendarEl.style.left = '100000px';
+                this.calendarEl.style.height = 'auto';
+                setTimeout(() => {
+                    let height = this.calendarEl.offsetHeight + 30;
+                    this.calendarEl.style.left = '';
+                    this.calendarEl.style.height = '';
+                    this.calendarEl.style.setProperty("--time-calendar-height", height + 'px');
+                    setTimeout(() => {
+                        this.calendarEl.style.transition = '';
+                    }, 50);
+                }, 50);
+            }, 50);
+        }
+        else {
+            this.calendarEl.style.setProperty("--time-calendar-height", this.calendarEl.offsetHeight + 'px');
+        }
+    }
+    bindCalendarSize() {
+        this.calendarEl.onDateChanged.add(this.calculateCalendarSize);
+        this.calculateCalendarSize();
+        this.calendarEl.addEventListener("transitionstart", () => {
+        });
+        this.calendarEl.addEventListener("transitionend", () => {
+            if (this.active) {
+                this.calendarEl.style.height = 'auto';
+            }
+        });
+    }
+    toggleActive() {
+        if (this.active) {
+            this.calendarEl.style.height = '';
+            setTimeout(() => {
+                this.active = false;
+            }, 10);
+        }
+        else {
+            this.active = true;
+        }
+    }
+    postCreation() {
+        this.firstLoading();
+        this.bindCalendarSize();
+    }
+}
+System.AddOnTime.Namespace=`${moduleName}.System`;
+System.AddOnTime.Tag=`rk-add-on-time`;
+_.System.AddOnTime=System.AddOnTime;
+if(!window.customElements.get('rk-add-on-time')){window.customElements.define('rk-add-on-time', System.AddOnTime);Aventus.WebComponentInstance.registerDefinition(System.AddOnTime);}
+
+Lib.PWA=class PWA {
+    static get isAvailable() {
+        if (window['deferredPrompt']) {
+            return true;
+        }
+        return false;
+    }
+    static get isAvailableIOS() {
+        return Lib.Platform.isiOS && !Lib.Platform.isStandalone;
+    }
+    static e;
+    static isInit = false;
+    static startInstall;
+    static onInit = new Aventus.Callback();
+    static onDownloading = new Aventus.Callback();
+    static onDownloaded = new Aventus.Callback();
+    static async init() {
+        if (this.isInit) {
+            return;
+        }
+        if (!this.e && Lib.PWA.isAvailable) {
+            this.e = window['deferredPrompt'];
+            let result = this.onInit.trigger([]);
+            this.isInit = true;
+        }
+        else if (Lib.PWA.isAvailableIOS) {
+            let result = this.onInit.trigger([]);
+            this.isInit = true;
+        }
+        if (this.isInit) {
+            window.addEventListener('appinstalled', async (evt) => {
+                let now = new Date();
+                let start = this.startInstall ?? new Date();
+                let diffMs = now.getTime() - start.getTime();
+                if (diffMs < 3000) {
+                    await Aventus.sleep(3000 - diffMs);
+                }
+                this.onDownloaded.trigger([]);
+            });
+        }
+    }
+    static addOnInit(cb) {
+        if (this.isInit) {
+            cb();
+        }
+        else {
+            this.onInit.add(cb);
+        }
+    }
+    static async download() {
+        if (this.isAvailable && this.e) {
+            this.e.prompt();
+            const choiceResult = await this.e.userChoice;
+            if (choiceResult.outcome === 'accepted') {
+                this.startInstall = new Date();
+                this.onDownloading.trigger([]);
+            }
+        }
+        else if (this.isAvailableIOS) {
+            let pwaios = new Components.PwaPromptIos();
+            document.body.appendChild(pwaios);
+        }
+    }
+}
+Lib.PWA.Namespace=`Core.Lib`;
+
+_.Lib.PWA=Lib.PWA;
+System.PwaButton = class PwaButton extends Aventus.WebComponent {
+    get 'visible'() { return this.getBoolAttr('visible') }
+    set 'visible'(val) { this.setBoolAttr('visible', val) }get 'downloading'() { return this.getBoolAttr('downloading') }
+    set 'downloading'(val) { this.setBoolAttr('downloading', val) }    static __style = `:host{align-items:center;background-color:var(--darker);border-radius:var(--border-radius-sm);box-shadow:var(--elevation-2);display:none;height:30px;justify-content:center;padding:5px;width:30px}:host .download{display:inline-block}:host .sync{display:none}:host .rotate{animation-name:rotate;animation-duration:1.5s;animation-iteration-count:infinite;animation-timing-function:linear;animation-direction:reverse}:host([visible]){display:flex !important}:host([downloading]) .download{display:none}:host([downloading]) .sync{display:inline-block}@keyframes rotate{0%{transform:rotate(0)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}`;
+    __getStatic() {
+        return PwaButton;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(PwaButton.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<mi-icon icon="download" class="download"></mi-icon><mi-icon icon="sync" class="sync rotate"></mi-icon><slot></slot>` }
+    });
+}
+    getClassName() {
+        return "PwaButton";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('visible')) { this.attributeChangedCallback('visible', false, false); }if(!this.hasAttribute('downloading')) { this.attributeChangedCallback('downloading', false, false); } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('visible');this.__upgradeProperty('downloading'); }
+    __listBoolProps() { return ["visible","downloading"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    async init() {
+        Lib.PWA.addOnInit(async () => {
+            this.visible = true;
+            new Aventus.PressManager({
+                element: this,
+                onPress: () => {
+                    Lib.PWA.download();
+                }
+            });
+        });
+        Lib.PWA.onDownloading.add(async () => {
+            this.downloading = true;
+        });
+        Lib.PWA.onDownloaded.add(async () => {
+            this.remove();
+        });
+    }
+    postCreation() {
+        this.classList.add("touch");
+        this.init();
+    }
+}
+System.PwaButton.Namespace=`${moduleName}.System`;
+System.PwaButton.Tag=`rk-pwa-button`;
+_.System.PwaButton=System.PwaButton;
+if(!window.customElements.get('rk-pwa-button')){window.customElements.define('rk-pwa-button', System.PwaButton);Aventus.WebComponentInstance.registerDefinition(System.PwaButton);}
+
+Lib.FileSaver=class FileSaver {
+    static bom(blob, opts) {
+        if (typeof opts === 'undefined')
+            opts = { autoBom: false };
+        else if (typeof opts !== 'object') {
+            console.warn('Deprecated: Expected third argument to be a object');
+            opts = { autoBom: !opts };
+        }
+        // prepend BOM for UTF-8 XML and text/* types (including HTML)
+        if (opts.autoBom && /^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+            return new Blob([String.fromCharCode(0xFEFF), blob], { type: blob.type });
+        }
+        return blob;
+    }
+    static download(url, name, opts) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.onload = () => {
+            this.saveAs(xhr.response, name, opts);
+        };
+        xhr.onerror = () => {
+            console.error('could not download file');
+        };
+        xhr.send();
+    }
+    static corsEnabled(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('HEAD', url, false);
+        try {
+            xhr.send();
+        }
+        catch (e) { }
+        return xhr.status >= 200 && xhr.status <= 299;
+    }
+    static click(node) {
+        try {
+            node.dispatchEvent(new MouseEvent('click'));
+        }
+        catch (e) {
+            var evt = document.createEvent('MouseEvents');
+            evt.initMouseEvent('click', true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
+            node.dispatchEvent(evt);
+        }
+    }
+    static get isMacOSWebView() {
+        return navigator && /Macintosh/.test(navigator.userAgent) && /AppleWebKit/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent);
+    }
+    static _saveAs;
+    static get saveAs() {
+        if (!this._saveAs) {
+            this._saveAs = this.initSaveAs();
+        }
+        return this._saveAs;
+    }
+    static initSaveAs() {
+        let result;
+        // Use download attribute first if possible (#193 Lumia mobile) unless this is a macOS WebView
+        result = ('download' in HTMLAnchorElement.prototype && !this.isMacOSWebView)
+            ? (blob, name, opts) => {
+                return new Promise((resolve) => {
+                    var URL = URL || webkitURL;
+                    // Namespace is used to prevent conflict w/ Chrome Poper Blocker extension (Issue #561)
+                    var a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+                    name = name || 'download';
+                    a.download = name;
+                    a.rel = 'noopener';
+                    if (typeof blob === 'string') {
+                        a.href = blob;
+                        if (a.origin !== location.origin) {
+                            this.corsEnabled(a.href)
+                                ? this.download(blob, name, opts)
+                                : this.click(a);
+                        }
+                        else {
+                            this.click(a);
+                        }
+                        resolve();
+                    }
+                    else {
+                        a.href = URL.createObjectURL(blob);
+                        setTimeout(() => { URL.revokeObjectURL(a.href); resolve(); }, 4E4);
+                        setTimeout(() => { this.click(a); }, 0);
+                    }
+                });
+            }
+            : 'msSaveOrOpenBlob' in navigator
+                ? (blob, name, opts) => {
+                    return new Promise((resolve) => {
+                        name = name || 'download';
+                        if (typeof blob === 'string') {
+                            if (this.corsEnabled(blob)) {
+                                this.download(blob, name, opts);
+                                resolve();
+                            }
+                            else {
+                                var a = document.createElement('a');
+                                a.href = blob;
+                                a.target = '_blank';
+                                setTimeout(() => { this.click(a); resolve(); });
+                            }
+                        }
+                        else {
+                            navigator['msSaveOrOpenBlob'](this.bom(blob, opts), name);
+                            resolve();
+                        }
+                    });
+                }
+                : (blob, name, opts, popup) => {
+                    return new Promise((resolve) => {
+                        popup = popup || open('', '_blank');
+                        if (popup) {
+                            popup.document.title =
+                                popup.document.body.innerText = 'downloading...';
+                        }
+                        if (typeof blob === 'string') {
+                            this.download(blob, name, opts);
+                            resolve();
+                            return;
+                        }
+                        var force = blob.type === 'application/octet-stream';
+                        var isSafari = /constructor/i.test(HTMLElement.toString()) || window['safari'];
+                        var isChromeIOS = /CriOS\/[\d]+/.test(navigator.userAgent);
+                        if ((isChromeIOS || (force && isSafari) || this.isMacOSWebView) && typeof FileReader !== 'undefined') {
+                            var reader = new FileReader();
+                            reader.onloadend = () => {
+                                var url = reader.result;
+                                url = isChromeIOS ? url : url.replace(/^data:[^;]*;/, 'data:attachment/file;');
+                                if (popup)
+                                    popup.location.href = url;
+                                else
+                                    location.replace(url);
+                                popup = null;
+                                resolve();
+                            };
+                            reader.readAsDataURL(blob);
+                        }
+                        else {
+                            var URL = URL || webkitURL;
+                            var url = URL.createObjectURL(blob);
+                            if (popup)
+                                popup.location = url;
+                            else
+                                location.href = url;
+                            popup = null;
+                            setTimeout(() => { URL.revokeObjectURL(url); resolve(); }, 4E4);
+                        }
+                    });
+                };
+        return result;
+    }
+}
+Lib.FileSaver.Namespace=`Core.Lib`;
+
+_.Lib.FileSaver=Lib.FileSaver;
+Components.Sheet = class Sheet extends Aventus.WebComponent {
+    get 'format'() { return this.getStringAttr('format') }
+    set 'format'(val) { this.setStringAttr('format', val) }get 'orientation'() { return this.getStringAttr('orientation') }
+    set 'orientation'(val) { this.setStringAttr('orientation', val) }    currentWrapper;
+    currentBody;
+    currentPage;
+    basicPage;
+    pageWrappers = [];
+    settings;
+    static __style = `:host{--_sheet-padding: var(--sheet-padding, 0)}:host .sheet{box-sizing:border-box;color:#000;display:flex;flex-direction:column;flex-shrink:0;margin:0;overflow:hidden;padding:var(--_sheet-padding);page-break-before:page;position:relative;user-select:text}:host .sheet .header,:host .sheet .footer{flex-grow:0;flex-shrink:0;width:100%}:host .sheet .body{flex-grow:1;overflow:hidden;width:100%}:host .sheet .body .body-wrapper{width:100%}@media screen{:host .sheet{background-color:#fff;box-shadow:0 .5mm 2mm rgba(0,0,0,.3)}}:host([format=A3][orientation=portrait]) .sheet{height:420mm;width:297mm}:host([format=A3][orientation=landscape]) .sheet{height:297mm;width:420mm}:host([format=A4][orientation=portrait]) .sheet{height:297mm;width:210mm}:host([format=A4][orientation=landscape]) .sheet{height:210mm;width:297mm}:host([format=A5][orientation=portrait]) .sheet{height:210mm;width:148mm}:host([format=A5][orientation=landscape]) .sheet{height:148mm;width:210mm}:host([format=letter][orientation=portrait]) .sheet{height:279mm;width:216mm}:host([format=letter][orientation=landscape]) .sheet{height:216mm;width:280mm}:host([format=legal][orientation=portrait]) .sheet{height:357mm;width:216mm}:host([format=legal][orientation=landscape]) .sheet{height:216mm;width:357mm}`;
+    constructor() {
+            super();
+            const settings = this.sheetSettings(this.defaultSettings());
+            this.settings = settings;
+            this.format = settings.format;
+            this.orientation = settings.orientation;
+            this.style.setProperty("--sheet-padding", settings.padding);
+if (this.constructor == Sheet) { throw "can't instanciate an abstract class"; } }
+    __getStatic() {
+        return Sheet;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(Sheet.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'header':`<slot name="header"></slot>`,'default':`<slot></slot>`,'footer':`<slot name="footer"></slot>` }, 
+        blocks: { 'default':`<div class="sheet">    <div class="header" _id="sheet_0">        <slot name="header"></slot>    </div>    <div class="body" _id="sheet_1">        <div class="body-wrapper" _id="sheet_2">            <slot></slot>        </div>    </div>    <div class="footer" _id="sheet_3">        <slot name="footer"></slot>    </div></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "headerEl",
+      "ids": [
+        "sheet_0"
+      ]
+    },
+    {
+      "name": "bodyEl",
+      "ids": [
+        "sheet_1"
+      ]
+    },
+    {
+      "name": "bodyWrapper",
+      "ids": [
+        "sheet_2"
+      ]
+    },
+    {
+      "name": "footerEl",
+      "ids": [
+        "sheet_3"
+      ]
+    }
+  ]
+}); }
+    getClassName() {
+        return "Sheet";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('format')){ this['format'] = "A4"; }if(!this.hasAttribute('orientation')){ this['orientation'] = "portrait"; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('format');this.__upgradeProperty('orientation'); }
+    defaultSettings() {
+        return {
+            format: "A4",
+            orientation: "portrait",
+            padding: "0",
+            calculateOnDisplay: true
+        };
+    }
+    addSinglePageValue() {
+        let children = this.currentPage.querySelectorAll("[page-number]");
+        for (let child of children) {
+            child.innerHTML = this.pageWrappers.length + '';
+        }
+    }
+    addAllPagesValue() {
+        let children = this.shadowRoot.querySelectorAll("[page-total]");
+        for (let child of children) {
+            child.innerHTML = this.pageWrappers.length + '';
+        }
+    }
+    createPage(splitter, container) {
+        this.currentPage = this.basicPage.cloneNode(true);
+        this.currentBody = this.currentPage.querySelector(".body");
+        this.currentWrapper = this.currentPage.querySelector(".body-wrapper");
+        this.pageWrappers.push(this.currentWrapper);
+        this.shadowRoot.appendChild(this.currentPage);
+        const result = this.onNewPage(splitter, container);
+        this.addSinglePageValue();
+        if (!result)
+            return this.currentWrapper;
+        return result;
+    }
+    getIdentifier(node) {
+        let result = [];
+        let samePage = true;
+        const loop = (el) => {
+            if (el instanceof Element) {
+                if (el.classList.contains("body-wrapper")) {
+                    samePage = el == this.currentWrapper;
+                    return;
+                }
+                if (el.classList.length > 0) {
+                    result.push("." + Array.from(el.classList.values()).join("."));
+                }
+            }
+            if (!el.parentNode)
+                return;
+            loop(el.parentNode);
+        };
+        loop(node);
+        if (samePage) {
+            return null;
+        }
+        return result.reverse().join(" ");
+    }
+    cloneFromParent(classname, container) {
+        let parent = Aventus.ElementExtension.findParentByClass(container, classname);
+        let result = null;
+        const loop = (element, parentClone) => {
+            let nodeClone = element.cloneNode();
+            parentClone.appendChild(nodeClone);
+            if (element == container) {
+                result = nodeClone;
+                return;
+            }
+            if (element instanceof HTMLElement && element.hasAttribute("page-avoid-other")) {
+                for (let child of Array.from(element.childNodes)) {
+                    if (child instanceof HTMLElement) {
+                        if (child.contains(container))
+                            loop(child, nodeClone);
+                    }
+                    else {
+                        loop(child, nodeClone);
+                    }
+                }
+            }
+            else {
+                for (let child of Array.from(element.childNodes)) {
+                    loop(child, nodeClone);
+                }
+            }
+        };
+        if (parent) {
+            loop(parent, this.currentWrapper);
+        }
+        else {
+            debugger;
+            console.warn("Parent " + classname + " not found from element", container);
+        }
+        return result;
+    }
+    calculatePageLoop(element, children, nb = 0) {
+        let lastSplitter = null;
+        let lastIndex = 0;
+        let hasNewPageG = false;
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            if (child instanceof Components.SheetSplitter) {
+                lastSplitter = child;
+                lastIndex = i;
+                continue;
+            }
+            element.appendChild(child);
+            if (this.currentWrapper.offsetHeight > this.currentBody.offsetHeight) {
+                const children2 = Array.from(child.childNodes);
+                for (let child2 of children2) {
+                    child.removeChild(child2);
+                }
+                const hasNewPage = this.calculatePageLoop(child, children2, nb + 1);
+                if (hasNewPage) {
+                    hasNewPageG = true;
+                }
+                if (!hasNewPage) {
+                    for (let child2 of children2) {
+                        child.appendChild(child2);
+                    }
+                    if (lastSplitter) {
+                        for (let j = lastIndex + 1; j <= i; j++) {
+                            element.removeChild(children[j]);
+                        }
+                        const newWrapper = this.createPage(lastSplitter, element);
+                        let missingChild = children.slice(lastIndex + 1);
+                        this.calculatePageLoop(newWrapper, missingChild);
+                        return true;
+                    }
+                    else {
+                        if (nb == 0) {
+                            debugger;
+                            if (child instanceof HTMLElement) {
+                                child.style.backgroundColor = "red";
+                            }
+                            throw {
+                                msg: 'Can\'t find a page-splitter',
+                                element: child
+                            };
+                        }
+                        else {
+                            element.removeChild(child);
+                        }
+                        return false;
+                    }
+                }
+                if (this.pageWrappers.includes(element) && element != this.currentWrapper) {
+                    element = this.currentWrapper;
+                }
+                else {
+                    const identifier = this.getIdentifier(element);
+                    if (identifier) {
+                        const el = this.currentWrapper.querySelector(identifier);
+                        if (el) {
+                            element = el;
+                        }
+                    }
+                }
+            }
+        }
+        return hasNewPageG;
+    }
+    calculatePage() {
+        const mainChildren = Array.from(this.bodyWrapper.childNodes);
+        for (let mainChild of mainChildren) {
+            this.bodyWrapper.removeChild(mainChild);
+        }
+        this.currentPage = this.shadowRoot.querySelector(".sheet");
+        this.basicPage = this.currentPage.cloneNode(true);
+        this.currentWrapper = this.bodyWrapper;
+        this.currentBody = this.bodyEl;
+        this.pageWrappers.push(this.currentWrapper);
+        try {
+            this.addSinglePageValue();
+            this.calculatePageLoop(this.bodyWrapper, mainChildren);
+            this.addAllPagesValue();
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
+    urlToBase64(url) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            }
+            catch (e) {
+                reject(e);
+            }
+        });
+    }
+    async export() {
+        let stylesheets = this.constructor['__styleSheets'];
+        let cssTxt = "";
+        for (let name in stylesheets) {
+            cssTxt += Aventus.Style.sheetToString(stylesheets[name]);
+        }
+        cssTxt = cssTxt.replace(/\:host\((.*?)\)/g, 'body\$1');
+        cssTxt = cssTxt.replace(/\:host/g, 'body');
+        const regexVariables = /var\((--.*?)[,|\)]/g;
+        let m = null;
+        let computedStyle = null;
+        const cssVarValue = {};
+        while ((m = regexVariables.exec(cssTxt)) !== null) {
+            if (m.index === regexVariables.lastIndex) {
+                regexVariables.lastIndex++;
+            }
+            if (cssVarValue[m[1]])
+                continue;
+            if (!computedStyle) {
+                computedStyle = getComputedStyle(this);
+            }
+            let v = computedStyle.getPropertyValue(m[1]);
+            if (v) {
+                cssVarValue[m[1]] = v;
+            }
+        }
+        let cssVarTxt = "";
+        for (let key in cssVarValue) {
+            cssVarTxt += `${key}:${cssVarValue[key]};`;
+        }
+        if (cssVarTxt)
+            cssTxt = `body{${cssVarTxt}}` + cssTxt;
+        let attributes = [];
+        for (let attr of this.attributes) {
+            attributes.push(attr.nodeName + "=\"" + attr.nodeValue + "\"");
+        }
+        let imgs = this.shadowRoot.querySelectorAll("img");
+        const imgMemory = {};
+        for (let img of imgs) {
+            if (img.src && !img.src.startsWith("data:")) {
+                if (!imgMemory[img.src]) {
+                    imgMemory[img.src] = await this.urlToBase64(img.src);
+                }
+                img.src = imgMemory[img.src];
+            }
+        }
+        const fonts = await Lib.FontManager.getFontRulesBase64();
+        let generalStyle = "";
+        // for(let i = 0; i < document.styleSheets.length; i++) {
+        //     let sheet: CSSStyleSheet = document.styleSheets[i];
+        //     if(sheet.href?.endsWith("/autoload/default.css")) {
+        //         for(let j = 0; j < sheet.cssRules.length; j++) {
+        //             let rule = sheet.cssRules[j];
+        //             if(!(rule instanceof CSSStyleRule)) continue;
+        //             if([":root", "*"].includes(rule.selectorText)) {
+        //                 generalStyle += rule.cssText + "\n";
+        //             }
+        //         }
+        //     }
+        // }
+        cssTxt = generalStyle + cssTxt;
+        const sizeTxt = this.format + " " + this.orientation;
+        const sizes = {
+            "A3": {
+                height: '420mm',
+                width: '297mm'
+            },
+            "A4": {
+                height: '297mm',
+                width: '210mm'
+            },
+            "A5": {
+                height: '210mm',
+                width: '148mm'
+            },
+            "letter": {
+                height: '279mm',
+                width: '216mm'
+            },
+            "legal": {
+                height: '357mm',
+                width: '216mm'
+            }
+        };
+        const widthTxt = this.orientation == 'portrait' ? sizes[this.format].width : sizes[this.format].height;
+        const heightTxt = this.orientation == 'portrait' ? sizes[this.format].height : sizes[this.format].width;
+        const txt = `<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Document</title>
+                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&amp;display=swap" rel="stylesheet" />
+                <style>
+                    html {
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    html, body {
+                        margin: 0;
+                        padding: 0;
+                    }
+                    body {
+                        width: ${widthTxt};
+                        height:  ${heightTxt};
+                    }
+                    @page {
+                        size: ${sizeTxt};
+                        margin: 0;
+                    }
+                    ${fonts}
+                </style>
+                <style>${cssTxt}</style>
+            </head>
+            <body ${attributes.join(" ")}>
+                ${this.shadowRoot.innerHTML}
+            </body>
+            </html>`;
+        return txt;
+    }
+    async saveAs(name) {
+        let blob = new Blob([await this.export()], {
+            type: "text/html"
+        });
+        Lib.FileSaver.saveAs(blob, name);
+    }
+    postCreation() {
+        super.postCreation();
+        if (this.settings.calculateOnDisplay) {
+            this.calculatePage();
+        }
+    }
+    static isISheetElement(node) {
+        return typeof node.getHtml == 'function' && typeof node.getCSS == 'function';
+    }
+}
+Components.Sheet.Namespace=`${moduleName}.Components`;
+_.Components.Sheet=Components.Sheet;
+
+Components.SheetPreview = class SheetPreview extends Aventus.WebComponent {
+    static get observedAttributes() {return ["filename"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'loading'() { return this.getBoolAttr('loading') }
+    set 'loading'(val) { this.setBoolAttr('loading', val) }    get 'filename'() { return this.getStringProp('filename') }
+    set 'filename'(val) { this.setStringAttr('filename', val) }    get 'zoom'() {
+						return this.__watch["zoom"];
+					}
+					set 'zoom'(val) {
+						this.__watch["zoom"] = val;
+					}    __registerWatchesActions() {
+    this.__addWatchesActions("zoom", ((target) => {
+    target.contentEl.zoom = target.zoom / 100;
+}));    super.__registerWatchesActions();
+}
+    static __style = `:host{display:flex;flex-direction:column;height:100%;width:100%}:host .menu{background-color:var(--primary-color);border-bottom:1px solid var(--lighter);box-shadow:var(--elevation-4);display:flex;flex-grow:0;flex-shrink:0;height:42px;padding:3px 15px;width:100%;z-index:2;gap:3px}:host .menu mi-icon{border:1px solid var(--darker);cursor:pointer;padding:5px}:host .menu mi-icon:hover{box-shadow:0px 0px 2px #000 inset}:host .content{--scrollbar-content-padding: 10px;background-color:var(--secondary-color);flex-grow:1;width:100%;padding-top:2px}:host .content *::slotted(*){display:flex;flex-wrap:wrap;gap:10px;justify-content:center}:host .footer{align-items:center;background-color:var(--primary-color);border-top:1px solid var(--lighter);display:flex;flex-direction:row;flex-grow:0;flex-shrink:0;font-size:13px;height:30px;justify-content:space-between;padding:0 15px;width:100%;z-index:2}:host .footer .slider{align-items:center;display:flex;gap:10px}:host .footer .slider mi-icon{cursor:pointer;font-size:18px}:host .footer .slider rk-slider{width:50px}:host .footer .slider .value{font-size:13px;text-align:center;width:30px}:host rk-loading{opacity:0;visibility:hidden}:host(:not([loading])) rk-loading{transition:opacity 1s var(--bezier-curve),visibility 1s var(--bezier-curve)}:host([loading]) rk-loading{opacity:1;visibility:visible}`;
+    __getStatic() {
+        return SheetPreview;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(SheetPreview.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<div class="menu">    <mi-icon icon="save" _id="sheetpreview_0"></mi-icon>    <mi-icon icon="print" _id="sheetpreview_1"></mi-icon></div><rk-scrollable class="content" _id="sheetpreview_2">    <slot></slot></rk-scrollable><div class="footer">    <div class="filename" _id="sheetpreview_3"></div>    <div class="slider">        <mi-icon icon="remove" _id="sheetpreview_4"></mi-icon>        <rk-slider min="30" max="200" _id="sheetpreview_5"></rk-slider>        <mi-icon icon="add" _id="sheetpreview_6"></mi-icon>        <div class="value" _id="sheetpreview_7"></div>    </div></div><rk-loading></rk-loading>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "contentEl",
+      "ids": [
+        "sheetpreview_2"
+      ]
+    }
+  ],
+  "content": {
+    "sheetpreview_3°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__ef3ef2c620c645514a1d0f1099b9edaamethod0())}`,
+      "once": true
+    },
+    "sheetpreview_7°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__ef3ef2c620c645514a1d0f1099b9edaamethod3())}%`,
+      "once": true
+    }
+  },
+  "bindings": [
+    {
+      "id": "sheetpreview_5",
+      "injectionName": "value",
+      "eventNames": [
+        "onChange"
+      ],
+      "inject": (c) => c.comp.__ef3ef2c620c645514a1d0f1099b9edaamethod1(),
+      "extract": (c, v) => c.comp.__ef3ef2c620c645514a1d0f1099b9edaamethod2(v),
+      "once": true,
+      "isCallback": true
+    }
+  ],
+  "pressEvents": [
+    {
+      "id": "sheetpreview_0",
+      "onPress": (e, pressInstance, c) => { c.comp.save(e, pressInstance); }
+    },
+    {
+      "id": "sheetpreview_1",
+      "onPress": (e, pressInstance, c) => { c.comp.print(e, pressInstance); }
+    },
+    {
+      "id": "sheetpreview_4",
+      "onPress": (e, pressInstance, c) => { c.comp.removeZoom(e, pressInstance); }
+    },
+    {
+      "id": "sheetpreview_6",
+      "onPress": (e, pressInstance, c) => { c.comp.addZoom(e, pressInstance); }
+    }
+  ]
+}); }
+    getClassName() {
+        return "SheetPreview";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('loading')) { this.attributeChangedCallback('loading', false, false); }if(!this.hasAttribute('filename')){ this['filename'] = undefined; } }
+    __defaultValuesWatch(w) { super.__defaultValuesWatch(w); w["zoom"] = 100; }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('loading');this.__upgradeProperty('filename');this.__correctGetter('zoom'); }
+    __listBoolProps() { return ["loading"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    removeZoom() {
+        let newZoom = this.zoom;
+        newZoom = Math.floor(newZoom / 10) * 10;
+        if (newZoom == this.zoom) {
+            newZoom -= 10;
+        }
+        if (newZoom < 30) {
+            newZoom = 30;
+        }
+        if (newZoom != this.zoom) {
+            this.zoom = newZoom;
+        }
+    }
+    addZoom() {
+        let newZoom = this.zoom;
+        newZoom = Math.ceil(newZoom / 10) * 10;
+        if (newZoom == this.zoom) {
+            newZoom += 10;
+        }
+        if (newZoom > 200) {
+            newZoom = 200;
+        }
+        if (newZoom != this.zoom) {
+            this.zoom = newZoom;
+        }
+    }
+    async print() {
+        let el = this.getElementsInSlot()[0];
+        if (el instanceof Components.Sheet) {
+            let execLoading = async (fct) => {
+                this.loading = true;
+                try {
+                    if (fct instanceof Promise) {
+                        await fct;
+                    }
+                    else {
+                        await fct();
+                    }
+                }
+                catch (e) {
+                }
+                this.loading = false;
+            };
+            let parent = this.findParentByType(System.Application);
+            if (parent) {
+                execLoading = parent.showLoading;
+            }
+            await execLoading(async () => {
+                let pdf = new Data.DataTypes.Pdf();
+                pdf.Name = this.filename ?? "doucment";
+                pdf.Html = await el.export();
+                let pdfResult = await new Routes.PdfRouter().Build({
+                    pdf
+                });
+                if (pdfResult.result) {
+                    Lib.FileSaver.saveAs(pdfResult.result, (this.filename ?? "doucment") + ".pdf");
+                }
+            });
+        }
+    }
+    save() {
+        let el = this.getElementsInSlot()[0];
+        if (el instanceof Components.Sheet) {
+            el.saveAs((this.filename ?? "doucment") + ".html");
+        }
+    }
+    __ef3ef2c620c645514a1d0f1099b9edaamethod0() {
+        return this.filename;
+    }
+    __ef3ef2c620c645514a1d0f1099b9edaamethod3() {
+        return this.zoom;
+    }
+    __ef3ef2c620c645514a1d0f1099b9edaamethod1() {
+        return this.zoom;
+    }
+    __ef3ef2c620c645514a1d0f1099b9edaamethod2(v) {
+        if (this) {
+            this.zoom = v;
+        }
+    }
+}
+Components.SheetPreview.Namespace=`${moduleName}.Components`;
+Components.SheetPreview.Tag=`rk-sheet-preview`;
+_.Components.SheetPreview=Components.SheetPreview;
+if(!window.customElements.get('rk-sheet-preview')){window.customElements.define('rk-sheet-preview', Components.SheetPreview);Aventus.WebComponentInstance.registerDefinition(Components.SheetPreview);}
+
 Components.FormElement = class FormElement extends Aventus.WebComponent {
     get 'has_errors'() { return this.getBoolAttr('has_errors') }
     set 'has_errors'(val) { this.setBoolAttr('has_errors', val) }    get 'errors'() {
@@ -8982,7 +10824,7 @@ Components.Textarea = class Textarea extends Components.FormElement {
     set 'value'(val) { this.setStringAttr('value', val) }    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("value", ((target) => {
     target.inputEl.value = target.value;
 })); }
-    static __style = `:host{--_textarea-height: var(--textarea-height, 30px);--_textarea-background-color: var(--textarea-background-color, var(--form-element-background, white));--_textarea-icon-height: var(--textarea-icon-height, calc(var(--_textarea-height) / 2));--_textarea-error-logo-size: var(--textarea-error-logo-size, calc(var(--_textarea-height) / 2));--_textarea-font-size: var(--textarea-font-size, var(--form-element-font-size, 16px));--_textarea-font-size-label: var(--textarea-font-size-label, var(--form-element-font-size-label, calc(var(--_textarea-font-size) * 0.95)));--_textarea-input-border: var(--textarea-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_textarea-border-radius: var(--textarea-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_textarea-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_textarea-background-color);border:var(--_textarea-input-border);border-radius:var(--_textarea-border-radius);display:flex;height:var(--_textarea-height);padding:0 10px;position:relative;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_textarea-icon-height);margin-right:10px}:host .input textarea{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-family:"Roboto",sans-serif;font-size:var(--_textarea-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px;resize:none}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:50%;color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_textarea-error-logo-size) - 5px);height:var(--_textarea-error-logo-size);justify-content:center;width:var(--_textarea-error-logo-size)}:host .input rk-resize{display:none}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}:host([resize]) .input rk-resize{display:block}:host([autogrow]) .input textarea{overflow:hidden}`;
+    static __style = `:host{--_textarea-height: var(--textarea-height, 30px);--_textarea-background-color: var(--textarea-background-color, var(--form-element-background, white));--_textarea-icon-height: var(--textarea-icon-height, calc(var(--_textarea-height) / 2));--_textarea-error-logo-size: var(--textarea-error-logo-size, calc(var(--_textarea-height) / 2));--_textarea-font-size: var(--textarea-font-size, var(--form-element-font-size, 16px));--_textarea-font-size-label: var(--textarea-font-size-label, var(--form-element-font-size-label, calc(var(--_textarea-font-size) * 0.95)));--_textarea-input-border: var(--textarea-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_textarea-border-radius: var(--textarea-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_textarea-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_textarea-background-color);border:var(--_textarea-input-border);border-radius:var(--_textarea-border-radius);display:flex;height:var(--_textarea-height);min-height:var(--_textarea-height);padding:0 10px;position:relative;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_textarea-icon-height);margin-right:10px}:host .input textarea{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-family:"Roboto",sans-serif;font-size:var(--_textarea-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px;resize:none}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:var(--border-radius-round);color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_textarea-error-logo-size) - 5px);height:var(--_textarea-error-logo-size);justify-content:center;width:var(--_textarea-error-logo-size)}:host .input rk-resize{display:none}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}:host([resize]) .input rk-resize{display:block}:host([autogrow]) .input textarea{overflow:hidden}`;
     __getStatic() {
         return Textarea;
     }
@@ -9141,7 +10983,7 @@ Components.Switch = class Switch extends Components.FormElement {
     target.value = target.checked;
     target.checkboxEl.checked = target.checked;
 })); }
-    static __style = `:host{--_switch-background-color: var(--switch-background-color, var(--form-element-background, white));--_switch-dot-size: var(--switch-dot-size, 20px);--_switch-dot-color: var(--switch-dot-color, var(--secondary-color));--_switch-active-dot-color: var(--switch-active-dot-color, var(--secondary-color-active));--_switch-active-background-color: var(--switch-active-background-color, var(--secondary-color));--_switch-font-size: var(--switch-font-size, var(--form-element-font-size, 16px));--_switch-font-size-label: var(--switch-font-size-label, var(--form-element-font-size-label, calc(var(--_input-font-size) * 0.95)))}:host{align-items:center;display:flex;font-size:var(--_switch-font-size);width:100%;min-height:var(--_switch-dot-size)}:host .label:not(:empty){cursor:pointer;margin-right:30px;transition:filter .3s var(--bezier-curve);font-size:var(--_switch-font-size-label)}:host .bar{align-items:center;background-color:var(--_switch-background-color);border-radius:10px;cursor:pointer;display:flex;height:10px;position:relative;transition:filter .3s var(--bezier-curve);width:30px}:host .bar input{appearance:none;background-color:rgba(0,0,0,0);border:0;cursor:pointer;height:100%;left:0;margin:0;outline:none;padding:0;position:absolute;top:0;width:100%}:host .bar .bar-content{align-items:center;background-color:rgba(0,0,0,0);display:flex;height:100%;pointer-events:none;position:relative;width:100%}:host .bar .bar-content .dot{background-color:var(--_switch-dot-color);border-radius:50%;box-shadow:none;cursor:pointer;height:var(--_switch-dot-size);left:0%;pointer-events:all;position:absolute;transform:translateX(-50%);transition:left var(--bezier-curve) .3s,box-shadow var(--bezier-curve) .3s,background-color var(--bezier-curve) .3s;width:var(--_switch-dot-size)}:host .bar .bar-content .bar-fill{background-color:var(--_switch-active-background-color);border-radius:100px;height:100%;left:0;pointer-events:all;position:absolute;top:0;transition:width var(--bezier-curve) .3s;width:0%}:host .bar input:checked+.bar-content .dot{background-color:var(--_switch-active-dot-color);box-shadow:0 0 5px var(--emphasize);left:100%}:host .bar input:checked+.bar-content .bar-fill{width:100%}:host([label_end]) .label:not(:empty){margin-left:30px;margin-right:0px;order:2}:host([disabled]) .bar{cursor:not-allowed;filter:brightness(0.75)}:host([disabled]) .bar input{cursor:not-allowed}:host([disabled]) .bar .bar-content .dot{cursor:not-allowed}:host([disabled]) .label{cursor:default;filter:brightness(0.75)}`;
+    static __style = `:host{--_switch-background-color: var(--switch-background-color, var(--form-element-background, white));--_switch-dot-size: var(--switch-dot-size, 20px);--_switch-dot-color: var(--switch-dot-color, var(--secondary-color));--_switch-active-dot-color: var(--switch-active-dot-color, var(--secondary-color-active));--_switch-active-background-color: var(--switch-active-background-color, var(--secondary-color));--_switch-font-size: var(--switch-font-size, var(--form-element-font-size, 16px));--_switch-font-size-label: var(--switch-font-size-label, var(--form-element-font-size-label, calc(var(--_input-font-size) * 0.95)));--_switch-border-radius: var(--switch-border-radius, 10px)}:host{align-items:center;display:flex;font-size:var(--_switch-font-size);min-height:var(--_switch-dot-size);width:100%}:host .label:not(:empty){cursor:pointer;font-size:var(--_switch-font-size-label);margin-right:30px;transition:filter .3s var(--bezier-curve)}:host .bar{align-items:center;background-color:var(--_switch-background-color);border-radius:var(--_switch-border-radius);cursor:pointer;display:flex;height:10px;position:relative;transition:filter .3s var(--bezier-curve);width:30px}:host .bar input{appearance:none;background-color:rgba(0,0,0,0);border:0;cursor:pointer;height:100%;left:0;margin:0;outline:none;padding:0;position:absolute;top:0;width:100%}:host .bar .bar-content{align-items:center;background-color:rgba(0,0,0,0);display:flex;height:100%;pointer-events:none;position:relative;width:100%}:host .bar .bar-content .dot{background-color:var(--_switch-dot-color);border-radius:var(--border-radius-round);box-shadow:none;cursor:pointer;height:var(--_switch-dot-size);left:0%;pointer-events:all;position:absolute;transform:translateX(-50%);transition:left var(--bezier-curve) .3s,box-shadow var(--bezier-curve) .3s,background-color var(--bezier-curve) .3s;width:var(--_switch-dot-size)}:host .bar .bar-content .bar-fill{background-color:var(--_switch-active-background-color);border-radius:var(--border-radius-round);height:100%;left:0;pointer-events:all;position:absolute;top:0;transition:width var(--bezier-curve) .3s;width:0%}:host .bar input:checked+.bar-content .dot{background-color:var(--_switch-active-dot-color);box-shadow:0 0 5px var(--emphasize);left:100%}:host .bar input:checked+.bar-content .bar-fill{width:100%}:host([label_end]) .label:not(:empty){margin-left:30px;margin-right:0px;order:2}:host([disabled]) .bar{cursor:not-allowed;filter:brightness(0.75)}:host([disabled]) .bar input{cursor:not-allowed}:host([disabled]) .bar .bar-content .dot{cursor:not-allowed}:host([disabled]) .label{cursor:default;filter:brightness(0.75)}`;
     __getStatic() {
         return Switch;
     }
@@ -9231,7 +11073,7 @@ Components.Slider = class Slider extends Components.FormElement {
 }));this.__addPropertyActions("value", ((target) => {
     target.calculatePercent();
 })); }
-    static __style = `:host{--_slider-background-color: var(--slider-background-color, var(--form-element-background, white));--_slider-active-background-color: var(--slider-active-background-color, var(--secondary-color-active));--_slider-dot-color: var(--slider-dot-color, var(--secondary-color));--_slider-dot-size: var(--slider-dot-size, var(--form-element-font-size, 16px));--_slider-popup-font-size: var(--slider-popup-font-size, var(--font-size-sm));--_slider-font-size-label: var(--slider-font-size-label, var(--form-element-font-size-label));--local-slider-dot-percent: 0%}:host{align-items:center;display:flex;height:var(--_slider-dot-size);min-width:100px;width:100%;flex-direction:column}:host label{display:none;font-size:var(--_slider-font-size-label);margin-bottom:5px;margin-left:3px;width:100%;flex-shrink:0}:host .bar{align-items:center;background-color:var(--_slider-background-color);border-radius:10px;cursor:pointer;display:flex;flex-direction:row;height:5px;position:relative;width:100%;flex-shrink:0}:host .bar .bar-fill{background-color:var(--_slider-active-background-color);border-radius:100px;height:100%;left:0;pointer-events:all;position:absolute;top:0;transition:width var(--bezier-curve) .3s;width:var(--local-slider-dot-percent)}:host .bar .dot{background-color:var(--_slider-dot-color);border-radius:50%;box-shadow:var(--elevation-2);cursor:pointer;height:var(--_slider-dot-size);left:var(--local-slider-dot-percent);pointer-events:all;position:absolute;transform:translateX(-50%);transition:left var(--bezier-curve) .3s,box-shadow var(--bezier-curve) .3s,background-color var(--bezier-curve) .3s;width:var(--_slider-dot-size)}:host .bar .value{background-color:var(--_slider-dot-color);border-radius:5px;box-shadow:var(--elevation-2);font-size:var(--_slider-popup-font-size);left:var(--local-slider-dot-percent);opacity:0;padding:5px 10px;padding-bottom:2px;position:absolute;top:0;transform:translateY(calc(-100% - 12px)) translateX(-50%);transform-origin:center center;transition:left var(--bezier-curve) .3s,opacity var(--bezier-curve) .3s,visibility var(--bezier-curve) .3s;visibility:hidden}:host .bar .value::after{border-left:6px solid rgba(0,0,0,0);border-right:6px solid rgba(0,0,0,0);border-top:8px solid var(--_slider-dot-color);bottom:-7px;content:"";left:50%;position:absolute;transform:translateX(-50%)}:host([no_transition]) .bar .bar-fill{transition:none}:host([no_transition]) .bar .dot{transition:none}:host([no_transition]) .bar .value{transition:opacity var(--bezier-curve) .3s,visibility var(--bezier-curve) .3s}:host([popup_visible]) .bar .value{opacity:1;visibility:visible}:host([label]:not([label=""])) label{display:flex}`;
+    static __style = `:host{--_slider-background-color: var(--slider-background-color, var(--form-element-background, white));--_slider-active-background-color: var(--slider-active-background-color, var(--secondary-color-active));--_slider-dot-color: var(--slider-dot-color, var(--secondary-color));--_slider-dot-size: var(--slider-dot-size, var(--form-element-font-size, 16px));--_slider-popup-font-size: var(--slider-popup-font-size, var(--font-size-sm));--_slider-font-size-label: var(--slider-font-size-label, var(--form-element-font-size-label));--_slider-border-radius: var(--slider-border-radius, var(--form-element-border-radius));--local-slider-dot-percent: 0%}:host{align-items:center;display:flex;height:var(--_slider-dot-size);min-width:100px;width:100%;flex-direction:column;justify-content:center}:host label{display:none;font-size:var(--_slider-font-size-label);margin-bottom:5px;margin-left:3px;width:100%;flex-shrink:0}:host .bar{align-items:center;background-color:var(--_slider-background-color);border-radius:var(--_slider-border-radius);cursor:pointer;display:flex;flex-direction:row;height:5px;position:relative;width:100%;flex-shrink:0}:host .bar .bar-fill{background-color:var(--_slider-active-background-color);border-radius:var(--border-radius-round);height:100%;left:0;pointer-events:all;position:absolute;top:0;transition:width var(--bezier-curve) .3s;width:var(--local-slider-dot-percent)}:host .bar .dot{background-color:var(--_slider-dot-color);border-radius:var(--border-radius-round);box-shadow:var(--elevation-2);cursor:pointer;height:var(--_slider-dot-size);left:var(--local-slider-dot-percent);pointer-events:all;position:absolute;transform:translateX(-50%);transition:left var(--bezier-curve) .3s,box-shadow var(--bezier-curve) .3s,background-color var(--bezier-curve) .3s;width:var(--_slider-dot-size)}:host .bar .value{background-color:var(--_slider-dot-color);border-radius:var(--_slider-border-radius);box-shadow:var(--elevation-2);font-size:var(--_slider-popup-font-size);left:var(--local-slider-dot-percent);opacity:0;padding:5px 10px;padding-bottom:2px;position:absolute;top:0;transform:translateY(calc(-100% - 12px)) translateX(-50%);transform-origin:center center;transition:left var(--bezier-curve) .3s,opacity var(--bezier-curve) .3s,visibility var(--bezier-curve) .3s;visibility:hidden}:host .bar .value::after{border-left:6px solid rgba(0,0,0,0);border-right:6px solid rgba(0,0,0,0);border-top:8px solid var(--_slider-dot-color);bottom:-7px;content:"";left:50%;position:absolute;transform:translateX(-50%)}:host([no_transition]) .bar .bar-fill{transition:none}:host([no_transition]) .bar .dot{transition:none}:host([no_transition]) .bar .value{transition:opacity var(--bezier-curve) .3s,visibility var(--bezier-curve) .3s}:host([popup_visible]) .bar .value{opacity:1;visibility:visible}:host([label]:not([label=""])) label{display:flex}`;
     __getStatic() {
         return Slider;
     }
@@ -9440,7 +11282,7 @@ Components.InputNumber = class InputNumber extends Components.FormElement {
     __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("value", ((target) => {
     target.inputEl.value = target.value + '';
 })); }
-    static __style = `:host{--_input-number-height: var(--input-number-height, 30px);--_input-number-background-color: var(--input-number-background-color, var(--form-element-background, white));--_input-number-icon-height: var(--input-number-icon-height, calc(var(--_input-number-height) / 2));--_input-number-error-logo-size: var(--input-number-error-logo-size, calc(var(--_input-number-height) / 2));--_input-number-font-size: var(--input-number-font-size, var(--form-element-font-size, 16px));--_input-number-font-size-label: var(--input-number-font-size-label, var(--form-element-font-size-label, calc(var(--_input-number-font-size) * 0.95)));--_input-number-input-border: var(--input-number-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_input-number-border-radius: var(--input-number-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_input-number-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_input-number-background-color);border:var(--_input-number-input-border);border-radius:var(--_input-number-border-radius);display:flex;height:var(--_input-number-height);padding:0 10px;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_input-number-icon-height);margin-right:10px}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_input-number-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:50%;color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_input-number-error-logo-size) - 5px);height:var(--_input-number-error-logo-size);justify-content:center;width:var(--_input-number-error-logo-size)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:0 10px}:host .errors *>div{margin:5px 0}:host .errors *>div:first-child{margin-top:10px}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}`;
+    static __style = `:host{--_input-number-height: var(--input-number-height, 30px);--_input-number-background-color: var(--input-number-background-color, var(--form-element-background, white));--_input-number-icon-height: var(--input-number-icon-height, calc(var(--_input-number-height) / 2));--_input-number-error-logo-size: var(--input-number-error-logo-size, calc(var(--_input-number-height) / 2));--_input-number-font-size: var(--input-number-font-size, var(--form-element-font-size, 16px));--_input-number-font-size-label: var(--input-number-font-size-label, var(--form-element-font-size-label, calc(var(--_input-number-font-size) * 0.95)));--_input-number-input-border: var(--input-number-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_input-number-border-radius: var(--input-number-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_input-number-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_input-number-background-color);border:var(--_input-number-input-border);border-radius:var(--_input-number-border-radius);display:flex;height:var(--_input-number-height);padding:0 10px;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_input-number-icon-height);margin-right:10px}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_input-number-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:var(--border-radius-round);color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_input-number-error-logo-size) - 5px);height:var(--_input-number-error-logo-size);justify-content:center;width:var(--_input-number-error-logo-size)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:0 10px}:host .errors *>div{margin:5px 0}:host .errors *>div:first-child{margin-top:10px}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}`;
     __getStatic() {
         return InputNumber;
     }
@@ -9596,117 +11438,6 @@ Components.InputNumber.Tag=`rk-input-number`;
 _.Components.InputNumber=Components.InputNumber;
 if(!window.customElements.get('rk-input-number')){window.customElements.define('rk-input-number', Components.InputNumber);Aventus.WebComponentInstance.registerDefinition(Components.InputNumber);}
 
-Components.Input = class Input extends Components.FormElement {
-    static get observedAttributes() {return ["label", "placeholder", "icon", "value"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
-    get 'label'() { return this.getStringProp('label') }
-    set 'label'(val) { this.setStringAttr('label', val) }get 'placeholder'() { return this.getStringProp('placeholder') }
-    set 'placeholder'(val) { this.setStringAttr('placeholder', val) }get 'icon'() { return this.getStringProp('icon') }
-    set 'icon'(val) { this.setStringAttr('icon', val) }get 'value'() { return this.getStringProp('value') }
-    set 'value'(val) { this.setStringAttr('value', val) }    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("value", ((target) => {
-    target.inputEl.value = target.value;
-})); }
-    static __style = `:host{--_input-height: var(--input-height, 30px);--_input-background-color: var(--input-background-color, var(--form-element-background, white));--_input-icon-height: var(--input-icon-height, calc(var(--_input-height) / 2));--_input-error-logo-size: var(--input-error-logo-size, calc(var(--_input-height) / 2));--_input-font-size: var(--input-font-size, var(--form-element-font-size, 16px));--_input-font-size-label: var(--input-font-size-label, var(--form-element-font-size-label, calc(var(--_input-font-size) * 0.95)));--_input-input-border: var(--input-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_input-border-radius: var(--input-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_input-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_input-background-color);border:var(--_input-input-border);border-radius:var(--_input-border-radius);display:flex;height:var(--_input-height);padding:0 10px;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_input-icon-height);margin-right:10px}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_input-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:50%;color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_input-error-logo-size) - 5px);height:var(--_input-error-logo-size);justify-content:center;width:var(--_input-error-logo-size)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}`;
-    __getStatic() {
-        return Input;
-    }
-    __getStyle() {
-        let arrStyle = super.__getStyle();
-        arrStyle.push(Input.__style);
-        return arrStyle;
-    }
-    __getHtml() {super.__getHtml();
-    this.__getStatic().__template.setHTML({
-        blocks: { 'default':`<label for="input" _id="input_0"></label><div class="input">    <rk-img class="icon" _id="input_1"></rk-img>    <input id="input" _id="input_2" />    <div class="error-logo">!</div></div><div class="errors">    <template _id="input_3"></template></div>` }
-    });
-}
-    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
-  "elements": [
-    {
-      "name": "inputEl",
-      "ids": [
-        "input_2"
-      ]
-    }
-  ],
-  "content": {
-    "input_0°@HTML": {
-      "fct": (c) => `${c.print(c.comp.__7b4688f1d13a935f88db2286094e0088method1())}`,
-      "once": true
-    },
-    "input_1°src": {
-      "fct": (c) => `${c.print(c.comp.__7b4688f1d13a935f88db2286094e0088method2())}`,
-      "once": true
-    },
-    "input_2°placeholder": {
-      "fct": (c) => `${c.print(c.comp.__7b4688f1d13a935f88db2286094e0088method3())}`,
-      "once": true
-    }
-  },
-  "events": [
-    {
-      "eventName": "focus",
-      "id": "input_2",
-      "fct": (e, c) => c.comp.removeErrors(e)
-    },
-    {
-      "eventName": "input",
-      "id": "input_2",
-      "fct": (e, c) => c.comp.onValueChange(e)
-    }
-  ]
-});const templ0 = new Aventus.Template(this);templ0.setTemplate(`        <template _id="input_4"></template>    `);this.__getStatic().__template.addLoop({
-                    anchorId: 'input_3',
-                    template: templ0,
-                simple:{data: "this.errors",item:"error"}});const templ1 = new Aventus.Template(this);templ1.setTemplate(`            <div _id="input_5"></div>        `);templ1.setActions({
-  "content": {
-    "input_5°@HTML": {
-      "fct": (c) => `${c.print(c.comp.__7b4688f1d13a935f88db2286094e0088method4(c.data.error))}`,
-      "once": true
-    }
-  }
-});templ0.addIf({
-                    anchorId: 'input_4',
-                    parts: [{once: true,
-                    condition: (c) => true,
-                    template: templ1
-                }]
-            }); }
-    getClassName() {
-        return "Input";
-    }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('label')){ this['label'] = undefined; }if(!this.hasAttribute('placeholder')){ this['placeholder'] = undefined; }if(!this.hasAttribute('icon')){ this['icon'] = undefined; }if(!this.hasAttribute('value')){ this['value'] = ""; } }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('label');this.__upgradeProperty('placeholder');this.__upgradeProperty('icon');this.__upgradeProperty('value'); }
-    removeErrors() {
-        this.errors = [];
-    }
-    onValueChange() {
-        this.value = this.inputEl.value;
-        this.onChange.trigger([this.value]);
-        if (this.formPart) {
-            Components.FormElement.setValue(this.formPart, this.value);
-            if (this.formPart.validateOnChange !== false) {
-                this.validate();
-            }
-        }
-    }
-    __7b4688f1d13a935f88db2286094e0088method1() {
-        return this.label;
-    }
-    __7b4688f1d13a935f88db2286094e0088method2() {
-        return this.icon;
-    }
-    __7b4688f1d13a935f88db2286094e0088method3() {
-        return this.placeholder;
-    }
-    __7b4688f1d13a935f88db2286094e0088method4(error) {
-        return error;
-    }
-}
-Components.Input.Namespace=`${moduleName}.Components`;
-Components.Input.Tag=`rk-input`;
-_.Components.Input=Components.Input;
-if(!window.customElements.get('rk-input')){window.customElements.define('rk-input', Components.Input);Aventus.WebComponentInstance.registerDefinition(Components.Input);}
-
 Components.Checkbox = class Checkbox extends Components.FormElement {
     static get observedAttributes() {return ["label", "placeholder", "icon", "checked"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'left_label'() { return this.getBoolAttr('left_label') }
@@ -9727,7 +11458,7 @@ Components.Checkbox = class Checkbox extends Components.FormElement {
     __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("checked", ((target) => {
     target.value = target.checked;
 })); }
-    static __style = `:host{--_checkbox-size: var(--checkbox-size, 18px);--_checkbox-height: var(--checkbox-height, var(--_checkbox-size));--_checkbox-width: var(--checkbox-width, var(--_checkbox-size));--_checkbox-size: 20px;--_checkbox-border-radius: var(--checkbox-border-radius, 2px);--_checkbox-border: var(--checkbox-border, var(--form-element-border));--_checkbox-border-active: var(--checkbox-border-active, var(--form-element-border-active, var(--_checkbox-border)));--_checkbox-background: var(--checkbox-background, var(--form-element-background, white));--_checkbox-background-active: var(--checkbox-background-active, var(--form-element-background-active, white));--_checkbox-tick-color: var(--checkbox-tick-color, var(--_checkbox-background));--_checkbox-tick-size: var(--checkbox-tick-size, 2px);--_checkbox-tick-padding: var(--checkbox-tick-padding, 10%);--_checkbox-font-size-label: var(--checkbox-font-size-label, var(--form-element-font-size-label, calc(var(--_input-font-size) * 0.95)));--_checkbox-margin-label: var(--checkbox-margin-label, 5px)}:host{align-items:center;display:flex}:host .label:not(:empty){cursor:pointer;font-size:var(--_checkbox-font-size-label);margin-left:var(--_checkbox-margin-label)}:host .square{background-color:var(--_checkbox-background);border:var(--_checkbox-border);border-radius:var(--_checkbox-border-radius);cursor:pointer;flex-shrink:0;height:var(--_checkbox-height);position:relative;transition:border .4s var(--bezier-curve),background-color .4s var(--bezier-curve);width:var(--_checkbox-width);display:flex;align-items:center;justify-content:center}:host .square rk-img{--img-stroke-color: var(--_checkbox-tick-color);--img-stroke-width: var(--_checkbox-tick-size);height:calc(100% - var(--_checkbox-tick-padding));opacity:0;visibility:hidden;width:calc(100% - var(--_checkbox-tick-padding))}:host([checked]) .square{background-color:var(--_checkbox-background-active);border:var(--_checkbox-border-active)}:host([checked]) .square rk-img{opacity:1;visibility:visible}:host([checked]) .square rk-img::part(tick){animation:dash .3s linear forwards;animation-delay:.2s;stroke-dasharray:100;stroke-dashoffset:100}:host([left_label]) .label:not(:empty){margin-left:0;margin-right:var(--_checkbox-margin-label);order:1}:host([left_label]) .square{order:2}@keyframes dash{to{stroke-dashoffset:70}}`;
+    static __style = `:host{--_checkbox-size: var(--checkbox-size, 18px);--_checkbox-height: var(--checkbox-height, var(--_checkbox-size));--_checkbox-width: var(--checkbox-width, var(--_checkbox-size));--_checkbox-size: 20px;--_checkbox-border-radius: var(--checkbox-border-radius, var(--form-element-border-radius));--_checkbox-border: var(--checkbox-border, var(--form-element-border));--_checkbox-border-active: var(--checkbox-border-active, var(--form-element-border-active, var(--_checkbox-border)));--_checkbox-background: var(--checkbox-background, var(--form-element-background, white));--_checkbox-background-active: var(--checkbox-background-active, var(--form-element-background-active, white));--_checkbox-tick-color: var(--checkbox-tick-color, var(--_checkbox-background));--_checkbox-tick-size: var(--checkbox-tick-size, 2px);--_checkbox-tick-padding: var(--checkbox-tick-padding, 10%);--_checkbox-font-size-label: var(--checkbox-font-size-label, var(--form-element-font-size-label, calc(var(--_input-font-size) * 0.95)));--_checkbox-margin-label: var(--checkbox-margin-label, 5px)}:host{align-items:center;display:flex}:host .label:not(:empty){cursor:pointer;font-size:var(--_checkbox-font-size-label);margin-left:var(--_checkbox-margin-label)}:host .square{background-color:var(--_checkbox-background);border:var(--_checkbox-border);border-radius:var(--_checkbox-border-radius);cursor:pointer;flex-shrink:0;height:var(--_checkbox-height);position:relative;transition:border .4s var(--bezier-curve),background-color .4s var(--bezier-curve);width:var(--_checkbox-width);display:flex;align-items:center;justify-content:center}:host .square rk-img{--img-stroke-color: var(--_checkbox-tick-color);--img-stroke-width: var(--_checkbox-tick-size);height:calc(100% - var(--_checkbox-tick-padding));opacity:0;visibility:hidden;width:calc(100% - var(--_checkbox-tick-padding))}:host([checked]) .square{background-color:var(--_checkbox-background-active);border:var(--_checkbox-border-active)}:host([checked]) .square rk-img{opacity:1;visibility:visible}:host([checked]) .square rk-img::part(tick){animation:dash .3s linear forwards;animation-delay:.2s;stroke-dasharray:100;stroke-dashoffset:100}:host([left_label]) .label:not(:empty){margin-left:0;margin-right:var(--_checkbox-margin-label);order:1}:host([left_label]) .square{order:2}@keyframes dash{to{stroke-dashoffset:70}}`;
     __getStatic() {
         return Checkbox;
     }
@@ -9902,34 +11633,12 @@ Components.InternalVirtualForm=class InternalVirtualForm {
         }
         return result;
     }
-    // public async validate(from?: Aventus.WebComponent): Promise<boolean | string[]> {
-    //     for(let name in this.__config) {
-    //         if(!elements || elements.length == 0) {
-    //             const result = this.__config[name].validate(FormElement.getValue(this.__config[name]));
-    //             if(result instanceof Promise) {
-    //                 promsCustom.push(result);
-    //                 namesCustom.push(name);
-    //             else if(result !== undefined && result !== true && result !== "") {
-    //                 if(result === false) {
-    //                     resultErrors.push("Le champs " + name + " n'est pas valide");
-    //                 resultErrors.push(result + "");
-    //             for(let element of this.__config[name].elements) {
-    //                 proms.push(element.validate());
-    //     const result2 = await Promise.all(promsCustom);
-    //     for(let i = 0; i < result2.length; i++) {
-    //         if(resultTemp !== undefined && resultTemp !== true && resultTemp !== "") {
-    //             if(resultTemp === false) {
-    //                 resultErrors.push("Le champs " + namesCustom[i] + " n'est pas valide");
-    //             resultErrors.push(resultTemp + "");
-    //     if(resultErrors.length > 0) {
-    //         if(from) {
-    //             let application = from instanceof Application ? from : from.findParentByType(Application);
-    //             await application?.alert({
-    //                 description: resultErrors.join("<br>")
-    //             });
-    //     const result = await Promise.all(proms);
-    //     for(let resultTemp of result) {
-    //         if(!resultTemp) return false;
+    refresh(key) {
+        const config = this.__config[key];
+        for (let element of config.elements) {
+            element.value = Components.FormElement.getValue(config);
+        }
+    }
     addFieldError(name, error) {
         if (this.__config[name]?.elements.length > 0) {
             for (let el of this.__config[name].elements) {
@@ -9940,7 +11649,7 @@ Components.InternalVirtualForm=class InternalVirtualForm {
         return false;
     }
 }
-Components.InternalVirtualForm.Namespace=`${moduleName}.Components`;
+Components.InternalVirtualForm.Namespace=`Core.Components`;
 
 Components.Form = class Form extends Aventus.WebComponent {
     elements = [];
@@ -10020,6 +11729,10 @@ State.CreateOrUpdate=class CreateOrUpdate extends State.ApplicationStorableState
         this.constructor['_state'] = this.genericState();
         this.__form = Aventus.Watcher.get(Components.Form.create(this.defineFormSchema()));
     }
+    refreshItem(key) {
+        super.refreshItem(key);
+        this.form?.refresh(key);
+    }
     /**
      * @inheritdoc
      */
@@ -10029,6 +11742,10 @@ State.CreateOrUpdate=class CreateOrUpdate extends State.ApplicationStorableState
     genericState() {
         return `/${this.defineObjectName().toLowerCase()}/{id:number}`;
     }
+    /**
+     * This will validate the form and save the model though the ram
+     * Errors are deals by this method. If success, result !== undefined
+     */
     async save() {
         let result;
         const validationResult = await this.form.validate(this.application);
@@ -10039,6 +11756,9 @@ State.CreateOrUpdate=class CreateOrUpdate extends State.ApplicationStorableState
             }
             else {
                 ramResult = await this.application.showLoading(this.defineRAM().updateWithError(this.item));
+            }
+            if (ramResult == null) {
+                return undefined;
             }
             if (ramResult.errors.length > 0) {
                 let noPrintErrors = [];
@@ -10074,7 +11794,7 @@ State.CreateOrUpdate=class CreateOrUpdate extends State.ApplicationStorableState
         this.back();
     }
 }
-State.CreateOrUpdate.Namespace=`${moduleName}.State`;
+State.CreateOrUpdate.Namespace=`Core.State`;
 State.CreateOrUpdate.$schema={...(State.ApplicationStorableState?.$schema ?? {}), "__form":""+moduleName+".Components.VirtualForm","form":""+moduleName+".Components.VirtualForm","name":"string"};
 Aventus.Converter.register(State.CreateOrUpdate.Fullname, State.CreateOrUpdate);
 
@@ -10091,7 +11811,7 @@ Components.Button = class Button extends Aventus.WebComponent {
     set 'icon'(val) { this.setStringAttr('icon', val) }    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("icon", ((target) => {
     target.icon_before = target.icon;
 })); }
-    static __style = `:host{--internal-button-background-color: var(--button-background-color);--_button-background-color-hover: var(--button-background-color-hover, var(--darker));--internal-button-color: var(--button-color);--internal-button-box-shadow: var(--button-box-shadow);--internal-button-box-shadow-hover: var(--button-box-shadow-hover);--_button-padding: var(--button-padding, 0 16px);--_button-icon-fill-color: var(--button-icon-fill-color, --internal-button-color);--_button-icon-stroke-color: var(--button-icon-stroke-color, transparent);--_button-background-color-disable: var(--button-background-color-disable, var(--disable-color));--_button-color-disable: var(--button-color-disable, var(--text-disable))}:host{background-color:var(--internal-button-background-color);border-radius:5px;box-shadow:var(--internal-button-box-shadow);color:var(--internal-button-color);cursor:pointer;height:36px;min-width:64px;position:relative}:host .hider{background-color:var(--_button-background-color-hover);inset:0;opacity:0;position:absolute;transition:opacity .3s var(--bezier-curve),visibility .3s var(--bezier-curve);visibility:hidden;z-index:1}:host .content{align-items:center;display:flex;height:100%;justify-content:center;padding:var(--_button-padding);position:relative;z-index:2}:host .content .icon-before,:host .content .icon-after{--img-stroke-color: var(--_button-icon-stroke-color);--img-fill-color: var(--_button-icon-fill-color);display:none;height:100%;padding:10px 0}:host([disabled]){background-color:var(--_button-background-color-disable) !important;cursor:not-allowed;color:var(--_button-color-disable);box-shadow:none}:host([disabled]) .hider{opacity:1;pointer-events:none;visibility:visible}:host([icon_before]) .icon-before{display:block;margin-right:10px}:host([icon_after]) .icon-after{display:block;margin-left:10px}:host([icon]) .icon-before{margin-right:0px}:host([outline]){background-color:rgba(0,0,0,0);border:1px solid var(--button-background-color);color:var(--text-color)}:host([color=green]){background-color:var(--green);color:var(--text-color-green)}:host([outline][color=green]){background-color:rgba(0,0,0,0);border:1px solid var(--green);color:var(--text-color)}:host([color=red]){background-color:var(--red);color:var(--text-color-red)}:host([outline][color=red]){background-color:rgba(0,0,0,0);border:1px solid var(--red);color:var(--text-color)}:host([color=orange]){background-color:var(--orange);color:var(--text-color-orange)}:host([outline][color=orange]){background-color:rgba(0,0,0,0);border:1px solid var(--orange);color:var(--text-color)}:host([color=blue]){background-color:var(--blue);color:var(--text-color-blue)}:host([outline][color=blue]){background-color:rgba(0,0,0,0);border:1px solid var(--blue);color:var(--text-color)}@media screen and (min-width: 1225px){:host(:not([disabled]):hover){box-shadow:var(--internal-button-box-shadow-hover)}:host(:not([disabled]):hover) .hider{opacity:1;visibility:visible}}`;
+    static __style = `:host{--internal-button-background-color: var(--button-background-color);--_button-background-color-hover: var(--button-background-color-hover, var(--darker));--internal-button-color: var(--button-color);--internal-button-box-shadow: var(--button-box-shadow);--internal-button-box-shadow-hover: var(--button-box-shadow-hover);--_button-border-radius: var(--button-border-radius, var(--border-radius-sm, 5px));--_button-padding: var(--button-padding, 0 16px);--_button-icon-fill-color: var(--button-icon-fill-color, --internal-button-color);--_button-icon-stroke-color: var(--button-icon-stroke-color, transparent);--_button-background-color-disable: var(--button-background-color-disable, var(--disable-color));--_button-color-disable: var(--button-color-disable, var(--text-disable))}:host{background-color:var(--internal-button-background-color);border-radius:var(--_button-border-radius);box-shadow:var(--internal-button-box-shadow);color:var(--internal-button-color);cursor:pointer;height:36px;min-width:64px;position:relative}:host .hider{background-color:var(--_button-background-color-hover);border-radius:var(--_button-border-radius);inset:0;opacity:0;position:absolute;transition:opacity .3s var(--bezier-curve),visibility .3s var(--bezier-curve);visibility:hidden;z-index:1}:host .content{align-items:center;display:flex;height:100%;justify-content:center;padding:var(--_button-padding);position:relative;z-index:2}:host .content .icon-before,:host .content .icon-after{--img-stroke-color: var(--_button-icon-stroke-color);--img-fill-color: var(--_button-icon-fill-color);display:none;height:100%;padding:10px 0}:host([disabled]){background-color:var(--_button-background-color-disable) !important;box-shadow:none;color:var(--_button-color-disable);cursor:not-allowed}:host([disabled]) .hider{opacity:1;pointer-events:none;visibility:visible}:host([icon_before]) .icon-before{display:block;margin-right:10px}:host([icon_after]) .icon-after{display:block;margin-left:10px}:host([icon]) .icon-before{margin-right:0px}:host([outline]){background-color:rgba(0,0,0,0);border:1px solid var(--button-background-color);color:var(--text-color)}:host([color=primary]){background-color:var(--primary);color:var(--text-color-primary)}:host([outline][color=primary]){background-color:rgba(0,0,0,0);border:1px solid var(--primary);color:var(--text-color)}:host([color=secondary]){background-color:var(--secondary);color:var(--text-color-secondary)}:host([outline][color=secondary]){background-color:rgba(0,0,0,0);border:1px solid var(--secondary);color:var(--text-color)}:host([color=green]){background-color:var(--green);color:var(--text-color-green)}:host([outline][color=green]){background-color:rgba(0,0,0,0);border:1px solid var(--green);color:var(--text-color)}:host([color=success]){background-color:var(--success);color:var(--text-color-success)}:host([outline][color=success]){background-color:rgba(0,0,0,0);border:1px solid var(--success);color:var(--text-color)}:host([color=red]){background-color:var(--red);color:var(--text-color-red)}:host([outline][color=red]){background-color:rgba(0,0,0,0);border:1px solid var(--red);color:var(--text-color)}:host([color=error]){background-color:var(--error);color:var(--text-color-error)}:host([outline][color=error]){background-color:rgba(0,0,0,0);border:1px solid var(--error);color:var(--text-color)}:host([color=orange]){background-color:var(--orange);color:var(--text-color-orange)}:host([outline][color=orange]){background-color:rgba(0,0,0,0);border:1px solid var(--orange);color:var(--text-color)}:host([color=warning]){background-color:var(--warning);color:var(--text-color-warning)}:host([outline][color=warning]){background-color:rgba(0,0,0,0);border:1px solid var(--warning);color:var(--text-color)}:host([color=blue]){background-color:var(--blue);color:var(--text-color-blue)}:host([outline][color=blue]){background-color:rgba(0,0,0,0);border:1px solid var(--blue);color:var(--text-color)}:host([color=information]){background-color:var(--information);color:var(--text-color-information)}:host([outline][color=information]){background-color:rgba(0,0,0,0);border:1px solid var(--information);color:var(--text-color)}@media screen and (min-width: 1225px){:host(:not([disabled]):hover){box-shadow:var(--internal-button-box-shadow-hover)}:host(:not([disabled]):hover) .hider{opacity:1;visibility:visible}}`;
     __getStatic() {
         return Button;
     }
@@ -10197,7 +11917,7 @@ Components.DatePicker = class DatePicker extends Components.FormElement {
     target.renderDate();
 }));    super.__registerWatchesActions();
 }
-    static __style = `:host{--_datepicker-height: var(--input-height, 30px);--_datepicker-background-color: var(--input-background-color, var(--form-element-background, white));--_datepicker-icon-height: var(--input-icon-height, calc(var(--_datepicker-height) / 2));--_datepicker-error-logo-size: var(--input-error-logo-size, calc(var(--_datepicker-height) / 2));--_datepicker-font-size: var(--input-font-size, var(--form-element-font-size, 16px));--_datepicker-font-size-label: var(--input-font-size-label, var(--form-element-font-size-label, calc(var(--_datepicker-font-size) * 0.95)));--_datepicker-input-border: var(--input-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_datepicker-border-radius: var(--input-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_datepicker-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_datepicker-background-color);border:var(--_datepicker-input-border);border-radius:var(--_datepicker-border-radius);display:flex;height:var(--_datepicker-height);padding:0 10px;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_datepicker-icon-height);margin-right:10px}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_datepicker-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px}:host .input .close-icon{font-size:18px;flex-shrink:0;display:none}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:50%;color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_datepicker-error-logo-size) - 5px);height:var(--_datepicker-error-logo-size);justify-content:center;width:var(--_datepicker-error-logo-size)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}:host([show_close]) .input .close-icon{display:inline-block}`;
+    static __style = `:host{--_datepicker-height: var(--input-height, 30px);--_datepicker-background-color: var(--input-background-color, var(--form-element-background, white));--_datepicker-icon-height: var(--input-icon-height, calc(var(--_datepicker-height) / 2));--_datepicker-error-logo-size: var(--input-error-logo-size, calc(var(--_datepicker-height) / 2));--_datepicker-font-size: var(--input-font-size, var(--form-element-font-size, 16px));--_datepicker-font-size-label: var(--input-font-size-label, var(--form-element-font-size-label, calc(var(--_datepicker-font-size) * 0.95)));--_datepicker-input-border: var(--input-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_datepicker-border-radius: var(--input-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_datepicker-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_datepicker-background-color);border:var(--_datepicker-input-border);border-radius:var(--_datepicker-border-radius);display:flex;height:var(--_datepicker-height);padding:0 10px;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_datepicker-icon-height);margin-right:10px}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_datepicker-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px}:host .input .close-icon{font-size:18px;flex-shrink:0;display:none}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:var(--border-radius-round);color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_datepicker-error-logo-size) - 5px);height:var(--_datepicker-error-logo-size);justify-content:center;width:var(--_datepicker-error-logo-size)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}:host([show_close]) .input .close-icon{display:inline-block}`;
     constructor() {
             super();
             this.bindCalendar();
@@ -10442,6 +12162,185 @@ Components.CalendarContainer.Tag=`rk-calendar-container`;
 _.Components.CalendarContainer=Components.CalendarContainer;
 if(!window.customElements.get('rk-calendar-container')){window.customElements.define('rk-calendar-container', Components.CalendarContainer);Aventus.WebComponentInstance.registerDefinition(Components.CalendarContainer);}
 
+Components.Input = class Input extends Components.FormElement {
+    static get observedAttributes() {return ["label", "placeholder", "icon", "icon_position", "value"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'label'() { return this.getStringProp('label') }
+    set 'label'(val) { this.setStringAttr('label', val) }get 'placeholder'() { return this.getStringProp('placeholder') }
+    set 'placeholder'(val) { this.setStringAttr('placeholder', val) }get 'icon'() { return this.getStringProp('icon') }
+    set 'icon'(val) { this.setStringAttr('icon', val) }get 'icon_position'() { return this.getStringProp('icon_position') }
+    set 'icon_position'(val) { this.setStringAttr('icon_position', val) }get 'value'() { return this.getStringProp('value') }
+    set 'value'(val) { this.setStringAttr('value', val) }    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("value", ((target) => {
+    target.inputEl.value = target.value ?? "";
+})); }
+    static __style = `:host{--_input-height: var(--input-height, 30px);--_input-background-color: var(--input-background-color, var(--form-element-background, white));--_input-icon-height: var(--input-icon-height, calc(var(--_input-height) / 2));--_input-error-logo-size: var(--input-error-logo-size, calc(var(--_input-height) / 2));--_input-font-size: var(--input-font-size, var(--form-element-font-size, 16px));--_input-font-size-label: var(--input-font-size-label, var(--form-element-font-size-label, calc(var(--_input-font-size) * 0.95)));--_input-input-border: var(--input-input-border, var(--form-element-border, 1px solid var(--lighter-active)));--_input-border-radius: var(--input-border-radius, var(--form-element-border-radius, 0))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_input-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_input-background-color);border:var(--_input-input-border);border-radius:var(--_input-border-radius);display:flex;height:var(--_input-height);padding:0 10px;width:100%}:host .input .icon{display:none;flex-shrink:0;height:var(--_input-icon-height);margin-right:10px}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_input-font-size);height:100%;margin:0;min-width:0;outline:none;padding:5px 0;padding-right:10px}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:var(--border-radius-round);color:#fff;display:none;flex-shrink:0;font-size:calc(var(--_input-error-logo-size) - 5px);height:var(--_input-error-logo-size);justify-content:center;width:var(--_input-error-logo-size)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([icon_position=right]) .input .icon{order:2;margin-right:0px}:host([icon_position=right]) .input .input{order:1}:host([icon_position=right]) .input .error-logo{order:3;margin-left:10px}:host([label]:not([label=""])) label{display:flex}`;
+    __getStatic() {
+        return Input;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(Input.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        blocks: { 'default':`<label for="input" _id="input_0"></label><div class="input">    <rk-img class="icon" _id="input_1"></rk-img>    <input id="input" _id="input_2" />    <div class="error-logo">!</div></div><div class="errors">    <template _id="input_3"></template></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "iconEl",
+      "ids": [
+        "input_1"
+      ]
+    },
+    {
+      "name": "inputEl",
+      "ids": [
+        "input_2"
+      ]
+    }
+  ],
+  "content": {
+    "input_0°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__7b4688f1d13a935f88db2286094e0088method1())}`,
+      "once": true
+    },
+    "input_1°src": {
+      "fct": (c) => `${c.print(c.comp.__7b4688f1d13a935f88db2286094e0088method2())}`,
+      "once": true
+    },
+    "input_2°placeholder": {
+      "fct": (c) => `${c.print(c.comp.__7b4688f1d13a935f88db2286094e0088method3())}`,
+      "once": true
+    }
+  },
+  "events": [
+    {
+      "eventName": "focus",
+      "id": "input_2",
+      "fct": (e, c) => c.comp.removeErrors(e)
+    },
+    {
+      "eventName": "input",
+      "id": "input_2",
+      "fct": (e, c) => c.comp.onValueChange(e)
+    }
+  ]
+});const templ0 = new Aventus.Template(this);templ0.setTemplate(`        <template _id="input_4"></template>    `);this.__getStatic().__template.addLoop({
+                    anchorId: 'input_3',
+                    template: templ0,
+                simple:{data: "this.errors",item:"error"}});const templ1 = new Aventus.Template(this);templ1.setTemplate(`            <div _id="input_5"></div>        `);templ1.setActions({
+  "content": {
+    "input_5°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__7b4688f1d13a935f88db2286094e0088method4(c.data.error))}`,
+      "once": true
+    }
+  }
+});templ0.addIf({
+                    anchorId: 'input_4',
+                    parts: [{once: true,
+                    condition: (c) => true,
+                    template: templ1
+                }]
+            }); }
+    getClassName() {
+        return "Input";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('label')){ this['label'] = undefined; }if(!this.hasAttribute('placeholder')){ this['placeholder'] = undefined; }if(!this.hasAttribute('icon')){ this['icon'] = undefined; }if(!this.hasAttribute('icon_position')){ this['icon_position'] = undefined; }if(!this.hasAttribute('value')){ this['value'] = ""; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('label');this.__upgradeProperty('placeholder');this.__upgradeProperty('icon');this.__upgradeProperty('icon_position');this.__upgradeProperty('value'); }
+    removeErrors() {
+        this.errors = [];
+    }
+    onValueChange() {
+        this.value = this.inputEl.value;
+        this.onChange.trigger([this.value]);
+        if (this.formPart) {
+            Components.FormElement.setValue(this.formPart, this.value);
+            if (this.formPart.validateOnChange !== false) {
+                this.validate();
+            }
+        }
+    }
+    __7b4688f1d13a935f88db2286094e0088method1() {
+        return this.label;
+    }
+    __7b4688f1d13a935f88db2286094e0088method2() {
+        return this.icon;
+    }
+    __7b4688f1d13a935f88db2286094e0088method3() {
+        return this.placeholder;
+    }
+    __7b4688f1d13a935f88db2286094e0088method4(error) {
+        return error;
+    }
+}
+Components.Input.Namespace=`${moduleName}.Components`;
+Components.Input.Tag=`rk-input`;
+_.Components.Input=Components.Input;
+if(!window.customElements.get('rk-input')){window.customElements.define('rk-input', Components.Input);Aventus.WebComponentInstance.registerDefinition(Components.Input);}
+
+Components.Password = class Password extends Components.Input {
+    static get observedAttributes() {return ["visible", "icon_position"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'visible'() { return this.getBoolProp('visible') }
+    set 'visible'(val) { this.setBoolAttr('visible', val) }get 'icon_position'() { return this.getStringProp('icon_position') }
+    set 'icon_position'(val) { this.setStringAttr('icon_position', val) }    pressIcon;
+    __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("visible", ((target) => {
+    target.updateIcon();
+})); }
+    static __style = `:host .input .icon{cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,0)}`;
+    __getStatic() {
+        return Password;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(Password.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "Password";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('visible')) { this.attributeChangedCallback('visible', false, false); }if(!this.hasAttribute('icon_position')){ this['icon_position'] = "right"; } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('visible');this.__upgradeProperty('icon_position'); }
+    __listBoolProps() { return ["visible"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    toggleVisible() {
+        this.visible = !this.visible;
+    }
+    updateIcon() {
+        if (this.visible) {
+            this.inputEl.type = "input";
+            this.icon = "mi-visibility_off";
+        }
+        else {
+            this.inputEl.type = "password";
+            this.icon = "mi-visibility";
+        }
+    }
+    postCreation() {
+        super.postCreation();
+        this.pressIcon = new Aventus.PressManager({
+            element: this.iconEl,
+            onPress: () => {
+                this.toggleVisible();
+            }
+        });
+    }
+    postDestruction() {
+        super.postDestruction();
+        this.pressIcon?.destroy();
+    }
+}
+Components.Password.Namespace=`${moduleName}.Components`;
+Components.Password.Tag=`rk-password`;
+_.Components.Password=Components.Password;
+if(!window.customElements.get('rk-password')){window.customElements.define('rk-password', Components.Password);Aventus.WebComponentInstance.registerDefinition(Components.Password);}
+
 Components.GenericSelect = class GenericSelect extends Components.FormElement {
     static get observedAttributes() {return ["label", "placeholder", "icon", "searchable"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'open'() { return this.getBoolAttr('open') }
@@ -10476,7 +12375,7 @@ Components.GenericSelect = class GenericSelect extends Components.FormElement {
         target.inputEl.setAttribute("disabled", "disabled");
     }
 })); }
-    static __style = `:host{--_select-height: var(--select-height, 30px);--_select-background-color: var(--select-background-color, var(--form-element-background, white));--_select-icon-height: var(--select-icon-height, calc(var(--_select-height) / 2));--_select-error-logo-size: var(--select-error-logo-size, calc(var(--_select-height) / 2));--_select-font-size: var(--select-font-size, var(--form-element-font-size, 16px));--_select-font-size-label: var(--select-font-size-label, var(--form-element-font-size-label, calc(var(--_select-font-size) * 0.95)));--_select-select-border: var(--select-select-border, var(--form-element-border, 1px solid var(--lighter-active)));--_generic-select-border-radius: var(--generic-select-border-radius, var(--form-element-border-radius, 0));--_select-caret-height: var(--select-caret-height, calc(var(--_select-height) / 2));--_select-caret-color: var(--select-caret-color, var(--form-element-color))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_select-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_select-background-color);border:var(--_select-select-border);border-radius:var(--_generic-select-border-radius);cursor:pointer;display:flex;height:var(--_select-height);padding:0 10px;width:100%}:host .input .icon{display:none;height:var(--_select-icon-height);margin-right:10px}:host .input rk-img.caret{--img-fill-color: var(--_select-caret-color);--img-stroke-width: 0;aspect-ratio:1;flex-grow:0;flex-shrink:0;height:var(--_select-caret-height);transform:rotate(-90deg);transition:transform .5s var(--bezier-curve)}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_select-font-size);height:100%;margin:0;opacity:1;outline:none;padding:5px 0;padding-right:10px;-webkit-text-fill-color:var(--text-color);width:100%}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:50%;color:#fff;display:none;font-size:calc(var(--_select-error-logo-size) - 5px);height:var(--_select-error-logo-size);justify-content:center;width:var(--_select-error-logo-size);flex-shrink:0}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host .hidden{display:none}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}:host([open]) .input .caret{transform:rotate(-270deg)}`;
+    static __style = `:host{--_select-height: var(--select-height, 30px);--_select-background-color: var(--select-background-color, var(--form-element-background, white));--_select-icon-height: var(--select-icon-height, calc(var(--_select-height) / 2));--_select-error-logo-size: var(--select-error-logo-size, calc(var(--_select-height) / 2));--_select-font-size: var(--select-font-size, var(--form-element-font-size, 16px));--_select-font-size-label: var(--select-font-size-label, var(--form-element-font-size-label, calc(var(--_select-font-size) * 0.95)));--_select-select-border: var(--select-select-border, var(--form-element-border, 1px solid var(--lighter-active)));--_generic-select-border-radius: var(--generic-select-border-radius, var(--form-element-border-radius, 0));--_select-caret-height: var(--select-caret-height, calc(var(--_select-height) / 2));--_select-caret-color: var(--select-caret-color, var(--form-element-color))}:host{min-width:100px;width:100%}:host label{display:none;font-size:var(--_select-font-size-label);margin-bottom:5px;margin-left:3px}:host .input{align-items:center;background-color:var(--_select-background-color);border:var(--_select-select-border);border-radius:var(--_generic-select-border-radius);cursor:pointer;display:flex;height:var(--_select-height);padding:0 10px;width:100%}:host .input .icon{display:none;height:var(--_select-icon-height);margin-right:10px}:host .input rk-img.caret{--img-fill-color: var(--_select-caret-color);--img-stroke-width: 0;aspect-ratio:1;flex-grow:0;flex-shrink:0;height:var(--_select-caret-height);transform:rotate(-90deg);transition:transform .5s var(--bezier-curve)}:host .input input{background-color:rgba(0,0,0,0);border:none;color:var(--text-color);display:block;flex-grow:1;font-size:var(--_select-font-size);height:100%;margin:0;opacity:1;outline:none;padding:5px 0;padding-right:10px;-webkit-text-fill-color:var(--text-color);width:100%}:host .input .error-logo{align-items:center;background-color:var(--red);border-radius:var(--border-radius-round);color:#fff;display:none;font-size:calc(var(--_select-error-logo-size) - 5px);height:var(--_select-error-logo-size);justify-content:center;width:var(--_select-error-logo-size);flex-shrink:0}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host .hidden{display:none}:host([has_errors]) .input{border:1px solid var(--red)}:host([has_errors]) .input .error-logo{display:flex}:host([has_errors]) .errors{display:block}:host([icon]:not([icon=""])) .input .icon{display:block}:host([label]:not([label=""])) label{display:flex}:host([open]) .input .caret{transform:rotate(-270deg)}`;
     constructor() { super(); if (this.constructor == GenericSelect) { throw "can't instanciate an abstract class"; } }
     __getStatic() {
         return GenericSelect;
@@ -11070,7 +12969,6 @@ Components.SelectData = class SelectData extends Components.GenericSelect {
     static __style = ``;
     constructor() {
             super();
-            this.createOptions();
 if (this.constructor == SelectData) { throw "can't instanciate an abstract class"; } this.subscribe=this.subscribe.bind(this)this.unsubscribe=this.unsubscribe.bind(this)this.onCreated=this.onCreated.bind(this)this.onDeleted=this.onDeleted.bind(this)this.onUpdated=this.onUpdated.bind(this) }
     __getStatic() {
         return SelectData;
@@ -11149,12 +13047,13 @@ if (this.constructor == SelectData) { throw "can't instanciate an abstract class
             }
         }
     }
-    init() {
+    async init() {
         if (!this.isConnected)
             return;
         if (this.isInit)
             return;
         this.isInit = true;
+        await this.createOptions();
         super.postCreation();
         this.subscribe();
     }
@@ -11171,13 +13070,480 @@ if (this.constructor == SelectData) { throw "can't instanciate an abstract class
 Components.SelectData.Namespace=`${moduleName}.Components`;
 _.Components.SelectData=Components.SelectData;
 
+Components.TwoColumnsSelect = class TwoColumnsSelect extends Components.FormElement {
+    static get observedAttributes() {return ["title_unselect", "title_select", "placeholder_unselect", "placeholder_select"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
+    get 'searchable_unselect'() { return this.getBoolAttr('searchable_unselect') }
+    set 'searchable_unselect'(val) { this.setBoolAttr('searchable_unselect', val) }get 'searchable_select'() { return this.getBoolAttr('searchable_select') }
+    set 'searchable_select'(val) { this.setBoolAttr('searchable_select', val) }    get 'title_unselect'() { return this.getStringProp('title_unselect') }
+    set 'title_unselect'(val) { this.setStringAttr('title_unselect', val) }get 'title_select'() { return this.getStringProp('title_select') }
+    set 'title_select'(val) { this.setStringAttr('title_select', val) }get 'placeholder_unselect'() { return this.getStringProp('placeholder_unselect') }
+    set 'placeholder_unselect'(val) { this.setStringAttr('placeholder_unselect', val) }get 'placeholder_select'() { return this.getStringProp('placeholder_select') }
+    set 'placeholder_select'(val) { this.setStringAttr('placeholder_select', val) }    get 'value'() {
+						return this.__watch["value"];
+					}
+					set 'value'(val) {
+						this.__watch["value"] = val;
+					}    selectedOption;
+    optionsSelected = [];
+    optionsUnselected = [];
+    canGenerateValues = false;
+    __registerWatchesActions() {
+    this.__addWatchesActions("value", ((target) => {
+    target.onInternalValueChanged();
+}));    super.__registerWatchesActions();
+}
+    static __style = `:host{display:flex;flex-direction:column;width:100%}:host .wrapper{align-items:center;display:flex;height:100%;width:100%}:host .wrapper .col{background-color:#fff;border-radius:var(--border-radius-sm);box-shadow:var(--elevation-1);display:flex;flex-direction:column;flex-grow:1;height:100%;padding:15px;width:100%}:host .wrapper .col .title{font-size:calc(var(--font-size)*.85);margin-bottom:10px;margin-left:3px}:host .wrapper .col .title:empty{display:none}:host .wrapper .col .search{display:none;margin-bottom:15px}:host .wrapper .action{display:flex;flex-direction:column;flex-grow:0;flex-shrink:0;gap:5px;padding:10px}:host .wrapper .action .btn{align-items:center;background-color:#fff;border-radius:var(--border-radius-sm);box-shadow:var(--elevation-3);cursor:pointer;display:flex;justify-content:center;transition:box-shadow .3s var(--bezier-curve),background-color .3s var(--bezier-curve)}:host .wrapper .action .btn mi-icon{font-size:var(--font-size-md);padding:2px}:host .wrapper .action .btn[disable=true]{color:var(--text-color-disable);cursor:not-allowed}:host .wrapper .action .btn:hover{background-color:var(--lighter);box-shadow:var(--elevation-1)}:host .errors{color:var(--red);display:none;font-size:var(--font-size-sm);line-height:1.1;margin:10px;margin-bottom:0px}:host .errors div{margin:5px 0}:host .hidden{display:none}:host([has_errors]) .errors{display:block}:host([column]) .wrapper{flex-direction:column}:host([column]) .wrapper .action{flex-direction:row}:host([column]) .wrapper .action .btn mi-icon{transform:rotate(90deg)}:host([searchable_unselect]) .wrapper .col .search-unselect{display:inline-block}:host([searchable_select]) .wrapper .col .search-select{display:inline-block}`;
+    constructor() { super(); if (this.constructor == TwoColumnsSelect) { throw "can't instanciate an abstract class"; } }
+    __getStatic() {
+        return TwoColumnsSelect;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(TwoColumnsSelect.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<div class="wrapper">    <div class="col">        <div class="title" _id="twocolumnsselect_0"></div>        <div class="search search-unselect">            <rk-input _id="twocolumnsselect_1"></rk-input>        </div>        <rk-scrollable class="options" _id="twocolumnsselect_2">        </rk-scrollable>    </div>    <div class="action">        <div class="btn" _id="twocolumnsselect_3">            <mi-icon icon="keyboard_double_arrow_right"></mi-icon>        </div>        <div class="btn" _id="twocolumnsselect_4">            <mi-icon icon="keyboard_arrow_right"></mi-icon>        </div>        <div class="btn" _id="twocolumnsselect_5">            <mi-icon icon="keyboard_arrow_left"></mi-icon>        </div>        <div class="btn" _id="twocolumnsselect_6">            <mi-icon icon="keyboard_double_arrow_left"></mi-icon>        </div>    </div>    <div class="col">        <div class="title" _id="twocolumnsselect_7"></div>        <div class="search search-select">            <rk-input _id="twocolumnsselect_8"></rk-input>        </div>        <rk-scrollable class="options" _id="twocolumnsselect_9">        </rk-scrollable>        <div class="errors">            <template _id="twocolumnsselect_10"></template>        </div>    </div></div><div class="hidden">    <slot></slot></div>` }
+    });
+}
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "unselectSearchInput",
+      "ids": [
+        "twocolumnsselect_1"
+      ]
+    },
+    {
+      "name": "unselectOptionsCont",
+      "ids": [
+        "twocolumnsselect_2"
+      ]
+    },
+    {
+      "name": "selectSearchInput",
+      "ids": [
+        "twocolumnsselect_8"
+      ]
+    },
+    {
+      "name": "selectOptionsCont",
+      "ids": [
+        "twocolumnsselect_9"
+      ]
+    }
+  ],
+  "content": {
+    "twocolumnsselect_0°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__02ff6a099b7c5d693b75b5727ffdf5e8method1())}`,
+      "once": true
+    },
+    "twocolumnsselect_1°placeholder": {
+      "fct": (c) => `${c.print(c.comp.__02ff6a099b7c5d693b75b5727ffdf5e8method2())}`,
+      "once": true
+    },
+    "twocolumnsselect_7°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__02ff6a099b7c5d693b75b5727ffdf5e8method3())}`,
+      "once": true
+    },
+    "twocolumnsselect_8°placeholder": {
+      "fct": (c) => `${c.print(c.comp.__02ff6a099b7c5d693b75b5727ffdf5e8method4())}`,
+      "once": true
+    }
+  },
+  "events": [
+    {
+      "eventName": "onChange",
+      "id": "twocolumnsselect_1",
+      "fct": (c, ...args) => c.comp.searchUnselect.apply(c.comp, ...args),
+      "isCallback": true
+    },
+    {
+      "eventName": "onChange",
+      "id": "twocolumnsselect_8",
+      "fct": (c, ...args) => c.comp.searchSelect.apply(c.comp, ...args),
+      "isCallback": true
+    }
+  ],
+  "pressEvents": [
+    {
+      "id": "twocolumnsselect_3",
+      "onPress": (e, pressInstance, c) => { c.comp.selectAll(e, pressInstance); }
+    },
+    {
+      "id": "twocolumnsselect_4",
+      "onPress": (e, pressInstance, c) => { c.comp.selectHighlighted(e, pressInstance); }
+    },
+    {
+      "id": "twocolumnsselect_5",
+      "onPress": (e, pressInstance, c) => { c.comp.unselectHighlighted(e, pressInstance); }
+    },
+    {
+      "id": "twocolumnsselect_6",
+      "onPress": (e, pressInstance, c) => { c.comp.unselectAll(e, pressInstance); }
+    }
+  ]
+});const templ0 = new Aventus.Template(this);templ0.setTemplate(`                 <div _id="twocolumnsselect_11"></div>            `);templ0.setActions({
+  "content": {
+    "twocolumnsselect_11°@HTML": {
+      "fct": (c) => `${c.print(c.comp.__02ff6a099b7c5d693b75b5727ffdf5e8method5(c.data.error))}`,
+      "once": true
+    }
+  }
+});this.__getStatic().__template.addLoop({
+                    anchorId: 'twocolumnsselect_10',
+                    template: templ0,
+                simple:{data: "this.errors",item:"error"}}); }
+    getClassName() {
+        return "TwoColumnsSelect";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('searchable_unselect')) { this.attributeChangedCallback('searchable_unselect', false, false); }if(!this.hasAttribute('searchable_select')) { this.attributeChangedCallback('searchable_select', false, false); }if(!this.hasAttribute('title_unselect')){ this['title_unselect'] = undefined; }if(!this.hasAttribute('title_select')){ this['title_select'] = undefined; }if(!this.hasAttribute('placeholder_unselect')){ this['placeholder_unselect'] = "Recherche"; }if(!this.hasAttribute('placeholder_select')){ this['placeholder_select'] = "Recherche"; } }
+    __defaultValuesWatch(w) { super.__defaultValuesWatch(w); w["value"] = undefined; }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('searchable_unselect');this.__upgradeProperty('searchable_select');this.__upgradeProperty('title_unselect');this.__upgradeProperty('title_select');this.__upgradeProperty('placeholder_unselect');this.__upgradeProperty('placeholder_select');this.__correctGetter('value'); }
+    __listBoolProps() { return ["searchable_unselect","searchable_select"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    include(array, value) {
+        return array.includes(value);
+    }
+    onInternalValueChanged() {
+        if (!this.isConnected || !this.canGenerateValues)
+            return;
+        if (!this.value) {
+            for (let option of this.optionsSelected) {
+                this.unselectOptionsCont.appendChild(option);
+            }
+            this.reloadOptions();
+            return;
+        }
+        for (let option of this.optionsSelected) {
+            if (!option.value || !this.include(this.value, option.value)) {
+                this.unselectOptionsCont.appendChild(option);
+            }
+        }
+        for (let option of this.optionsUnselected) {
+            if (option.value && this.include(this.value, option.value)) {
+                this.selectOptionsCont.appendChild(option);
+            }
+        }
+        this.reloadOptions();
+        return;
+    }
+    changeValue() {
+        this.onChange.trigger([this.value]);
+        if (this.formPart) {
+            Components.FormElement.setValue(this.formPart, this.value);
+            if (this.formPart.validateOnChange !== false) {
+                this.validate();
+            }
+        }
+    }
+    loadElementsFromSlot() {
+        let elements = this.getElementsInSlot();
+        for (let element of elements) {
+            if (element instanceof Components.TwoColumnsOption) {
+                element.init(this);
+                this.unselectOptionsCont.appendChild(element);
+            }
+        }
+        this.reloadOptions();
+    }
+    reloadOptions() {
+        this.optionsSelected = Array.from(this.selectOptionsCont.children);
+        this.optionsUnselected = Array.from(this.unselectOptionsCont.children);
+        this.searchSelect();
+        this.searchUnselect();
+        if (this.canGenerateValues) {
+            let values = [];
+            for (let optionSelected of this.optionsSelected) {
+                if (optionSelected.value)
+                    values.push(optionSelected.value);
+            }
+            this.value = values;
+        }
+    }
+    removeErrors() {
+        this.errors = [];
+    }
+    selectAll() {
+        for (let optionUnselected of this.optionsUnselected) {
+            this.selectOptionsCont.appendChild(optionUnselected);
+        }
+        this.reloadOptions();
+        this.changeValue();
+    }
+    selectHighlighted() {
+        for (let optionUnselected of this.optionsUnselected) {
+            if (optionUnselected.highlight) {
+                this.selectOptionsCont.appendChild(optionUnselected);
+                optionUnselected.highlight = false;
+            }
+        }
+        this.reloadOptions();
+        this.changeValue();
+    }
+    unselectHighlighted() {
+        for (let optionSelected of this.optionsSelected) {
+            if (optionSelected.highlight) {
+                this.unselectOptionsCont.appendChild(optionSelected);
+                optionSelected.highlight = false;
+            }
+        }
+        this.reloadOptions();
+        this.changeValue();
+    }
+    unselectAll() {
+        for (let optionSelected of this.optionsSelected) {
+            this.unselectOptionsCont.appendChild(optionSelected);
+        }
+        this.reloadOptions();
+        this.changeValue();
+    }
+    searchUnselect() {
+        for (let option of this.optionsUnselected) {
+            option.filter(this.unselectSearchInput.value);
+        }
+    }
+    searchSelect() {
+        for (let option of this.optionsSelected) {
+            option.filter(this.selectSearchInput.value);
+        }
+    }
+    postDestruction() {
+        super.postDestruction();
+    }
+    postCreation() {
+        this.loadElementsFromSlot();
+        this.canGenerateValues = true;
+        this.onInternalValueChanged();
+    }
+    __02ff6a099b7c5d693b75b5727ffdf5e8method1() {
+        return this.title_unselect;
+    }
+    __02ff6a099b7c5d693b75b5727ffdf5e8method2() {
+        return this.placeholder_unselect;
+    }
+    __02ff6a099b7c5d693b75b5727ffdf5e8method3() {
+        return this.title_select;
+    }
+    __02ff6a099b7c5d693b75b5727ffdf5e8method4() {
+        return this.placeholder_select;
+    }
+    __02ff6a099b7c5d693b75b5727ffdf5e8method5(error) {
+        return error;
+    }
+}
+Components.TwoColumnsSelect.Namespace=`${moduleName}.Components`;
+_.Components.TwoColumnsSelect=Components.TwoColumnsSelect;
+
+Components.TwoColumnsOption = class TwoColumnsOption extends Aventus.WebComponent {
+    get 'highlight'() { return this.getBoolAttr('highlight') }
+    set 'highlight'(val) { this.setBoolAttr('highlight', val) }    value;
+    select;
+    static __style = `:host{border-radius:var(--border-radius-sm);cursor:pointer;margin:5px 0;padding:5px;transition:background-color .2s var(--bezier-curve)}:host([highlight]){background-color:var(--lighter)}:host(:first-child){margin-top:0}:host(:last-child){margin-bottom:0}@media screen and (min-width: 1225px){:host(:hover){background-color:var(--lighter)}}`;
+    __getStatic() {
+        return TwoColumnsOption;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(TwoColumnsOption.__style);
+        return arrStyle;
+    }
+    __getHtml() {
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "TwoColumnsOption";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('highlight')) { this.attributeChangedCallback('highlight', false, false); } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('highlight'); }
+    __listBoolProps() { return ["highlight"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    init(select) {
+        this.select = select;
+    }
+    filter(text) {
+        if (this.innerText.toLowerCase().includes(text)) {
+            this.style.display = "";
+        }
+        else {
+            this.style.display = "none";
+        }
+    }
+    postCreation() {
+        new Aventus.PressManager({
+            element: this,
+            onPress: () => {
+                this.highlight = !this.highlight;
+            }
+        });
+    }
+}
+Components.TwoColumnsOption.Namespace=`${moduleName}.Components`;
+Components.TwoColumnsOption.Tag=`rk-two-columns-option`;
+_.Components.TwoColumnsOption=Components.TwoColumnsOption;
+if(!window.customElements.get('rk-two-columns-option')){window.customElements.define('rk-two-columns-option', Components.TwoColumnsOption);Aventus.WebComponentInstance.registerDefinition(Components.TwoColumnsOption);}
+
+Components.TwoColumnsOptionData = class TwoColumnsOptionData extends Components.TwoColumnsOption {
+    static __style = `:host{display:block}`;
+    __getStatic() {
+        return TwoColumnsOptionData;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(TwoColumnsOptionData.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "TwoColumnsOptionData";
+    }
+}
+Components.TwoColumnsOptionData.Namespace=`${moduleName}.Components`;
+Components.TwoColumnsOptionData.Tag=`rk-two-columns-option-data`;
+_.Components.TwoColumnsOptionData=Components.TwoColumnsOptionData;
+if(!window.customElements.get('rk-two-columns-option-data')){window.customElements.define('rk-two-columns-option-data', Components.TwoColumnsOptionData);Aventus.WebComponentInstance.registerDefinition(Components.TwoColumnsOptionData);}
+
+Components.TwoColumnsSelectData = class TwoColumnsSelectData extends Components.TwoColumnsSelect {
+    get 'loading'() { return this.getBoolAttr('loading') }
+    set 'loading'(val) { this.setBoolAttr('loading', val) }    data = [];
+    isInit = false;
+    static __style = ``;
+    constructor() {
+            super();
+            this.createOptions();
+if (this.constructor == TwoColumnsSelectData) { throw "can't instanciate an abstract class"; } this.subscribe=this.subscribe.bind(this)this.unsubscribe=this.unsubscribe.bind(this)this.onCreated=this.onCreated.bind(this)this.onDeleted=this.onDeleted.bind(this)this.onUpdated=this.onUpdated.bind(this) }
+    __getStatic() {
+        return TwoColumnsSelectData;
+    }
+    __getStyle() {
+        let arrStyle = super.__getStyle();
+        arrStyle.push(TwoColumnsSelectData.__style);
+        return arrStyle;
+    }
+    __getHtml() {super.__getHtml();
+    this.__getStatic().__template.setHTML({
+        slots: { 'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot></slot>` }
+    });
+}
+    getClassName() {
+        return "TwoColumnsSelectData";
+    }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('loading')) { this.attributeChangedCallback('loading', false, false); } }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('loading'); }
+    __listBoolProps() { return ["loading"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    itemToText(option) {
+        return option.innerHTML;
+    }
+    include(array, value) {
+        if (typeof value == 'number') {
+            return array.includes(value);
+        }
+        let arrayEl = array;
+        let valueEl = value;
+        let ram = this.defineRam();
+        return arrayEl.findIndex(p => ram.getId(p) == ram.getId(valueEl)) != -1;
+    }
+    async createOptions() {
+        this.loading = true;
+        this.data = await this.loadData();
+        for (let item of this.data) {
+            let option = new Components.TwoColumnsOptionData();
+            option.value = await Aventus.Async(this.optionValue(item));
+            option.innerHTML = await Aventus.Async(this.optionText(item));
+            this.appendChild(option);
+        }
+        this.loading = false;
+        this.init();
+    }
+    async loadData() {
+        const result = await Lib.Process.execute(this, this.defineRam().getListWithError()) ?? [];
+        return result;
+    }
+    subscribe() {
+        this.defineRam().onCreated(this.onCreated);
+        this.defineRam().onUpdated(this.onUpdated);
+        this.defineRam().onDeleted(this.onDeleted);
+    }
+    unsubscribe() {
+        this.defineRam().offCreated(this.onCreated);
+        this.defineRam().offUpdated(this.onUpdated);
+        this.defineRam().offDeleted(this.onDeleted);
+    }
+    async onCreated(item) {
+        this.data.push(item);
+        let option = new Components.TwoColumnsOptionData();
+        option.value = await Aventus.Async(this.optionValue(item));
+        option.innerHTML = await Aventus.Async(this.optionText(item));
+        this.appendChild(option);
+        this.loadElementsFromSlot();
+    }
+    onDeleted(item) {
+        for (let i = 0; i < this.optionsSelected.length; i++) {
+            let option = this.optionsSelected[i];
+            if (option.value == this.optionValue(item)) {
+                this.optionsSelected.splice(i, 1);
+                option.remove();
+            }
+        }
+        for (let i = 0; i < this.optionsUnselected.length; i++) {
+            let option = this.optionsUnselected[i];
+            if (option.value == this.optionValue(item)) {
+                this.optionsUnselected.splice(i, 1);
+                option.remove();
+            }
+        }
+    }
+    async onUpdated(item) {
+        for (let i = 0; i < this.optionsSelected.length; i++) {
+            let option = this.optionsSelected[i];
+            if (option.value == this.optionValue(item)) {
+                option.innerHTML = await Aventus.Async(this.optionText(item));
+            }
+        }
+        for (let i = 0; i < this.optionsUnselected.length; i++) {
+            let option = this.optionsUnselected[i];
+            if (option.value == this.optionValue(item)) {
+                option.innerHTML = await Aventus.Async(this.optionText(item));
+            }
+        }
+    }
+    init() {
+        if (!this.isConnected)
+            return;
+        if (this.isInit)
+            return;
+        this.isInit = true;
+        super.postCreation();
+        this.subscribe();
+    }
+    postDestruction() {
+        super.postDestruction();
+        this.unsubscribe();
+    }
+    postCreation() {
+        this.init();
+    }
+}
+Components.TwoColumnsSelectData.Namespace=`${moduleName}.Components`;
+_.Components.TwoColumnsSelectData=Components.TwoColumnsSelectData;
+
 Components.Table = class Table extends Aventus.WebComponent {
     static get observedAttributes() {return ["auto_hide_scroll", "grid", "items_per_page"].concat(super.observedAttributes).filter((v, i, a) => a.indexOf(v) === i);}
     get 'col_resize'() { return this.getBoolAttr('col_resize') }
     set 'col_resize'(val) { this.setBoolAttr('col_resize', val) }get 'grid_breakpoint'() { return this.getNumberAttr('grid_breakpoint') }
     set 'grid_breakpoint'(val) { this.setNumberAttr('grid_breakpoint', val) }get 'first_page'() { return this.getBoolAttr('first_page') }
     set 'first_page'(val) { this.setBoolAttr('first_page', val) }get 'last_page'() { return this.getBoolAttr('last_page') }
-    set 'last_page'(val) { this.setBoolAttr('last_page', val) }    get 'auto_hide_scroll'() { return this.getBoolProp('auto_hide_scroll') }
+    set 'last_page'(val) { this.setBoolAttr('last_page', val) }get 'loading'() { return this.getBoolAttr('loading') }
+    set 'loading'(val) { this.setBoolAttr('loading', val) }    get 'auto_hide_scroll'() { return this.getBoolProp('auto_hide_scroll') }
     set 'auto_hide_scroll'(val) { this.setBoolAttr('auto_hide_scroll', val) }get 'grid'() { return this.getBoolProp('grid') }
     set 'grid'(val) { this.setBoolAttr('grid', val) }get 'items_per_page'() { return this.getNumberProp('items_per_page') }
     set 'items_per_page'(val) { this.setNumberAttr('items_per_page', val) }    get 'tableTitle'() {
@@ -11222,6 +13588,7 @@ Components.Table = class Table extends Aventus.WebComponent {
 						this.__watch["nbItems"] = val;
 					}    options;
     filters = {};
+    dataFilters = [];
     sortColumns = {};
     globalSearchTxt;
     rows = new Map();
@@ -11238,6 +13605,10 @@ Components.Table = class Table extends Aventus.WebComponent {
         lowerThanMin: '',
         biggerThanMax: '',
     };
+    showLoadingStart;
+    showLoadingTimeout = 0;
+    timeoutBeforeLoading = 200;
+    minTimeoutLoading = 1000;
     select = new Aventus.Callback();
     __registerWatchesActions() {
     this.__addWatchesActions("tableTitle");this.__addWatchesActions("showSearch");this.__addWatchesActions("showHeader");this.__addWatchesActions("showFooter");this.__addWatchesActions("displayedData", ((target, action, path, value) => {
@@ -11256,7 +13627,7 @@ Components.Table = class Table extends Aventus.WebComponent {
         target.showFooter = true;
     }
 })); }
-    static __style = `:host{--_table-background-color: var(--table-background-color, var(--secondary-color));--_table-elevation: var(--table-elevation, var(--elevation-2));--_table-row-header-height: var(--table-row-header-height, 50px);--_table-header-backgroud-color: var(--table-header-backgroud-color, var(--primary-color));--_table-header-color: var(--table-header-color, var(--text-color-reverse));--_table-footer-backgroud-color: var(--table-footer-backgroud-color, var(--primary-color));--_table-footer-color: var(--table-footer-color, var(--text-color-reverse));--_table-row-header-backgroud-color: var(--table-row-header-backgroud-color, var(--primary-color));--_table-row-header-color: var(--table-row-header-color, var(--text-color-reverse));--_table-border-color: var(--table-border-color, var(--secondary-color));--_table-row-header-vertical-border: var(--table-row-header-vertical-border, 1px solid var(--_table-border-color));--_table-row-header-horizontal-border: var(--table-row-header-horizontal-border, 1px solid var(--_table-border-color));--_table-cell-vertical-border: var(--table-cell-vertical-border, 1px solid var(--_table-border-color));--_table-cell-horizontal-border: var(--table-cell-vertical-border, 1px solid var(--_table-border-color));--_table-cell-padding: var(--table-cell-padding, 10px);--local-table-cell-resize-display: none}:host{background-color:var(--_table-background-color);border:1px solid var(--_table-border-color);border-radius:5px;box-shadow:var(--_table-elevation);display:flex;flex-direction:column;height:100%;overflow:hidden;width:100%}:host .style-wrapper{display:flex;flex-direction:column;height:100%;overflow:hidden;width:100%}:host .style-wrapper .header{align-items:center;background-color:var(--_table-header-backgroud-color);color:var(--_table-header-color);display:flex;justify-content:space-between;padding:10px}:host .style-wrapper .header .title{align-items:center;display:flex;font-size:var(--font-size-md);height:30px;margin-left:5px}:host .style-wrapper .row-header{--scrollbar-color: transparent;--scrollbar-active-color: transparent;--scroller-width: 0;height:var(--_table-row-header-height);width:100%}:host .style-wrapper .body{display:flex;flex-direction:column;height:calc(100% - var(--_table-row-header-height));width:100%}:host .style-wrapper .footer{align-items:center;background-color:var(--_table-footer-backgroud-color);color:var(--_table-footer-color);display:flex;gap:30px;justify-content:end;padding:10px}:host .style-wrapper .footer .items-per-page{align-items:center;display:flex}:host .style-wrapper .footer .items-per-page rk-input-number{margin-left:10px;min-width:auto;width:50px}:host .style-wrapper .footer .location{align-items:center;display:flex}:host .style-wrapper .footer .pagination{align-items:center;display:flex}:host .style-wrapper .footer .pagination .btn-previous,:host .style-wrapper .footer .pagination .btn-next{transition:background-color .2s var(--bezier-curve)}:host .style-wrapper rk-scrollable::part(content-wrapper){min-width:100%}:host([first_page]) .style-wrapper .footer .pagination .btn-previous{opacity:.5;pointer-events:none}:host([last_page]) .style-wrapper .footer .pagination .btn-next{opacity:.5;pointer-events:none}:host([col_resize]){--local-table-cell-resize-display: block}:host([grid]) .style-wrapper .header{display:none}:host([grid]) .style-wrapper .body{flex-direction:row}:host([grid]) .style-wrapper .body rk-scrollable::part(content-wrapper){display:flex;flex-wrap:wrap;gap:15px;justify-content:center;padding:15px}@media screen and (min-width: 1225px){:host .style-wrapper .footer .pagination .touch:hover{background-color:var(--lighter);border-radius:5px}}`;
+    static __style = `:host{--_table-background-color: var(--table-background-color, var(--secondary-color));--_table-elevation: var(--table-elevation, var(--elevation-2));--_table-row-header-height: var(--table-row-header-height, 50px);--_table-header-backgroud-color: var(--table-header-backgroud-color, var(--primary-color));--_table-header-color: var(--table-header-color, var(--text-color-reverse));--_table-footer-backgroud-color: var(--table-footer-backgroud-color, var(--primary-color));--_table-footer-color: var(--table-footer-color, var(--text-color-reverse));--_table-row-header-backgroud-color: var(--table-row-header-backgroud-color, var(--primary-color));--_table-row-header-color: var(--table-row-header-color, var(--text-color-reverse));--_table-border-color: var(--table-border-color, var(--secondary-color));--_table-row-header-vertical-border: var(--table-row-header-vertical-border, 1px solid var(--_table-border-color));--_table-row-header-horizontal-border: var(--table-row-header-horizontal-border, 1px solid var(--_table-border-color));--_table-cell-vertical-border: var(--table-cell-vertical-border, 1px solid var(--_table-border-color));--_table-cell-horizontal-border: var(--table-cell-vertical-border, 1px solid var(--_table-border-color));--_table-cell-padding: var(--table-cell-padding, 10px);--local-table-cell-resize-display: none}:host{background-color:var(--_table-background-color);border-radius:var(--border-radius-sm);box-shadow:var(--_table-elevation);display:flex;flex-direction:column;height:100%;overflow:hidden;width:100%}:host .style-wrapper{display:flex;flex-direction:column;height:100%;min-height:100%;width:100%}:host .style-wrapper .header{align-items:center;background-color:var(--_table-header-backgroud-color);color:var(--_table-header-color);display:flex;justify-content:space-between;min-height:0;padding:10px}:host .style-wrapper .header .title{align-items:center;display:flex;font-size:var(--font-size-md);height:30px;margin-left:5px}:host .style-wrapper .row-header{--scrollbar-color: transparent;--scrollbar-active-color: transparent;--scroller-width: 0;min-height:0;width:100%}:host .style-wrapper .body{display:flex;flex:1;flex-direction:column;min-height:0;width:100%;position:relative}:host .style-wrapper .body .loading{display:none}:host .style-wrapper .footer{align-items:center;background-color:var(--_table-footer-backgroud-color);color:var(--_table-footer-color);display:flex;gap:30px;justify-content:end;min-height:0;padding:10px}:host .style-wrapper .footer .items-per-page{align-items:center;display:flex}:host .style-wrapper .footer .items-per-page rk-input-number{margin-left:10px;min-width:auto;width:50px}:host .style-wrapper .footer .location{align-items:center;display:flex}:host .style-wrapper .footer .pagination{align-items:center;display:flex}:host .style-wrapper .footer .pagination .btn-previous,:host .style-wrapper .footer .pagination .btn-next{transition:background-color .2s var(--bezier-curve)}:host .style-wrapper rk-scrollable::part(content-wrapper){min-width:100%}:host([first_page]) .style-wrapper .footer .pagination .btn-previous{opacity:.5;pointer-events:none}:host([last_page]) .style-wrapper .footer .pagination .btn-next{opacity:.5;pointer-events:none}:host([col_resize]){--local-table-cell-resize-display: block}:host([grid]) .style-wrapper .header{display:none}:host([grid]) .style-wrapper .body{flex-direction:row}:host([grid]) .style-wrapper .body rk-scrollable::part(content-wrapper){display:flex;flex-wrap:wrap;gap:15px;justify-content:center;padding:15px}:host([loading]) .style-wrapper .body{min-height:200px}:host([loading]) .style-wrapper .body .loading{display:flex}@media screen and (min-width: 1225px){:host .style-wrapper .footer .pagination .touch:hover{background-color:var(--lighter);border-radius:var(--border-radius-sm)}}`;
     constructor() {
             super();
             this.options = this.configure(this.defaultOptions());
@@ -11274,8 +13645,8 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
     }
     __getHtml() {
     this.__getStatic().__template.setHTML({
-        slots: { 'before':`<slot name="before"></slot>`,'header':`<slot name="header">        <template _id="table_1"></template>    </slot>`,'footer':`<slot name="footer">        <template _id="table_7"></template>    </slot>`,'after':`<slot name="after"></slot>`,'default':`<slot></slot>` }, 
-        blocks: { 'default':`<slot name="before"></slot><div class="style-wrapper" _id="table_0">    <slot name="header">        <template _id="table_1"></template>    </slot>    <div class="row-header">        <rk-scrollable y_scroll="false" x_scroll floating_scroll _id="table_5">        </rk-scrollable>    </div>    <div class="body">        <rk-scrollable x_scroll floating_scroll _id="table_6">        </rk-scrollable>    </div>    <slot name="footer">        <template _id="table_7"></template>    </slot></div><slot name="after"></slot><slot></slot>` }
+        slots: { 'before':`<slot name="before"></slot>`,'header':`<slot name="header">        <template _id="table_1"></template>    </slot>`,'loader':`<slot name="loader">            <rk-loading class="loading"></rk-loading>        </slot>`,'footer':`<slot name="footer">        <template _id="table_7"></template>    </slot>`,'after':`<slot name="after"></slot>`,'default':`<slot></slot>` }, 
+        blocks: { 'default':`<slot name="before"></slot><div class="style-wrapper" _id="table_0">    <slot name="header">        <template _id="table_1"></template>    </slot>    <div class="row-header">        <rk-scrollable y_scroll="false" x_scroll floating_scroll _id="table_5">        </rk-scrollable>    </div>    <div class="body">        <rk-scrollable x_scroll floating_scroll _id="table_6">        </rk-scrollable>        <slot name="loader">            <rk-loading class="loading"></rk-loading>        </slot>    </div>    <slot name="footer">        <template _id="table_7"></template>    </slot></div><slot name="after"></slot><slot></slot>` }
     });
 }
     __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
@@ -11389,16 +13760,35 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
     getClassName() {
         return "Table";
     }
-    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('col_resize')) { this.attributeChangedCallback('col_resize', false, false); }if(!this.hasAttribute('grid_breakpoint')){ this['grid_breakpoint'] = undefined; }if(!this.hasAttribute('first_page')) { this.attributeChangedCallback('first_page', false, false); }if(!this.hasAttribute('last_page')) { this.attributeChangedCallback('last_page', false, false); }if(!this.hasAttribute('auto_hide_scroll')) { this.attributeChangedCallback('auto_hide_scroll', false, false); }if(!this.hasAttribute('grid')) { this.attributeChangedCallback('grid', false, false); }if(!this.hasAttribute('items_per_page')){ this['items_per_page'] = 0; } }
+    __defaultValues() { super.__defaultValues(); if(!this.hasAttribute('col_resize')) { this.attributeChangedCallback('col_resize', false, false); }if(!this.hasAttribute('grid_breakpoint')){ this['grid_breakpoint'] = undefined; }if(!this.hasAttribute('first_page')) { this.attributeChangedCallback('first_page', false, false); }if(!this.hasAttribute('last_page')) { this.attributeChangedCallback('last_page', false, false); }if(!this.hasAttribute('loading')) { this.attributeChangedCallback('loading', false, false); }if(!this.hasAttribute('auto_hide_scroll')) { this.attributeChangedCallback('auto_hide_scroll', false, false); }if(!this.hasAttribute('grid')) { this.attributeChangedCallback('grid', false, false); }if(!this.hasAttribute('items_per_page')){ this['items_per_page'] = 0; } }
     __defaultValuesWatch(w) { super.__defaultValuesWatch(w); w["tableTitle"] = "";w["showSearch"] = false;w["showHeader"] = false;w["showFooter"] = false;w["displayedData"] = undefined;w["data"] = undefined;w["currentPage"] = 0;w["nbItems"] = 0; }
-    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('col_resize');this.__upgradeProperty('grid_breakpoint');this.__upgradeProperty('first_page');this.__upgradeProperty('last_page');this.__upgradeProperty('auto_hide_scroll');this.__upgradeProperty('grid');this.__upgradeProperty('items_per_page');this.__correctGetter('tableTitle');this.__correctGetter('showSearch');this.__correctGetter('showHeader');this.__correctGetter('showFooter');this.__correctGetter('displayedData');this.__correctGetter('data');this.__correctGetter('currentPage');this.__correctGetter('nbItems'); }
-    __listBoolProps() { return ["col_resize","first_page","last_page","auto_hide_scroll","grid"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
+    __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('col_resize');this.__upgradeProperty('grid_breakpoint');this.__upgradeProperty('first_page');this.__upgradeProperty('last_page');this.__upgradeProperty('loading');this.__upgradeProperty('auto_hide_scroll');this.__upgradeProperty('grid');this.__upgradeProperty('items_per_page');this.__correctGetter('tableTitle');this.__correctGetter('showSearch');this.__correctGetter('showHeader');this.__correctGetter('showFooter');this.__correctGetter('displayedData');this.__correctGetter('data');this.__correctGetter('currentPage');this.__correctGetter('nbItems'); }
+    __listBoolProps() { return ["col_resize","first_page","last_page","loading","auto_hide_scroll","grid"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
     getSelectedData() {
         const result = [];
         for (let row of this.rowsSelected) {
             result.push(row.data);
         }
         return result;
+    }
+    showLoading() {
+        this.showLoadingTimeout = setTimeout(() => {
+            this.showLoadingStart = new Date();
+            this.loading = true;
+        }, this.timeoutBeforeLoading);
+    }
+    async hideLoading() {
+        const minDelay = this.minTimeoutLoading;
+        clearTimeout(this.showLoadingTimeout);
+        if (this.showLoadingStart) {
+            let now = new Date();
+            let diffMs = now.getTime() - this.showLoadingStart.getTime();
+            if (diffMs < minDelay) {
+                await Aventus.sleep(minDelay - diffMs);
+            }
+            this.showLoadingStart = undefined;
+        }
+        this.loading = false;
     }
     autoHideScroll() {
         return true;
@@ -11482,6 +13872,12 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
                 sortable: false
             });
         }
+        if (this.options.timeoutBeforeLoading !== undefined) {
+            this.timeoutBeforeLoading = this.options.timeoutBeforeLoading;
+        }
+        if (this.options.minTimeoutLoading !== undefined) {
+            this.minTimeoutLoading = this.options.minTimeoutLoading;
+        }
     }
     defaultOptions() {
         return {
@@ -11537,6 +13933,12 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
                             isOk = false;
                             break;
                         }
+                    }
+                }
+                for (let dataFilter of this.dataFilters) {
+                    if (!dataFilter(item)) {
+                        isOk = false;
+                        break;
                     }
                 }
                 if (isOk) {
@@ -11633,6 +14035,7 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
             this.bodyContainer.appendChild(row);
         }
         this.rowsDisplayed = rowsDisplayed;
+        this.hideLoading();
     }
     locationInfo() {
         const nbItems = this.nbItems;
@@ -11692,6 +14095,22 @@ if (this.constructor == Table) { throw "can't instanciate an abstract class"; } 
             if (index != -1) {
                 this.filters[nameTxt].splice(index, 1);
             }
+        }
+        if (reload && this.isReady)
+            this.filterData();
+    }
+    addCustomFilter(action, reload = true) {
+        if (this.dataFilters.includes(action)) {
+            return;
+        }
+        this.dataFilters.push(action);
+        if (reload && this.isReady)
+            this.filterData();
+    }
+    removeCustomFilter(action, reload = true) {
+        let index = this.dataFilters.indexOf(action);
+        if (index != -1) {
+            this.dataFilters.splice(index, 1);
         }
         if (reload && this.isReady)
             this.filterData();
@@ -11766,7 +14185,7 @@ Components.TableRow = class TableRow extends Aventus.WebComponent {
     __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("grid", ((target) => {
     target.updateGrid();
 })); }
-    static __style = `:host{width:100%}:host .row-content{align-items:stretch;border-bottom:var(--_table-cell-horizontal-border);display:flex;flex-direction:row;width:100%}:host .row-content>*:last-child{border-right:none !important}:host .grid-content{display:none}:host([grid]){width:fit-content}:host([grid]) .row-content,:host([grid]) .grid-content{border:var(--_table-cell-vertical-border);border-radius:5px;flex-direction:column;padding:10px;width:fit-content}:host([grid][custom_grid]) .row-content{display:none}:host([grid][custom_grid]) .grid-content{display:flex}`;
+    static __style = `:host{width:100%}:host .row-content{align-items:stretch;border-bottom:var(--_table-cell-horizontal-border);display:flex;flex-direction:row;width:100%}:host .row-content>*:last-child{border-right:none !important}:host .grid-content{display:none}:host([grid]){width:fit-content}:host([grid]) .row-content,:host([grid]) .grid-content{border:var(--_table-cell-vertical-border);border-radius:var(--border-radius-sm);flex-direction:column;padding:10px;width:fit-content}:host([grid][custom_grid]) .row-content{display:none}:host([grid][custom_grid]) .grid-content{display:flex}`;
     constructor() {
             super();
             this.custom_grid = this.customGridTemplate();
@@ -11833,7 +14252,10 @@ Components.TableRow = class TableRow extends Aventus.WebComponent {
     }
     setCellContent(cell, cellConfig, data) {
         if (cellConfig.cellContent) {
-            cellConfig.cellContent(data, cell);
+            const result = cellConfig.cellContent(data, cell);
+            if (result) {
+                cell.setContent(result, data);
+            }
         }
         else {
             const v = cellConfig.name ? Aventus.getValueFromObject(cellConfig.name, data) : undefined;
@@ -12233,7 +14655,7 @@ _.Components.TableCellHeader=Components.TableCellHeader;
 if(!window.customElements.get('rk-table-cell-header')){window.customElements.define('rk-table-cell-header', Components.TableCellHeader);Aventus.WebComponentInstance.registerDefinition(Components.TableCellHeader);}
 
 Components.TableDataCellHeaderAction = class TableDataCellHeaderAction extends Components.TableCellHeader {
-    static __style = `:host{align-items:center;display:flex;justify-content:end}:host span{align-items:center;display:flex;height:100%}:host mi-icon{color:var(--green);cursor:pointer;border-radius:5px}:host mi-icon:hover{background-color:var(--lighter)}`;
+    static __style = `:host{align-items:center;display:flex;justify-content:end}:host span{align-items:center;display:flex;height:100%}:host mi-icon{border-radius:var(--border-radius-sm);color:var(--green);cursor:pointer}:host mi-icon:hover{background-color:var(--lighter)}`;
     __getStatic() {
         return TableDataCellHeaderAction;
     }
@@ -12599,11 +15021,15 @@ Components.TableData = class TableData extends Components.Table {
     __upgradeAttributes() { super.__upgradeAttributes(); this.__upgradeProperty('add_btn'); }
     __listBoolProps() { return ["add_btn"].concat(super.__listBoolProps()).filter((v, i, a) => a.indexOf(v) === i); }
     async loadData() {
-        this.ram = this.defineRAM();
-        this.data = await this.application?.executeWithLoading(this.ram.getListWithError());
-        this.ram.onCreated(this.onCreatedData);
-        this.ram.onUpdated(this.onUpdatedData);
-        this.ram.onDeleted(this.onDeletedData);
+        if (this.options.showLoading)
+            this.showLoading();
+        setTimeout(async () => {
+            this.ram = this.defineRAM();
+            this.data = await this.application?.executeWithLoading(this.ram.getListWithError());
+            this.ram.onCreated(this.onCreatedData);
+            this.ram.onUpdated(this.onUpdatedData);
+            this.ram.onDeleted(this.onDeletedData);
+        }, this.options.delayLoading);
     }
     onCreatedData(data) {
         if (!this.data) {
@@ -12660,7 +15086,11 @@ Components.TableData = class TableData extends Components.Table {
         }
     }
     defaultOptions() {
-        let result = super.defaultOptions();
+        let result = {
+            ...super.defaultOptions(),
+            showLoading: true,
+            delayLoading: 0
+        };
         result.row = Components.TableRowData;
         return result;
     }
@@ -12679,7 +15109,7 @@ Components.TableData.Namespace=`${moduleName}.Components`;
 _.Components.TableData=Components.TableData;
 
 Components.TableDataCellAction = class TableDataCellAction extends Components.TableCellAction {
-    static __style = `:host{padding:0 7px;justify-content:flex-end}:host mi-icon{font-size:var(--font-size-md);color:var(--blue);margin:0 2px;padding:3px;cursor:pointer;transition:background-color .2s linear;border-radius:5px}:host mi-icon.delete{color:var(--red)}:host mi-icon:hover{background-color:var(--lighter)}:host([grid]){margin-top:0;align-items:center;width:100%}`;
+    static __style = `:host{justify-content:flex-end;padding:0 7px}:host mi-icon{border-radius:var(--border-radius-sm);color:var(--blue);cursor:pointer;font-size:var(--font-size-md);margin:0 2px;padding:3px;transition:background-color .2s linear}:host mi-icon.delete{color:var(--red)}:host mi-icon:hover{background-color:var(--lighter)}:host([grid]){align-items:center;margin-top:0;width:100%}`;
     __getStatic() {
         return TableDataCellAction;
     }
@@ -12727,7 +15157,7 @@ if(!window.customElements.get('rk-table-data-cell-action')){window.customElement
 App.AppError=class AppError extends Aventus.GenericError {
     static get Fullname() { return "Core.App.AppError, Core"; }
 }
-App.AppError.Namespace=`${moduleName}.App`;
+App.AppError.Namespace=`Core.App`;
 App.AppError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(App.AppError.Fullname, App.AppError);
 
@@ -12735,69 +15165,31 @@ _.App.AppError=App.AppError;
 Errors.DesktopError=class DesktopError extends Aventus.GenericError {
     static get Fullname() { return "Core.Logic.DesktopError, Core"; }
 }
-Errors.DesktopError.Namespace=`${moduleName}.Errors`;
+Errors.DesktopError.Namespace=`Core.Errors`;
 Errors.DesktopError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(Errors.DesktopError.Fullname, Errors.DesktopError);
 
 _.Errors.DesktopError=Errors.DesktopError;
-Permissions.Permission=class Permission {
-    static saved = {};
-    static async can(query) {
-        if (!query.additionalInfo) {
-            query.additionalInfo = "";
-        }
-        let key = query.enumName + "$" + query.value + "$" + query.additionalInfo;
-        if (Object.keys(this.saved).includes(key)) {
-            return this.saved[key];
-        }
-        let response = await new Routes.PermissionRouter().Can({ permissionQuery: query });
-        if (response.success && response.result !== undefined) {
-            this.saved[key] = response.result;
-            return this.saved[key];
-        }
-        else {
-            console.log(response.errors);
-        }
-        return false;
-    }
-}
-Permissions.Permission.Namespace=`${moduleName}.Permissions`;
-
-_.Permissions.Permission=Permissions.Permission;
-Permissions.PermissionQuery=class PermissionQuery {
-    $type;
-    value;
-    additionalInfo;
-    can(value, additionalInfo) {
-        this.$type = this.constructor['Fullname'];
-        this.value = value;
-        this.additionalInfo = additionalInfo;
-        return Permissions.Permission.can(this);
-    }
-}
-Permissions.PermissionQuery.Namespace=`${moduleName}.Permissions`;
-
-_.Permissions.PermissionQuery=Permissions.PermissionQuery;
-Permissions.ApplicationPermissionQuery=class ApplicationPermissionQuery extends Permissions.PermissionQuery {
-    static get Fullname() { return "Core.Permissions.ApplicationPermissionQuery, Core"; }
-}
-Permissions.ApplicationPermissionQuery.Namespace=`${moduleName}.Permissions`;
-Permissions.ApplicationPermissionQuery.$schema={...(Permissions.PermissionQuery?.$schema ?? {}), };
-Aventus.Converter.register(Permissions.ApplicationPermissionQuery.Fullname, Permissions.ApplicationPermissionQuery);
-
-_.Permissions.ApplicationPermissionQuery=Permissions.ApplicationPermissionQuery;
 Permissions.DesktopPermissionQuery=class DesktopPermissionQuery extends Permissions.PermissionQuery {
     static get Fullname() { return "Core.Permissions.DesktopPermissionQuery, Core"; }
 }
-Permissions.DesktopPermissionQuery.Namespace=`${moduleName}.Permissions`;
+Permissions.DesktopPermissionQuery.Namespace=`Core.Permissions`;
 Permissions.DesktopPermissionQuery.$schema={...(Permissions.PermissionQuery?.$schema ?? {}), };
 Aventus.Converter.register(Permissions.DesktopPermissionQuery.Fullname, Permissions.DesktopPermissionQuery);
 
 _.Permissions.DesktopPermissionQuery=Permissions.DesktopPermissionQuery;
+Permissions.UserPermissionQuery=class UserPermissionQuery extends Permissions.PermissionQuery {
+    static get Fullname() { return "Core.Permissions.UserPermissionQuery, Core"; }
+}
+Permissions.UserPermissionQuery.Namespace=`Core.Permissions`;
+Permissions.UserPermissionQuery.$schema={...(Permissions.PermissionQuery?.$schema ?? {}), };
+Aventus.Converter.register(Permissions.UserPermissionQuery.Fullname, Permissions.UserPermissionQuery);
+
+_.Permissions.UserPermissionQuery=Permissions.UserPermissionQuery;
 Errors.CoreError=class CoreError extends Aventus.GenericError {
     static get Fullname() { return "Core.Tools.CoreError, Core"; }
 }
-Errors.CoreError.Namespace=`${moduleName}.Errors`;
+Errors.CoreError.Namespace=`Core.Errors`;
 Errors.CoreError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(Errors.CoreError.Fullname, Errors.CoreError);
 
@@ -12805,7 +15197,7 @@ _.Errors.CoreError=Errors.CoreError;
 Errors.ImageFileError=class ImageFileError extends Aventus.GenericError {
     static get Fullname() { return "Core.Tools.ImageFileError, Core"; }
 }
-Errors.ImageFileError.Namespace=`${moduleName}.Errors`;
+Errors.ImageFileError.Namespace=`Core.Errors`;
 Errors.ImageFileError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(Errors.ImageFileError.Fullname, Errors.ImageFileError);
 
@@ -12813,7 +15205,7 @@ _.Errors.ImageFileError=Errors.ImageFileError;
 Tools.ResultWithImageFileError=class ResultWithImageFileError extends AventusSharp.Tools.ResultWithError {
     static get Fullname() { return "Core.Tools.ResultWithImageFileError, Core"; }
 }
-Tools.ResultWithImageFileError.Namespace=`${moduleName}.Tools`;
+Tools.ResultWithImageFileError.Namespace=`Core.Tools`;
 Tools.ResultWithImageFileError.$schema={...(AventusSharp.Tools.ResultWithError?.$schema ?? {}), };
 Aventus.Converter.register(Tools.ResultWithImageFileError.Fullname, Tools.ResultWithImageFileError);
 
@@ -12821,7 +15213,7 @@ _.Tools.ResultWithImageFileError=Tools.ResultWithImageFileError;
 Tools.VoidWithImageFileError=class VoidWithImageFileError extends AventusSharp.Tools.VoidWithError {
     static get Fullname() { return "Core.Tools.VoidWithImageFileError, Core"; }
 }
-Tools.VoidWithImageFileError.Namespace=`${moduleName}.Tools`;
+Tools.VoidWithImageFileError.Namespace=`Core.Tools`;
 Tools.VoidWithImageFileError.$schema={...(AventusSharp.Tools.VoidWithError?.$schema ?? {}), };
 Aventus.Converter.register(Tools.VoidWithImageFileError.Fullname, Tools.VoidWithImageFileError);
 
@@ -12829,7 +15221,7 @@ _.Tools.VoidWithImageFileError=Tools.VoidWithImageFileError;
 Errors.PdfError=class PdfError extends Aventus.GenericError {
     static get Fullname() { return "Core.Tools.PdfError, Core"; }
 }
-Errors.PdfError.Namespace=`${moduleName}.Errors`;
+Errors.PdfError.Namespace=`Core.Errors`;
 Errors.PdfError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(Errors.PdfError.Fullname, Errors.PdfError);
 
@@ -12837,7 +15229,7 @@ _.Errors.PdfError=Errors.PdfError;
 Tools.ResultWithPdfError=class ResultWithPdfError extends AventusSharp.Tools.ResultWithError {
     static get Fullname() { return "Core.Tools.ResultWithPdfError, Core"; }
 }
-Tools.ResultWithPdfError.Namespace=`${moduleName}.Tools`;
+Tools.ResultWithPdfError.Namespace=`Core.Tools`;
 Tools.ResultWithPdfError.$schema={...(AventusSharp.Tools.ResultWithError?.$schema ?? {}), };
 Aventus.Converter.register(Tools.ResultWithPdfError.Fullname, Tools.ResultWithPdfError);
 
@@ -12845,7 +15237,7 @@ _.Tools.ResultWithPdfError=Tools.ResultWithPdfError;
 Tools.VoidWithPdfError=class VoidWithPdfError extends AventusSharp.Tools.VoidWithError {
     static get Fullname() { return "Core.Tools.VoidWithPdfError, Core"; }
 }
-Tools.VoidWithPdfError.Namespace=`${moduleName}.Tools`;
+Tools.VoidWithPdfError.Namespace=`Core.Tools`;
 Tools.VoidWithPdfError.$schema={...(AventusSharp.Tools.VoidWithError?.$schema ?? {}), };
 Aventus.Converter.register(Tools.VoidWithPdfError.Fullname, Tools.VoidWithPdfError);
 
@@ -12893,9 +15285,51 @@ Websocket.Routes.ApplicationRouter=class ApplicationRouter extends AventusSharp.
         return await this.endpoint.sendMessageAndWait(info);
     }
 }
-Websocket.Routes.ApplicationRouter.Namespace=`${moduleName}.Websocket.Routes`;
+Websocket.Routes.ApplicationRouter.Namespace=`Core.Websocket.Routes`;
 
 _.Websocket.Routes.ApplicationRouter=Websocket.Routes.ApplicationRouter;
+RAM.GroupRAM=class GroupRAM extends AventusSharp.RAM.RamHttp {
+    /**
+     * Create a singleton to store data
+     */
+    static getInstance() {
+        return Aventus.Instance.get(RAM.GroupRAM);
+    }
+    /**
+     * @inheritdoc
+     */
+    defineIndexKey() {
+        return 'Id';
+    }
+    /**
+     * @inheritdoc
+     */
+    getTypeForData(objJson) {
+        return this.addUserMethod(Data.Group);
+    }
+    /**
+     * @inheritdoc
+     */
+    defineRoutes() {
+        return new Routes.GroupRouter(new Lib.HttpRouter());
+    }
+    /**
+     * Mixin pattern to add methods
+     */
+    addUserMethod(Base) {
+        return class Extension extends Base {
+            static get className() {
+                return Base.className || Base.name;
+            }
+            get className() {
+                return Base.className || Base.name;
+            }
+        };
+    }
+}
+RAM.GroupRAM.Namespace=`Core.RAM`;
+
+_.RAM.GroupRAM=RAM.GroupRAM;
 
 for(let key in _) { Core[key] = _[key] }
 })(Core);

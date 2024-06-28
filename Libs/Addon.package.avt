@@ -1,0 +1,24 @@
+// Addon@Addon:1.0.0
+//#region js def //
+declare global {
+
+namespace Addon{
+
+	}
+}
+//#endregion js def //
+//#region js src //
+{"namespace":"Addon","available":[],"existing":[]}
+//#endregion js src //
+//#region css def //
+{}
+//#endregion css def //
+//#region css //
+{}
+//#endregion css //
+//#region html //
+{}
+//#endregion html //
+//#region dependances //
+[{"include":"full","subDependancesInclude":{"*":"need"},"version":"x.x.x","uri":"https://store.aventusjs.com/libs/QrCodeReader/1_0_0/QrCodeReader@Main.package.avt"},{"include":"full","subDependancesInclude":{"*":"need"},"version":"x.x.x","uri":"https://store.aventusjs.com/libs/QrCodeGenerator/1_0_0/QrCodeGenerator@Main.package.avt"},{"include":"full","subDependancesInclude":{"*":"need"},"version":"x.x.x","uri":"@local:Univer@Main.package.avt"}]
+//#endregion dependances //

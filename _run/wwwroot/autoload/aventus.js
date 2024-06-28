@@ -1,6 +1,32 @@
 Object.defineProperty(window, "AvInstance", {
 	get() {return Aventus.Instance;}
-})
+});
+
+(() => {
+	Map.prototype._defaultHas = Map.prototype.has;
+	Map.prototype._defaultSet = Map.prototype.set;
+	Map.prototype._defaultGet = Map.prototype.get;
+	Map.prototype.has = function(key) {
+		if(Aventus.Watcher.is(key)) {
+			return Map.prototype._defaultHas.call(this,key.getTarget())
+		}
+		return Map.prototype._defaultHas.call(this,key);
+	}
+
+	Map.prototype.set = function(key, value) {
+		if(Aventus.Watcher.is(key)) {
+			return Map.prototype._defaultSet.call(this, key.getTarget(), value)
+		}
+		return Map.prototype._defaultSet.call(this, key, value);
+	}
+	Map.prototype.get = function(key) {
+		if(Aventus.Watcher.is(key)) {
+			return Map.prototype._defaultGet.call(this, key.getTarget())
+		}
+		return Map.prototype._defaultGet.call(this, key);
+	}
+})()
+
 var Aventus;
 (Aventus||(Aventus = {}));
 (function (Aventus) {
@@ -70,7 +96,7 @@ const CallbackGroup=class CallbackGroup {
         }
     }
 }
-CallbackGroup.Namespace=`${moduleName}`;
+CallbackGroup.Namespace=`Aventus`;
 
 _.CallbackGroup=CallbackGroup;
 const Callback=class Callback {
@@ -107,7 +133,7 @@ const Callback=class Callback {
         return result;
     }
 }
-Callback.Namespace=`${moduleName}`;
+Callback.Namespace=`Aventus`;
 
 _.Callback=Callback;
 const Instance=class Instance {
@@ -134,7 +160,7 @@ const Instance=class Instance {
         return this.elements.delete(cst);
     }
 }
-Instance.Namespace=`${moduleName}`;
+Instance.Namespace=`Aventus`;
 
 _.Instance=Instance;
 const getValueFromObject=function getValueFromObject(path, obj) {
@@ -142,18 +168,25 @@ const getValueFromObject=function getValueFromObject(path, obj) {
     if (path == "") {
         return obj;
     }
+    const val = (key) => {
+        if (obj instanceof Map) {
+            return obj.get(key);
+        }
+        return obj[key];
+    };
     let splitted = path.split(".");
     for (let i = 0; i < splitted.length - 1; i++) {
         let split = splitted[i];
-        if (!obj[split] || typeof obj[split] !== 'object') {
+        let value = val(split);
+        if (!value || typeof value !== 'object') {
             return undefined;
         }
-        obj = obj[split];
+        obj = value;
     }
     if (!obj || typeof obj !== 'object') {
         return undefined;
     }
-    return obj[splitted[splitted.length - 1]];
+    return val(splitted[splitted.length - 1]);
 }
 
 _.getValueFromObject=getValueFromObject;
@@ -244,7 +277,7 @@ const ActionGuard=class ActionGuard {
         });
     }
 }
-ActionGuard.Namespace=`${moduleName}`;
+ActionGuard.Namespace=`Aventus`;
 
 _.ActionGuard=ActionGuard;
 const Mutex=class Mutex {
@@ -383,20 +416,33 @@ const Mutex=class Mutex {
         return result;
     }
 }
-Mutex.Namespace=`${moduleName}`;
+Mutex.Namespace=`Aventus`;
 
 _.Mutex=Mutex;
 const setValueToObject=function setValueToObject(path, obj, value) {
     path = path.replace(/\[(.*?)\]/g, '.$1');
+    const val = (key) => {
+        if (obj instanceof Map) {
+            return obj.get(key);
+        }
+        return obj[key];
+    };
     let splitted = path.split(".");
     for (let i = 0; i < splitted.length - 1; i++) {
         let split = splitted[i];
-        if (!obj[split]) {
+        let value = val(split);
+        if (!value) {
             obj[split] = {};
+            value = obj[split];
         }
-        obj = obj[split];
+        obj = value;
     }
-    obj[splitted[splitted.length - 1]] = value;
+    if (obj instanceof Map) {
+        obj.set(splitted[splitted.length - 1], value);
+    }
+    else {
+        obj[splitted[splitted.length - 1]] = value;
+    }
 }
 
 _.setValueToObject=setValueToObject;
@@ -652,7 +698,7 @@ const ElementExtension=class ElementExtension {
         return _realTarget(startFrom);
     }
 }
-ElementExtension.Namespace=`${moduleName}`;
+ElementExtension.Namespace=`Aventus`;
 
 _.ElementExtension=ElementExtension;
 const Style=class Style {
@@ -732,7 +778,7 @@ const Style=class Style {
             : '';
     }
 }
-Style.Namespace=`${moduleName}`;
+Style.Namespace=`Aventus`;
 
 _.Style=Style;
 const Effect=class Effect {
@@ -780,13 +826,13 @@ const Effect=class Effect {
         }
         let cb;
         if (path == "*") {
-            cb = (action, changePath, value) => { this.onChange(action, changePath, value); };
+            cb = (action, changePath, value, dones) => { this.onChange(action, changePath, value, dones); };
         }
         else {
-            cb = (action, changePath, value) => {
+            cb = (action, changePath, value, dones) => {
                 let full = fullPath;
                 if (changePath == path) {
-                    this.onChange(action, changePath, value);
+                    this.onChange(action, changePath, value, dones);
                 }
             };
         }
@@ -803,24 +849,24 @@ const Effect=class Effect {
     canChange(fct) {
         this.__allowChanged.push(fct);
     }
-    checkCanChange(action, changePath, value) {
+    checkCanChange(action, changePath, value, dones) {
         if (this.isDestroy) {
             return false;
         }
         for (let fct of this.__allowChanged) {
-            if (!fct(action, changePath, value)) {
+            if (!fct(action, changePath, value, dones)) {
                 return false;
             }
         }
         return true;
     }
-    onChange(action, changePath, value) {
-        if (!this.checkCanChange(action, changePath, value)) {
+    onChange(action, changePath, value, dones) {
+        if (!this.checkCanChange(action, changePath, value, dones)) {
             return;
         }
         this.run();
         for (let fct of this.__subscribes) {
-            fct(action, changePath, value);
+            fct(action, changePath, value, dones);
         }
     }
     destroy() {
@@ -847,7 +893,7 @@ const Effect=class Effect {
         }
     }
 }
-Effect.Namespace=`${moduleName}`;
+Effect.Namespace=`Aventus`;
 
 _.Effect=Effect;
 const Computed=class Computed extends Effect {
@@ -873,8 +919,8 @@ const Computed=class Computed extends Effect {
     computedValue() {
         this._value = this.run();
     }
-    onChange(action, changePath, value) {
-        if (!this.checkCanChange(action, changePath, value)) {
+    onChange(action, changePath, value, dones) {
+        if (!this.checkCanChange(action, changePath, value, dones)) {
             return;
         }
         let oldValue = this._value;
@@ -883,11 +929,11 @@ const Computed=class Computed extends Effect {
             return;
         }
         for (let fct of this.__subscribes) {
-            fct(action, changePath, value);
+            fct(action, changePath, value, dones);
         }
     }
 }
-Computed.Namespace=`${moduleName}`;
+Computed.Namespace=`Aventus`;
 
 _.Computed=Computed;
 const Watcher=class Watcher {
@@ -1041,6 +1087,7 @@ const Watcher=class Watcher {
             callbacksReverse: new Map(),
             avoidUpdate: [],
             pathToRemove: [],
+            injectedDones: null,
             history: [{
                     object: JSON.parse(JSON.stringify(obj, jsonReplacer)),
                     trace: currentTrace,
@@ -1195,6 +1242,11 @@ const Watcher=class Watcher {
                 else if (prop == "__deleteAlias") {
                     return deleteAlias;
                 }
+                else if (prop == "__injectedDones") {
+                    return (dones) => {
+                        this.injectedDones = dones;
+                    };
+                }
                 else if (prop == "__trigger") {
                     return trigger;
                 }
@@ -1299,6 +1351,62 @@ const Watcher=class Watcher {
                         }
                         return result;
                     }
+                    else if (target instanceof Map) {
+                        let result;
+                        if (prop == "set") {
+                            if (target.__isProxy) {
+                                result = (key, value) => {
+                                    return target.set(key, value);
+                                };
+                            }
+                            else {
+                                result = (key, value) => {
+                                    let result = target.set(key, value);
+                                    trigger('CREATED', target, receiver, receiver.get(key), key);
+                                    trigger('UPDATED', target, receiver, target.size, "size");
+                                    return result;
+                                };
+                            }
+                        }
+                        else if (prop == "clear") {
+                            if (target.__isProxy) {
+                                result = () => {
+                                    return target.clear();
+                                };
+                            }
+                            else {
+                                result = () => {
+                                    let keys = target.keys();
+                                    for (let key of keys) {
+                                        let oldValue = receiver.get(key);
+                                        target.delete(key);
+                                        trigger('DELETED', target, receiver, oldValue, key);
+                                        trigger('UPDATED', target, receiver, target.size, "size");
+                                    }
+                                };
+                            }
+                        }
+                        else if (prop == "delete") {
+                            if (target.__isProxy) {
+                                result = (key) => {
+                                    return target.delete(key);
+                                };
+                            }
+                            else {
+                                result = (key) => {
+                                    let oldValue = receiver.get(key);
+                                    let res = target.delete(key);
+                                    trigger('DELETED', target, receiver, oldValue, key);
+                                    trigger('UPDATED', target, receiver, target.size, "size");
+                                    return res;
+                                };
+                            }
+                        }
+                        else {
+                            result = element.bind(target);
+                        }
+                        return result;
+                    }
                     return element.bind(target);
                 }
                 if (element instanceof Computed) {
@@ -1343,7 +1451,9 @@ const Watcher=class Watcher {
                 if (triggerChange) {
                     let index = this.avoidUpdate.indexOf(prop);
                     if (index == -1) {
-                        trigger('UPDATED', target, receiver, value, prop);
+                        let dones = this.injectedDones ?? [];
+                        this.injectedDones = null;
+                        trigger('UPDATED', target, receiver, value, prop, dones);
                     }
                     else {
                         this.avoidUpdate.splice(index, 1);
@@ -1441,6 +1551,9 @@ const Watcher=class Watcher {
             proxyData.callbacks[''] = [onDataChanged];
         }
         const trigger = (type, target, receiver, value, prop, dones = []) => {
+            if (dones.includes(proxyData.baseData)) {
+                return;
+            }
             if (target.__isProxy) {
                 return;
             }
@@ -1516,7 +1629,7 @@ const Watcher=class Watcher {
                 let cbs = [...proxyData.callbacks[name]];
                 for (let cb of cbs) {
                     try {
-                        cb(WatchAction[type], pathToSend, value);
+                        cb(WatchAction[type], pathToSend, value, dones);
                     }
                     catch (e) {
                         if (e != 'impossible')
@@ -1601,7 +1714,7 @@ const Watcher=class Watcher {
         return comp;
     }
 }
-Watcher.Namespace=`${moduleName}`;
+Watcher.Namespace=`Aventus`;
 
 _.Watcher=Watcher;
 const EffectNoRecomputed=class EffectNoRecomputed extends Effect {
@@ -1617,7 +1730,7 @@ const EffectNoRecomputed=class EffectNoRecomputed extends Effect {
         }
     }
 }
-EffectNoRecomputed.Namespace=`${moduleName}`;
+EffectNoRecomputed.Namespace=`Aventus`;
 
 _.EffectNoRecomputed=EffectNoRecomputed;
 const ComputedNoRecomputed=class ComputedNoRecomputed extends Computed {
@@ -1635,7 +1748,7 @@ const ComputedNoRecomputed=class ComputedNoRecomputed extends Computed {
     }
     run() { }
 }
-ComputedNoRecomputed.Namespace=`${moduleName}`;
+ComputedNoRecomputed.Namespace=`Aventus`;
 
 _.ComputedNoRecomputed=ComputedNoRecomputed;
 const compareObject=function compareObject(obj1, obj2) {
@@ -1674,18 +1787,35 @@ const compareObject=function compareObject(obj1, obj2) {
         }
         obj1 = Watcher.extract(obj1);
         obj2 = Watcher.extract(obj2);
-        if (Object.keys(obj1).length !== Object.keys(obj2).length) {
-            return false;
-        }
-        for (let key in obj1) {
-            if (!(key in obj2)) {
+        if (obj1 instanceof Map && obj2 instanceof Map) {
+            if (obj1.size != obj2.size) {
                 return false;
             }
-            if (!compareObject(obj1[key], obj2[key])) {
+            const keys = obj1.keys();
+            for (let key in keys) {
+                if (!obj2.has(key)) {
+                    return false;
+                }
+                if (!compareObject(obj1.get(key), obj2.get(key))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        else {
+            if (Object.keys(obj1).length !== Object.keys(obj2).length) {
                 return false;
             }
+            for (let key in obj1) {
+                if (!(key in obj2)) {
+                    return false;
+                }
+                if (!compareObject(obj1[key], obj2[key])) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
     }
     else {
         return obj1 === obj2;
@@ -1860,7 +1990,7 @@ const ResourceLoader=class ResourceLoader {
         return result;
     }
 }
-ResourceLoader.Namespace=`${moduleName}`;
+ResourceLoader.Namespace=`Aventus`;
 
 _.ResourceLoader=ResourceLoader;
 const Async=function Async(el) {
@@ -1926,6 +2056,7 @@ const Json=class Json {
     static classFromJson(obj, data, options) {
         let realOptions = {
             transformValue: options?.transformValue ?? ((key, value) => value),
+            replaceUndefined: options?.replaceUndefined ?? false,
         };
         return this.__classFromJson(obj, data, realOptions);
     }
@@ -1934,7 +2065,7 @@ const Json=class Json {
         for (let prop of props) {
             let propUpperFirst = prop[0].toUpperCase() + prop.slice(1);
             let value = data[prop] === undefined ? data[propUpperFirst] : data[prop];
-            if (value !== undefined) {
+            if (value !== undefined || options.replaceUndefined) {
                 let propInfo = Object.getOwnPropertyDescriptor(obj, prop);
                 if (propInfo?.writable) {
                     obj[prop] = options.transformValue(prop, value);
@@ -1947,7 +2078,7 @@ const Json=class Json {
             for (let prop of props) {
                 let propUpperFirst = prop[0].toUpperCase() + prop.slice(1);
                 let value = data[prop] === undefined ? data[propUpperFirst] : data[prop];
-                if (value !== undefined) {
+                if (value !== undefined || options.replaceUndefined) {
                     let propInfo = Object.getOwnPropertyDescriptor(cstTemp.prototype, prop);
                     if (propInfo?.set) {
                         obj[prop] = options.transformValue(prop, value);
@@ -1959,7 +2090,7 @@ const Json=class Json {
         return obj;
     }
 }
-Json.Namespace=`${moduleName}`;
+Json.Namespace=`Aventus`;
 
 _.Json=Json;
 const Data=class Data {
@@ -2006,7 +2137,7 @@ const Data=class Data {
         return Converter.transform(JSON.parse(JSON.stringify(this)));
     }
 }
-Data.Namespace=`${moduleName}`;
+Data.Namespace=`Aventus`;
 
 _.Data=Data;
 const ConverterTransform=class ConverterTransform {
@@ -2046,12 +2177,15 @@ const ConverterTransform=class ConverterTransform {
                 let obj = objTemp;
                 this.beforeTransformObject(obj);
                 if (obj.fromJSON) {
-                    obj.fromJSON(data);
+                    obj = obj.fromJSON(data);
                 }
                 else {
                     obj = Json.classFromJson(obj, data, {
                         transformValue: (key, value) => {
                             if (obj[key] instanceof Date) {
+                                return value ? new Date(value) : null;
+                            }
+                            else if (typeof obj[key] == 'string' && /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})Z$/.exec(obj[key])) {
                                 return value ? new Date(value) : null;
                             }
                             else if (obj[key] instanceof Map) {
@@ -2089,6 +2223,9 @@ const ConverterTransform=class ConverterTransform {
             }
             return result;
         }
+        if (typeof data == 'string' && /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})\.(\d{3})Z$/.exec(data)) {
+            return new Date(data);
+        }
         return data;
     }
     copyValuesClass(target, src, options) {
@@ -2122,7 +2259,7 @@ const ConverterTransform=class ConverterTransform {
         }
     }
 }
-ConverterTransform.Namespace=`${moduleName}`;
+ConverterTransform.Namespace=`Aventus`;
 
 _.ConverterTransform=ConverterTransform;
 const Converter=class Converter {
@@ -2192,7 +2329,7 @@ const Converter=class Converter {
         return converter.copyValuesClass(to, from, options);
     }
 }
-Converter.Namespace=`${moduleName}`;
+Converter.Namespace=`Aventus`;
 
 _.Converter=Converter;
 const GenericError=class GenericError {
@@ -2219,17 +2356,17 @@ const GenericError=class GenericError {
         this.message = message;
     }
 }
-GenericError.Namespace=`${moduleName}`;
+GenericError.Namespace=`Aventus`;
 
 _.GenericError=GenericError;
 const RamError=class RamError extends GenericError {
 }
-RamError.Namespace=`${moduleName}`;
+RamError.Namespace=`Aventus`;
 
 _.RamError=RamError;
 const HttpError=class HttpError extends GenericError {
 }
-HttpError.Namespace=`${moduleName}`;
+HttpError.Namespace=`Aventus`;
 
 _.HttpError=HttpError;
 const VoidWithError=class VoidWithError {
@@ -2280,12 +2417,12 @@ const VoidWithError=class VoidWithError {
         return false;
     }
 }
-VoidWithError.Namespace=`${moduleName}`;
+VoidWithError.Namespace=`Aventus`;
 
 _.VoidWithError=VoidWithError;
 const VoidRamWithError=class VoidRamWithError extends VoidWithError {
 }
-VoidRamWithError.Namespace=`${moduleName}`;
+VoidRamWithError.Namespace=`Aventus`;
 
 _.VoidRamWithError=VoidRamWithError;
 const ResultWithError=class ResultWithError extends VoidWithError {
@@ -2305,12 +2442,12 @@ const ResultWithError=class ResultWithError extends VoidWithError {
         return result;
     }
 }
-ResultWithError.Namespace=`${moduleName}`;
+ResultWithError.Namespace=`Aventus`;
 
 _.ResultWithError=ResultWithError;
 const ResultRamWithError=class ResultRamWithError extends ResultWithError {
 }
-ResultRamWithError.Namespace=`${moduleName}`;
+ResultRamWithError.Namespace=`Aventus`;
 
 _.ResultRamWithError=ResultRamWithError;
 const HttpRequest=class HttpRequest {
@@ -2503,8 +2640,26 @@ const HttpRequest=class HttpRequest {
         }
         return result;
     }
+    async queryBlob(router) {
+        let resultTemp = await this.query(router);
+        let result = new ResultWithError();
+        if (!resultTemp.success) {
+            result.errors = resultTemp.errors;
+            return result;
+        }
+        try {
+            if (!resultTemp.result) {
+                return result;
+            }
+            result.result = await resultTemp.result.blob();
+        }
+        catch (e) {
+            result.errors.push(new HttpError(HttpErrorCode.unknow, e));
+        }
+        return result;
+    }
 }
-HttpRequest.Namespace=`${moduleName}`;
+HttpRequest.Namespace=`Aventus`;
 
 _.HttpRequest=HttpRequest;
 const HttpRouter=class HttpRouter {
@@ -2551,7 +2706,7 @@ const HttpRouter=class HttpRouter {
         return await new HttpRequest(url, HttpMethod.OPTION, data).queryJSON(this);
     }
 }
-HttpRouter.Namespace=`${moduleName}`;
+HttpRouter.Namespace=`Aventus`;
 
 _.HttpRouter=HttpRouter;
 const HttpRoute=class HttpRoute {
@@ -2573,7 +2728,7 @@ const HttpRoute=class HttpRoute {
         return "";
     }
 }
-HttpRoute.Namespace=`${moduleName}`;
+HttpRoute.Namespace=`Aventus`;
 
 _.HttpRoute=HttpRoute;
 const StorableRoute=class StorableRoute extends HttpRoute {
@@ -2600,7 +2755,7 @@ const StorableRoute=class StorableRoute extends HttpRoute {
         return await request.queryJSON(this.router);
     }
 }
-StorableRoute.Namespace=`${moduleName}`;
+StorableRoute.Namespace=`Aventus`;
 
 _.StorableRoute=StorableRoute;
 const Animation=class Animation {
@@ -2688,7 +2843,7 @@ const Animation=class Animation {
         return this.continueAnimation;
     }
 }
-Animation.Namespace=`${moduleName}`;
+Animation.Namespace=`Aventus`;
 
 _.Animation=Animation;
 const PressManager=class PressManager {
@@ -2880,6 +3035,7 @@ const PressManager=class PressManager {
         }
         this.startPosition = { x: e.pageX, y: e.pageY };
         document.addEventListener("pointerup", this.functionsBinded.upAction);
+        document.addEventListener("pointercancel", this.functionsBinded.upAction);
         document.addEventListener("pointermove", this.functionsBinded.moveAction);
         this.timeoutLongPress = setTimeout(() => {
             if (!this.state.oneActionTriggered) {
@@ -2909,6 +3065,7 @@ const PressManager=class PressManager {
             e.stopImmediatePropagation();
         }
         document.removeEventListener("pointerup", this.functionsBinded.upAction);
+        document.removeEventListener("pointercancel", this.functionsBinded.upAction);
         document.removeEventListener("pointermove", this.functionsBinded.moveAction);
         clearTimeout(this.timeoutLongPress);
         if (this.state.isMoving) {
@@ -3116,11 +3273,12 @@ const PressManager=class PressManager {
             this.element.removeEventListener("trigger_pointer_longpress", this.functionsBinded.childLongPress);
             this.element.removeEventListener("trigger_pointer_dragstart", this.functionsBinded.childDragStart);
             document.removeEventListener("pointerup", this.functionsBinded.upAction);
+            document.removeEventListener("pointercancel", this.functionsBinded.upAction);
             document.removeEventListener("pointermove", this.functionsBinded.moveAction);
         }
     }
 }
-PressManager.Namespace=`${moduleName}`;
+PressManager.Namespace=`Aventus`;
 
 _.PressManager=PressManager;
 const DragAndDrop=class DragAndDrop {
@@ -3392,7 +3550,7 @@ const DragAndDrop=class DragAndDrop {
         this.pressManager.destroy();
     }
 }
-DragAndDrop.Namespace=`${moduleName}`;
+DragAndDrop.Namespace=`Aventus`;
 
 _.DragAndDrop=DragAndDrop;
 const ResizeObserver=class ResizeObserver {
@@ -3520,7 +3678,7 @@ const ResizeObserver=class ResizeObserver {
         }, 0);
     }
 }
-ResizeObserver.Namespace=`${moduleName}`;
+ResizeObserver.Namespace=`Aventus`;
 
 _.ResizeObserver=ResizeObserver;
 const Uri=class Uri {
@@ -3598,14 +3756,15 @@ const Uri=class Uri {
         return normalizedPath;
     }
 }
-Uri.Namespace=`${moduleName}`;
+Uri.Namespace=`Aventus`;
 
 _.Uri=Uri;
 const GenericRam=class GenericRam {
     /**
      * The current namespace
      */
-    static get Namespace() { return ""; }
+    static Namespace = "";
+    // public static get Namespace(): string { return ""; }
     /**
      * Get the unique type for the data. Define it as the namespace + class name
      */
@@ -3804,7 +3963,9 @@ const GenericRam=class GenericRam {
         if (!item) {
             return;
         }
-        Json.classFromJson(item, objJson);
+        Json.classFromJson(item, objJson, {
+            replaceUndefined: true
+        });
     }
     publish(type, data) {
         [...this.subscribers[type]].forEach(callback => callback(data));
@@ -4376,12 +4537,12 @@ const GenericRam=class GenericRam {
      */
     async afterDeleteList(result) { }
 }
-GenericRam.Namespace=`${moduleName}`;
+GenericRam.Namespace=`Aventus`;
 
 _.GenericRam=GenericRam;
 const Ram=class Ram extends GenericRam {
 }
-Ram.Namespace=`${moduleName}`;
+Ram.Namespace=`Aventus`;
 
 _.Ram=Ram;
 const State=class State {
@@ -4406,7 +4567,7 @@ const State=class State {
         return true;
     }
 }
-State.Namespace=`${moduleName}`;
+State.Namespace=`Aventus`;
 
 _.State=State;
 const EmptyState=class EmptyState extends State {
@@ -4422,7 +4583,7 @@ const EmptyState=class EmptyState extends State {
         return this.localName;
     }
 }
-EmptyState.Namespace=`${moduleName}`;
+EmptyState.Namespace=`Aventus`;
 
 _.EmptyState=EmptyState;
 const StateManager=class StateManager {
@@ -4728,7 +4889,7 @@ const StateManager=class StateManager {
         }
     }
 }
-StateManager.Namespace=`${moduleName}`;
+StateManager.Namespace=`Aventus`;
 
 _.StateManager=StateManager;
 const Template=class Template {
@@ -4866,7 +5027,7 @@ const Template=class Template {
         return new TemplateInstance(component, content, this.actions, this.loops, this.ifs);
     }
 }
-Template.Namespace=`${moduleName}`;
+Template.Namespace=`Aventus`;
 
 _.Template=Template;
 const WebComponent=class WebComponent extends HTMLElement {
@@ -5535,7 +5696,7 @@ const WebComponent=class WebComponent extends HTMLElement {
         return ElementExtension.getElementsInSlot(this, slotName);
     }
 }
-WebComponent.Namespace=`${moduleName}`;
+WebComponent.Namespace=`Aventus`;
 
 _.WebComponent=WebComponent;
 const WebComponentInstance=class WebComponentInstance {
@@ -5608,7 +5769,7 @@ const WebComponentInstance=class WebComponentInstance {
         return null;
     }
 }
-WebComponentInstance.Namespace=`${moduleName}`;
+WebComponentInstance.Namespace=`Aventus`;
 
 _.WebComponentInstance=WebComponentInstance;
 const TemplateContext=class TemplateContext {
@@ -5775,7 +5936,10 @@ const TemplateContext=class TemplateContext {
             }
         });
     }
-    updateWatch(name, value) {
+    updateWatch(name, value, dones) {
+        if (Watcher.is(this.watch[name])) {
+            this.watch[name].__injectedDones(dones);
+        }
         this.watch[name] = value;
     }
     normalizePath(path) {
@@ -5811,7 +5975,7 @@ const TemplateContext=class TemplateContext {
         setValueToObject(name, this.comp, value);
     }
 }
-TemplateContext.Namespace=`${moduleName}`;
+TemplateContext.Namespace=`Aventus`;
 
 _.TemplateContext=TemplateContext;
 const TemplateInstance=class TemplateInstance {
@@ -5942,10 +6106,10 @@ const TemplateInstance=class TemplateInstance {
             }
             return {};
         });
-        computed.subscribe((action, path, value) => {
+        computed.subscribe((action, path, value, dones) => {
             for (let key in computed.value) {
                 let newValue = computed.value[key];
-                this.context.updateWatch(key, newValue);
+                this.context.updateWatch(key, newValue, dones);
             }
         });
         this.computeds.push(computed);
@@ -6075,7 +6239,7 @@ const TemplateInstance=class TemplateInstance {
             return "";
         });
         let timeout;
-        computed.subscribe((action, path, value) => {
+        computed.subscribe((action, path, value, dones) => {
             clearTimeout(timeout);
             // add timeout to group change that append on the same frame (for example index update)
             timeout = setTimeout(() => {
@@ -6109,8 +6273,11 @@ const TemplateInstance=class TemplateInstance {
             }
         });
         this.computeds.push(computed);
-        computed.subscribe(() => {
+        computed.subscribe((action, path, value, dones) => {
             for (const el of this._components[injection.id]) {
+                if (el instanceof WebComponent && el.__watch && Object.hasOwn(el.__watch, injection.injectionName)) {
+                    el.__watch.__injectedDones(dones);
+                }
                 el[injection.injectionName] = computed.value;
             }
         });
@@ -6139,10 +6306,13 @@ const TemplateInstance=class TemplateInstance {
             }
         });
         this.computeds.push(computed);
-        computed.subscribe(() => {
+        computed.subscribe((action, path, value, dones) => {
             if (isLocalChange)
                 return;
             for (const el of this._components[binding.id]) {
+                if (el instanceof WebComponent && el.__watch && Object.hasOwn(el.__watch, binding.injectionName)) {
+                    el.__watch.__injectedDones(dones);
+                }
                 el[binding.injectionName] = computed.value;
             }
         });
@@ -6495,7 +6665,7 @@ const TemplateInstance=class TemplateInstance {
         calculateActive();
     }
 }
-TemplateInstance.Namespace=`${moduleName}`;
+TemplateInstance.Namespace=`Aventus`;
 
 _.TemplateInstance=TemplateInstance;
 
@@ -6517,13 +6687,14 @@ const Icon = class Icon extends Aventus.WebComponent {
     set 'icon'(val) { this.setStringAttr('icon', val) }get 'type'() { return this.getStringProp('type') }
     set 'type'(val) { this.setStringAttr('type', val) }    static defaultType = 'outlined';
     __registerPropertiesActions() { super.__registerPropertiesActions(); this.__addPropertyActions("icon", ((target) => {
-    if (target.isReady)
-        target.shadowRoot.innerHTML = target.icon;
+    if (target.isReady) {
+        // target.shadowRoot.innerHTML = target.icon;
+    }
 }));this.__addPropertyActions("type", ((target) => {
     if (target.isReady)
         target.loadFont();
 })); }
-    static __style = `:host{--_material-icon-animation-duration: var(--material-icon-animation-duration, 1.75s)}:host{direction:ltr;display:inline-block;font-family:"Material Symbols Outlined";-moz-font-feature-settings:"liga";font-size:24px;-moz-osx-font-smoothing:grayscale;font-style:normal;font-weight:normal;letter-spacing:normal;line-height:1;text-transform:none;white-space:nowrap;word-wrap:normal}:host([is_hidden]){opacity:0}:host([type=sharp]){font-family:"Material Symbols Sharp"}:host([type=rounded]){font-family:"Material Symbols Rounded"}:host([type=outlined]){font-family:"Material Symbols Outlined"}:host([spin]){animation:spin var(--_material-icon-animation-duration) linear infinite}:host([reverse_spin]){animation:reverse-spin var(--_material-icon-animation-duration) linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes reverse-spin{0%{transform:rotate(360deg)}100%{transform:rotate(0deg)}}`;
+    static __style = `:host{--_material-icon-animation-duration: var(--material-icon-animation-duration, 1.75s)}:host{direction:ltr;display:inline-block;font-family:"Material Symbols Outlined";-moz-font-feature-settings:"liga";font-size:24px;-moz-osx-font-smoothing:grayscale;font-style:normal;font-weight:normal;letter-spacing:normal;line-height:1;text-transform:none;white-space:nowrap;word-wrap:normal}:host .icon{direction:inherit;display:inline-block;font-family:inherit;-moz-font-feature-settings:inherit;font-size:inherit;-moz-osx-font-smoothing:inherit;font-style:inherit;font-weight:inherit;letter-spacing:inherit;line-height:inherit;text-transform:inherit;white-space:inherit;word-wrap:inherit}:host([is_hidden]){opacity:0}:host([type=sharp]){font-family:"Material Symbols Sharp"}:host([type=rounded]){font-family:"Material Symbols Rounded"}:host([type=outlined]){font-family:"Material Symbols Outlined"}:host([spin]){animation:spin var(--_material-icon-animation-duration) linear infinite}:host([reverse_spin]){animation:reverse-spin var(--_material-icon-animation-duration) linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}@keyframes reverse-spin{0%{transform:rotate(360deg)}100%{transform:rotate(0deg)}}`;
     __getStatic() {
         return Icon;
     }
@@ -6534,9 +6705,19 @@ const Icon = class Icon extends Aventus.WebComponent {
     }
     __getHtml() {
     this.__getStatic().__template.setHTML({
-        blocks: { 'default':`` }
+        blocks: { 'default':`<div class="icon" _id="icon_0"></div>` }
     });
 }
+    __registerTemplateAction() { super.__registerTemplateAction();this.__getStatic().__template.setActions({
+  "elements": [
+    {
+      "name": "iconEl",
+      "ids": [
+        "icon_0"
+      ]
+    }
+  ]
+}); }
     getClassName() {
         return "Icon";
     }
@@ -6547,16 +6728,19 @@ const Icon = class Icon extends Aventus.WebComponent {
         if (!this.type)
             return;
         const name = this.type.charAt(0).toUpperCase() + this.type.slice(1);
-        let fontName = 'Material Symbols ' + name;
+        let fontsName = [
+            'Material Symbols ' + name,
+            '"Material Symbols ' + name + '"',
+        ];
         for (let font of document.fonts) {
-            if (font.family == fontName) {
+            if (fontsName.includes(font.family)) {
                 this.is_hidden = false;
                 return;
             }
         }
         const cb = (e) => {
             for (let font of e.fontfaces) {
-                if (font.family == fontName) {
+                if (fontsName.includes(font.family)) {
                     this.is_hidden = false;
                     break;
                 }
@@ -6572,7 +6756,7 @@ const Icon = class Icon extends Aventus.WebComponent {
     }
     async init() {
         await this.loadFont();
-        this.shadowRoot.innerHTML = this.icon;
+        this.iconEl.innerHTML = this.icon;
     }
     postCreation() {
         this.init();
@@ -6637,7 +6821,7 @@ Data.AventusFile=class AventusFile {
         });
     }
 }
-Data.AventusFile.Namespace=`${moduleName}.Data`;
+Data.AventusFile.Namespace=`AventusSharp.Data`;
 Data.AventusFile.$schema={"Uri":"string","Upload":"File","$type":"string"};
 Aventus.Converter.register(Data.AventusFile.Fullname, Data.AventusFile);
 
@@ -6688,7 +6872,7 @@ _.Data.DataErrorCode=Data.DataErrorCode;
 Data.DataError=class DataError extends Aventus.GenericError {
     static get Fullname() { return "AventusSharp.Data.DataError, AventusSharp"; }
 }
-Data.DataError.Namespace=`${moduleName}.Data`;
+Data.DataError.Namespace=`AventusSharp.Data`;
 Data.DataError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(Data.DataError.Fullname, Data.DataError);
 
@@ -6697,7 +6881,7 @@ Data.FieldErrorInfo=class FieldErrorInfo {
     static get Fullname() { return "AventusSharp.Data.FieldErrorInfo, AventusSharp"; }
     Name;
 }
-Data.FieldErrorInfo.Namespace=`${moduleName}.Data`;
+Data.FieldErrorInfo.Namespace=`AventusSharp.Data`;
 Data.FieldErrorInfo.$schema={"Name":"string"};
 Aventus.Converter.register(Data.FieldErrorInfo.Fullname, Data.FieldErrorInfo);
 
@@ -6714,7 +6898,7 @@ _.Routes.RouteErrorCode=Routes.RouteErrorCode;
 Routes.RouteError=class RouteError extends Aventus.GenericError {
     static get Fullname() { return "AventusSharp.Routes.RouteError, AventusSharp"; }
 }
-Routes.RouteError.Namespace=`${moduleName}.Routes`;
+Routes.RouteError.Namespace=`AventusSharp.Routes`;
 Routes.RouteError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(Routes.RouteError.Fullname, Routes.RouteError);
 
@@ -6758,7 +6942,7 @@ Routes.StorableRoute=class StorableRoute extends Aventus.HttpRoute {
         return await request.queryJSON(this.router);
     }
 }
-Routes.StorableRoute.Namespace=`${moduleName}.Routes`;
+Routes.StorableRoute.Namespace=`AventusSharp.Routes`;
 
 _.Routes.StorableRoute=Routes.StorableRoute;
 WebSocket.Socket=class Socket {
@@ -6854,7 +7038,7 @@ WebSocket.Socket=class Socket {
         return this.socket.readyState == 1;
     }
 }
-WebSocket.Socket.Namespace=`${moduleName}.WebSocket`;
+WebSocket.Socket.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.Socket=WebSocket.Socket;
 (function (SocketErrorCode) {
@@ -6867,7 +7051,7 @@ _.WebSocket.Socket=WebSocket.Socket;
 _.WebSocket.SocketErrorCode=WebSocket.SocketErrorCode;
 WebSocket.SocketError=class SocketError extends Aventus.GenericError {
 }
-WebSocket.SocketError.Namespace=`${moduleName}.WebSocket`;
+WebSocket.SocketError.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.SocketError=WebSocket.SocketError;
 (function (WsErrorCode) {
@@ -6885,7 +7069,7 @@ _.WebSocket.WsErrorCode=WebSocket.WsErrorCode;
 WebSocket.WsError=class WsError extends Aventus.GenericError {
     static get Fullname() { return "AventusSharp.WebSocket.WsError, AventusSharp"; }
 }
-WebSocket.WsError.Namespace=`${moduleName}.WebSocket`;
+WebSocket.WsError.Namespace=`AventusSharp.WebSocket`;
 WebSocket.WsError.$schema={...(Aventus.GenericError?.$schema ?? {}), };
 Aventus.Converter.register(WebSocket.WsError.Fullname, WebSocket.WsError);
 
@@ -6915,7 +7099,7 @@ Data.Storable=class Storable extends Aventus.Data {
         });
     }
 }
-Data.Storable.Namespace=`${moduleName}.Data`;
+Data.Storable.Namespace=`AventusSharp.Data`;
 Data.Storable.$schema={...(Aventus.Data?.$schema ?? {}), "Id":"number"};
 Aventus.Converter.register(Data.Storable.Fullname, Data.Storable);
 
@@ -7044,14 +7228,14 @@ RAM.RamHttp=class RamHttp extends Aventus.Ram {
         }
     }
 }
-RAM.RamHttp.Namespace=`${moduleName}.RAM`;
+RAM.RamHttp.Namespace=`AventusSharp.RAM`;
 
 _.RAM.RamHttp=RAM.RamHttp;
 Data.StorableTimestamp=class StorableTimestamp extends Data.Storable {
     CreatedDate = new Date();
     UpdatedDate = new Date();
 }
-Data.StorableTimestamp.Namespace=`${moduleName}.Data`;
+Data.StorableTimestamp.Namespace=`AventusSharp.Data`;
 Data.StorableTimestamp.$schema={...(Data.Storable?.$schema ?? {}), "CreatedDate":"Date","UpdatedDate":"Date"};
 Aventus.Converter.register(Data.StorableTimestamp.Fullname, Data.StorableTimestamp);
 
@@ -7059,7 +7243,7 @@ _.Data.StorableTimestamp=Data.StorableTimestamp;
 Tools.VoidWithError=class VoidWithError extends Aventus.VoidWithError {
     static get Fullname() { return "AventusSharp.Tools.VoidWithError, AventusSharp"; }
 }
-Tools.VoidWithError.Namespace=`${moduleName}.Tools`;
+Tools.VoidWithError.Namespace=`AventusSharp.Tools`;
 Tools.VoidWithError.$schema={...(Aventus.VoidWithError?.$schema ?? {}), };
 Aventus.Converter.register(Tools.VoidWithError.Fullname, Tools.VoidWithError);
 
@@ -7067,7 +7251,7 @@ _.Tools.VoidWithError=Tools.VoidWithError;
 WebSocket.VoidWithWsError=class VoidWithWsError extends Tools.VoidWithError {
     static get Fullname() { return "AventusSharp.WebSocket.VoidWithWsError, AventusSharp"; }
 }
-WebSocket.VoidWithWsError.Namespace=`${moduleName}.WebSocket`;
+WebSocket.VoidWithWsError.Namespace=`AventusSharp.WebSocket`;
 WebSocket.VoidWithWsError.$schema={...(Tools.VoidWithError?.$schema ?? {}), };
 Aventus.Converter.register(WebSocket.VoidWithWsError.Fullname, WebSocket.VoidWithWsError);
 
@@ -7075,7 +7259,7 @@ _.WebSocket.VoidWithWsError=WebSocket.VoidWithWsError;
 Routes.VoidWithRouteError=class VoidWithRouteError extends Tools.VoidWithError {
     static get Fullname() { return "AventusSharp.Routes.VoidWithRouteError, AventusSharp"; }
 }
-Routes.VoidWithRouteError.Namespace=`${moduleName}.Routes`;
+Routes.VoidWithRouteError.Namespace=`AventusSharp.Routes`;
 Routes.VoidWithRouteError.$schema={...(Tools.VoidWithError?.$schema ?? {}), };
 Aventus.Converter.register(Routes.VoidWithRouteError.Fullname, Routes.VoidWithRouteError);
 
@@ -7083,7 +7267,7 @@ _.Routes.VoidWithRouteError=Routes.VoidWithRouteError;
 Data.VoidWithDataError=class VoidWithDataError extends Tools.VoidWithError {
     static get Fullname() { return "AventusSharp.Data.VoidWithDataError, AventusSharp"; }
 }
-Data.VoidWithDataError.Namespace=`${moduleName}.Data`;
+Data.VoidWithDataError.Namespace=`AventusSharp.Data`;
 Data.VoidWithDataError.$schema={...(Tools.VoidWithError?.$schema ?? {}), };
 Aventus.Converter.register(Data.VoidWithDataError.Fullname, Data.VoidWithDataError);
 
@@ -7091,7 +7275,7 @@ _.Data.VoidWithDataError=Data.VoidWithDataError;
 Tools.ResultWithError=class ResultWithError extends Aventus.ResultWithError {
     static get Fullname() { return "AventusSharp.Tools.ResultWithError, AventusSharp"; }
 }
-Tools.ResultWithError.Namespace=`${moduleName}.Tools`;
+Tools.ResultWithError.Namespace=`AventusSharp.Tools`;
 Tools.ResultWithError.$schema={...(Aventus.ResultWithError?.$schema ?? {}), };
 Aventus.Converter.register(Tools.ResultWithError.Fullname, Tools.ResultWithError);
 
@@ -7099,7 +7283,7 @@ _.Tools.ResultWithError=Tools.ResultWithError;
 WebSocket.ResultWithWsError=class ResultWithWsError extends Tools.ResultWithError {
     static get Fullname() { return "AventusSharp.WebSocket.ResultWithWsError, AventusSharp"; }
 }
-WebSocket.ResultWithWsError.Namespace=`${moduleName}.WebSocket`;
+WebSocket.ResultWithWsError.Namespace=`AventusSharp.WebSocket`;
 WebSocket.ResultWithWsError.$schema={...(Tools.ResultWithError?.$schema ?? {}), };
 Aventus.Converter.register(WebSocket.ResultWithWsError.Fullname, WebSocket.ResultWithWsError);
 
@@ -7107,7 +7291,7 @@ _.WebSocket.ResultWithWsError=WebSocket.ResultWithWsError;
 Routes.ResultWithRouteError=class ResultWithRouteError extends Tools.ResultWithError {
     static get Fullname() { return "AventusSharp.Routes.ResultWithRouteError, AventusSharp"; }
 }
-Routes.ResultWithRouteError.Namespace=`${moduleName}.Routes`;
+Routes.ResultWithRouteError.Namespace=`AventusSharp.Routes`;
 Routes.ResultWithRouteError.$schema={...(Tools.ResultWithError?.$schema ?? {}), };
 Aventus.Converter.register(Routes.ResultWithRouteError.Fullname, Routes.ResultWithRouteError);
 
@@ -7115,7 +7299,7 @@ _.Routes.ResultWithRouteError=Routes.ResultWithRouteError;
 Data.ResultWithDataError=class ResultWithDataError extends Tools.ResultWithError {
     static get Fullname() { return "AventusSharp.Data.ResultWithDataError, AventusSharp"; }
 }
-Data.ResultWithDataError.Namespace=`${moduleName}.Data`;
+Data.ResultWithDataError.Namespace=`AventusSharp.Data`;
 Data.ResultWithDataError.$schema={...(Tools.ResultWithError?.$schema ?? {}), };
 Aventus.Converter.register(Data.ResultWithDataError.Fullname, Data.ResultWithDataError);
 
@@ -7491,7 +7675,7 @@ WebSocket.Connection=class Connection {
         }
     }
 }
-WebSocket.Connection.Namespace=`${moduleName}.WebSocket`;
+WebSocket.Connection.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.Connection=WebSocket.Connection;
 WebSocket.EndPoint=class EndPoint extends WebSocket.Connection {
@@ -7519,7 +7703,7 @@ WebSocket.EndPoint=class EndPoint extends WebSocket.Connection {
     }
     ;
 }
-WebSocket.EndPoint.Namespace=`${moduleName}.WebSocket`;
+WebSocket.EndPoint.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.EndPoint=WebSocket.EndPoint;
 WebSocket.Route=class Route {
@@ -7531,7 +7715,7 @@ WebSocket.Route=class Route {
         return "";
     }
 }
-WebSocket.Route.Namespace=`${moduleName}.WebSocket`;
+WebSocket.Route.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.Route=WebSocket.Route;
 WebSocket.Event=class Event {
@@ -7569,6 +7753,12 @@ WebSocket.Event=class Event {
     listen() {
         if (!this._listening) {
             this._listening = true;
+            if (!this.routeInfo) {
+                this.routeInfo = {
+                    channel: this.path(),
+                    callback: this.onEvent
+                };
+            }
             this.endpoint.addRoute(this.routeInfo);
         }
     }
@@ -7585,7 +7775,7 @@ WebSocket.Event=class Event {
         this.onTrigger.trigger([data, params, uid]);
     }
 }
-WebSocket.Event.Namespace=`${moduleName}.WebSocket`;
+WebSocket.Event.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.Event=WebSocket.Event;
 WebSocket.StorableWsRoute_GetAll=class StorableWsRoute_GetAll extends WebSocket.Event {
@@ -7601,7 +7791,7 @@ WebSocket.StorableWsRoute_GetAll=class StorableWsRoute_GetAll extends WebSocket.
         return `${this.getPrefix()}/${this.StorableName()}`;
     }
 }
-WebSocket.StorableWsRoute_GetAll.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute_GetAll.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute_GetAll=WebSocket.StorableWsRoute_GetAll;
 WebSocket.StorableWsRoute_Create=class StorableWsRoute_Create extends WebSocket.Event {
@@ -7617,7 +7807,7 @@ WebSocket.StorableWsRoute_Create=class StorableWsRoute_Create extends WebSocket.
         return `${this.getPrefix()}/${this.StorableName()}/Create`;
     }
 }
-WebSocket.StorableWsRoute_Create.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute_Create.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute_Create=WebSocket.StorableWsRoute_Create;
 WebSocket.StorableWsRoute_CreateMany=class StorableWsRoute_CreateMany extends WebSocket.Event {
@@ -7633,7 +7823,7 @@ WebSocket.StorableWsRoute_CreateMany=class StorableWsRoute_CreateMany extends We
         this.StorableName = StorableName;
     }
 }
-WebSocket.StorableWsRoute_CreateMany.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute_CreateMany.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute_CreateMany=WebSocket.StorableWsRoute_CreateMany;
 WebSocket.StorableWsRoute_GetById=class StorableWsRoute_GetById extends WebSocket.Event {
@@ -7649,7 +7839,7 @@ WebSocket.StorableWsRoute_GetById=class StorableWsRoute_GetById extends WebSocke
         return `${this.getPrefix()}/${this.StorableName()}/{id:number}`;
     }
 }
-WebSocket.StorableWsRoute_GetById.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute_GetById.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute_GetById=WebSocket.StorableWsRoute_GetById;
 WebSocket.StorableWsRoute_Update=class StorableWsRoute_Update extends WebSocket.Event {
@@ -7665,7 +7855,7 @@ WebSocket.StorableWsRoute_Update=class StorableWsRoute_Update extends WebSocket.
         return `${this.getPrefix()}/${this.StorableName()}/{id:number}/Update`;
     }
 }
-WebSocket.StorableWsRoute_Update.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute_Update.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute_Update=WebSocket.StorableWsRoute_Update;
 WebSocket.StorableWsRoute_UpdateMany=class StorableWsRoute_UpdateMany extends WebSocket.Event {
@@ -7681,7 +7871,7 @@ WebSocket.StorableWsRoute_UpdateMany=class StorableWsRoute_UpdateMany extends We
         this.StorableName = StorableName;
     }
 }
-WebSocket.StorableWsRoute_UpdateMany.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute_UpdateMany.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute_UpdateMany=WebSocket.StorableWsRoute_UpdateMany;
 WebSocket.StorableWsRoute_Delete=class StorableWsRoute_Delete extends WebSocket.Event {
@@ -7697,7 +7887,7 @@ WebSocket.StorableWsRoute_Delete=class StorableWsRoute_Delete extends WebSocket.
         return `${this.getPrefix()}/${this.StorableName()}/{id:number}/Delete`;
     }
 }
-WebSocket.StorableWsRoute_Delete.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute_Delete.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute_Delete=WebSocket.StorableWsRoute_Delete;
 WebSocket.StorableWsRoute_DeleteMany=class StorableWsRoute_DeleteMany extends WebSocket.Event {
@@ -7713,7 +7903,7 @@ WebSocket.StorableWsRoute_DeleteMany=class StorableWsRoute_DeleteMany extends We
         this.StorableName = StorableName;
     }
 }
-WebSocket.StorableWsRoute_DeleteMany.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute_DeleteMany.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute_DeleteMany=WebSocket.StorableWsRoute_DeleteMany;
 WebSocket.StorableWsRoute=class StorableWsRoute extends WebSocket.Route {
@@ -7796,7 +7986,7 @@ WebSocket.StorableWsRoute=class StorableWsRoute extends WebSocket.Route {
         return await this.endpoint.sendMessageAndWait(info);
     }
 }
-WebSocket.StorableWsRoute.Namespace=`${moduleName}.WebSocket`;
+WebSocket.StorableWsRoute.Namespace=`AventusSharp.WebSocket`;
 
 _.WebSocket.StorableWsRoute=WebSocket.StorableWsRoute;
 RAM.RamWebSocket=class RamWebSocket extends Aventus.Ram {
@@ -8138,7 +8328,7 @@ RAM.RamWebSocket=class RamWebSocket extends Aventus.Ram {
         }
     }
 }
-RAM.RamWebSocket.Namespace=`${moduleName}.RAM`;
+RAM.RamWebSocket.Namespace=`AventusSharp.RAM`;
 
 _.RAM.RamWebSocket=RAM.RamWebSocket;
 
